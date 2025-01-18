@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "kyber-vision-mobile-06",
+    "slug": "kyber-vision-mobile-06",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-video"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "19bda6d6-1261-4ffc-9425-4e157bd11f4b"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/19bda6d6-1261-4ffc-9425-4e157bd11f4b"
+    }
+  }
+}
