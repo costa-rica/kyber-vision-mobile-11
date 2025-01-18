@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   // ------ Display Latest Action
   vwDisplayRecentAction: {
     // backgroundColor: "green",
-    flex: 1,
+    // flex: 1,
     // padding: 10,
     borderColor: "white",
     borderWidth: 2,

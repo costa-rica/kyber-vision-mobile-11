@@ -165,10 +165,10 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   touchOpCircle: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     backgroundColor: "white",
-    borderRadius: 20, // Makes it a circle
+    borderRadius: 25, // Makes it a circle
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
