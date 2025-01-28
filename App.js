@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./screens/Home";
 import ScriptingMatchSelection from "./screens/ScritptingMatchSelection";
 import Scripting from "./screens/Scripting";
+import Admin from "./screens/Admin";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -50,6 +51,7 @@ export default function App() {
               component={ScriptingMatchSelection}
             />
             <Stack.Screen name="Scripting" component={Scripting} />
+            <Stack.Screen name="Admin" component={Admin} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>

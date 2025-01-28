@@ -12,6 +12,18 @@
   - implement gesture GestureScreen06 with ActionWheel02 from this repo: https://github.com/costa-rica/NativeStuff17nonRectanglularButtons
 - probably needs local database?
 
+## .env
+
+```
+EXPO_PUBLIC_API_URL=https://api.kv06.dashanddata.com
+EXPO_PUBLIC_API_URL_WORKSTATION=http://192.168.1.193:3000
+EXPO_PUBLIC_API_URL_SERVER=https://api.kv06.dashanddata.com
+EXPO_PUBLIC_EMAIL=nrodrig1@gmail.com
+EXPO_PUBLIC_PASSWORD=test
+```
+
+- only: EXPO_PUBLIC_API_URL, EXPO_PUBLIC_EMAIL, and EXPO_PUBLIC_PASSWORD are actually used.
+
 ## Installations
 
 ### Navigation

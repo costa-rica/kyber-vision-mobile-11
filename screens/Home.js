@@ -106,7 +106,7 @@ export default function Home({ navigation }) {
             <View style={styles.vwLogo}>
               <Image
                 style={styles.image}
-                source={require("../assets/images/kyberVisionLogo01.png")}
+                source={require("../assets/images/KyberV2shinyV02.png")}
                 alt="logo"
                 resizeMode="contain"
               />
@@ -124,6 +124,12 @@ export default function Home({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity style={styles.touchOpButton}>
               <Text style={styles.txtButton}>Revue vidéo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.touchOpButton}
+              onPress={() => navigation.navigate("Admin")}
+            >
+              <Text style={styles.txtButton}>Admin</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -168,7 +174,7 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F2EBF2",
   },
 
   // ----- MIDDLE Container -----
@@ -253,5 +259,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#A3A3A3",
     fontFamily: "ApfelGrotezk",
+    backgroundColor: "#F2EBF2",
   },
 });

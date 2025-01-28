@@ -41,14 +41,35 @@ export default function TemplateView(props) {
     }).start(() => setModalVisible(false));
   };
 
+  // Dynamic styles
+  const styleVwTopGreyBand = {
+    backgroundColor: props.noGrayBand ? null : "#A3A3A3",
+    marginTop: 5,
+    borderRadius: 35,
+    justifyContent: "center",
+    alignItems: "flex-end",
+    width: "95%",
+    padding: 5,
+  };
+  const styleVwTopGreyBandWithBackButton = {
+    backgroundColor: props.noGrayBand ? null : "#A3A3A3",
+    marginTop: 5,
+    borderRadius: 35,
+    justifyContent: "space-between",
+    // alignItems: "flex-end",
+    flexDirection: "row",
+    width: "95%",
+    padding: 5,
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
         <View
           style={
             props.noBackButton
-              ? styles.vwTopGreyBand
-              : styles.vwTopGreyBandWithBackButton
+              ? styleVwTopGreyBand
+              : styleVwTopGreyBandWithBackButton
           }
         >
           {props.noBackButton ? null : (
@@ -63,6 +84,7 @@ export default function TemplateView(props) {
               }}
             >
               {/* <Text> User: {userReducer.email}</Text> */}
+
               <Image
                 style={styles.imgGearGray}
                 source={require("../../assets/images/btnBackArrow.png")}
@@ -71,19 +93,21 @@ export default function TemplateView(props) {
               />
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            style={styles.touchOpCircle}
-            // onPress={() => pressedGear()}
-            onPress={openModal}
-          >
-            {/* <Text> User: {userReducer.email}</Text> */}
-            <Image
-              style={styles.imgGearGray}
-              source={require("../../assets/images/btnGear.png")}
-              alt="logo"
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
+          {props.hideSettings ? null : (
+            <TouchableOpacity
+              style={styles.touchOpCircle}
+              // onPress={() => pressedGear()}
+              onPress={openModal}
+            >
+              {/* <Text> User: {userReducer.email}</Text> */}
+              <Image
+                style={styles.imgGearGray}
+                source={require("../../assets/images/btnGear.png")}
+                alt="logo"
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 
@@ -102,7 +126,8 @@ export default function TemplateView(props) {
           <StatusBar backgroundColor="black" barStyle="light-content" />
           <View style={styles.modalBackdrop}>
             <View style={styles.containerTop}>
-              <View style={styles.vwTopGreyBand}>
+              {/* <View style={styles.vwTopGreyBand}> */}
+              <View style={styleVwTopGreyBand}>
                 <TouchableOpacity
                   style={styles.touchOpCircle}
                   // onPress={() => pressedGear()}
@@ -136,7 +161,7 @@ export default function TemplateView(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F2EBF2",
   },
   // ----- TOP Container -----
   containerTop: {
@@ -145,25 +170,7 @@ const styles = StyleSheet.create({
     // height: "15%",
     paddingBottom: 5,
   },
-  vwTopGreyBand: {
-    backgroundColor: "#A3A3A3",
-    marginTop: 10,
-    borderRadius: 35,
-    justifyContent: "center",
-    alignItems: "flex-end",
-    width: "95%",
-    padding: 5,
-  },
-  vwTopGreyBandWithBackButton: {
-    backgroundColor: "#A3A3A3",
-    marginTop: 10,
-    borderRadius: 35,
-    justifyContent: "space-between",
-    // alignItems: "flex-end",
-    flexDirection: "row",
-    width: "95%",
-    padding: 5,
-  },
+
   touchOpCircle: {
     width: 50,
     height: 50,
