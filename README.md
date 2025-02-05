@@ -26,30 +26,28 @@ EXPO_PUBLIC_PASSWORD=test
 
 ## Installations
 
-### Navigation
-
-1. install
+1. Navigation
 
 ```
    yarn add @react-navigation/native @react-navigation/native-stack
    npx expo install react-native-screens react-native-safe-area-context
 ```
 
-### Reducers
+2. Reducers
 
-1. install
    `yarn add react-redux @reduxjs/toolkit`
 
-### Play video
-
-1. install
+3. Play video
    `npx expo install expo-video`
-2. video disable native controls: `nativeControls={false}`
 
-### sense re orienting of screen for video
+4. sense re orienting of screen for video
+   `npx expo install expo-screen-orientation`
 
-1. terminal: `npx expo install expo-screen-orientation`
-2. app.json: make sure the orientation is set to "default" otherwise it won't adjust.
+5. `npx expo install react-native-gesture-handler`
+
+## expo-screen-orientation
+
+- app.json: make sure the orientation is set to "default" otherwise it won't adjust.
 
 ```json
 {
@@ -59,9 +57,9 @@ EXPO_PUBLIC_PASSWORD=test
 }
 ```
 
-## Gesture handling
+## Play video
 
-1. install: `npx expo install react-native-gesture-handler`
+video disable native controls: `nativeControls={false}`
 
 ## Orientation Descriptions
 

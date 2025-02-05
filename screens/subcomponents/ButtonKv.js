@@ -6,6 +6,7 @@ const ButtonKv = ({
   colorBackground = "#A3A3A3",
   colorText = "white",
   width = 140,
+  fontSize = 20,
   children,
 }) => {
   const scaleValue = useRef(new Animated.Value(1)).current;
@@ -44,7 +45,7 @@ const ButtonKv = ({
     alignItems: "center",
   };
   const styleText = {
-    fontSize: 20,
+    fontSize: fontSize,
     color: colorText,
     textAlign: "center",
     fontFamily: "ApfelGrotezk",

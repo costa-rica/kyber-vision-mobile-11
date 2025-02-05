@@ -22,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { storeVideoDetailsInRedux } from "../reducers/user";
 import { useSelector } from "react-redux";
 import { appendAction, deleteScript } from "../reducers/script";
+import ButtonKv from "./subcomponents/ButtonKv";
 
 export default function ScriptingMatchSelection({ navigation }) {
   const [currentYear, setCurrentYear] = useState(null); // State for the currently visible year
@@ -314,6 +315,17 @@ export default function ScriptingMatchSelection({ navigation }) {
             onViewableItemsChanged={onViewableItemsChanged.current}
             viewabilityConfig={viewabilityConfig.current}
           />
+          <View style={styles.vwLiveRowSuper}>
+            <ButtonKv
+              colorBackground={"#970F9A"}
+              colorText={"white"}
+              fontSize={48}
+              width={Dimensions.get("window").width * 0.95}
+              onPress={() => navigation.navigate("ScriptingLive")}
+            >
+              Live
+            </ButtonKv>
+          </View>
         </View>
       </View>
     </TemplateView>
@@ -433,6 +445,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "ApfelGrotezk",
   },
+
+  // ---- Live Row -----
+  vwLiveRowSuper: {
+    padding: 20,
+    width: "100%",
+    // backgroundColor: "green",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  // vwLiveRow: {
+  //   backgroundColor: "#970F9A",
+  //   marginTop: 10,
+  //   borderRadius: 35,
+  //   flexDirection: "row",
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   width: "95%",
+  //   padding: 10,
+  // },
+  // txtLive: {
+  //   fontSize: 48,
+  //   color: "white",
+  //   // textAlign: "center",
+  //   fontFamily: "ApfelGrotezk",
+  //   // backgroundColor: "green",
+  // },
 
   // Modal styles Download
   modalDownloadBackdrop: {

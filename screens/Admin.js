@@ -21,6 +21,7 @@ const table01data = {
   User62: "Melody",
 };
 const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
+
 export default function Admin({ navigation }) {
   const [groupAdmin, setGroupAdmin] = useState(false);
   const [createPlayers, setCreatePlayers] = useState(false);
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
   vwTitle: {
     borderBottomWidth: 1,
     borderColor: "#970F9A",
-    width: 285,
+    width: Dimensions.get("window").width * 0.8,
   },
   txtTitleAdmin: {
     fontSize: 20,
