@@ -4,8 +4,10 @@ import CustomPicker from "./CustomPicker";
 
 export default function DoublePickerWithSideBorders({
   elementsArray,
-  setSelectedNumber,
-  setSelectedNumber02,
+  setSelectedElement,
+  selectedElement,
+  setSelectedElement02,
+  selectedElement02,
   itemHeight,
   elementsFontSize,
   parentViewWidth,
@@ -41,7 +43,8 @@ export default function DoublePickerWithSideBorders({
       {/* <View style={styles.vwScoreTeamAnalyzedPicker}> */}
       <CustomPicker
         elementsArray={elementsArray}
-        setSelectedNumber={setSelectedNumber} // Pass callback function
+        setSelectedElement={setSelectedElement} // Pass callback function
+        selectedElement={selectedElement}
         itemHeight={itemHeight}
         elementsFontSize={elementsFontSize}
         parentViewWidth={parentViewWidth}
@@ -53,7 +56,8 @@ export default function DoublePickerWithSideBorders({
       </View>
       <CustomPicker
         elementsArray={elementsArray}
-        setSelectedNumber={setSelectedNumber02} // Pass callback function
+        setSelectedElement={setSelectedElement02} // Pass callback function
+        selectedElement={selectedElement}
         itemHeight={itemHeight}
         elementsFontSize={elementsFontSize}
         parentViewWidth={parentViewWidth}

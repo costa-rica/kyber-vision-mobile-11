@@ -5,7 +5,8 @@ import CustomPicker from "./CustomPicker";
 export default function SinglePickerWithSideBorders({
   elementsArray,
   itemHeight,
-  setSelectedNumber,
+  setSelectedElement,
+  selectedElement,
   elementsFontSize,
   parentViewWidth,
   elementPickerBorderRadius,
@@ -41,7 +42,8 @@ export default function SinglePickerWithSideBorders({
         <CustomPicker
           elementsArray={elementsArray}
           itemHeight={itemHeight}
-          setSelectedNumber={setSelectedNumber} // Pass callback function
+          setSelectedElement={setSelectedElement} // Pass callback function
+          selectedElement={selectedElement}
           elementsFontSize={elementsFontSize}
           parentViewWidth={parentViewWidth}
           elementPickerBorderRadius={elementPickerBorderRadius}

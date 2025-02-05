@@ -1,10 +1,11 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 
 export default function CustomPicker({
   elementsArray,
   itemHeight,
-  setSelectedNumber,
+  setSelectedElement,
+  selectedElement, // New prop
   elementsFontSize,
   parentViewWidth,
   elementPickerBorderRadius,
@@ -12,17 +13,25 @@ export default function CustomPicker({
   backgroundColor = "#310732",
 }) {
   const scrollViewRef = useRef(null);
+  console.log(`selectedElement: ${selectedElement}`);
+  useEffect(() => {
+    if (selectedElement && scrollViewRef.current) {
+      const index = elementsArray.indexOf(selectedElement);
+      if (index !== -1) {
+        scrollViewRef.current.scrollTo({
+          y: index * itemHeight,
+          animated: true,
+        });
+      }
+    }
+  }, [selectedElement, elementsArray, itemHeight]);
 
   const handleScroll = (event) => {
-    // Get current scroll position
     const offsetY = event.nativeEvent.contentOffset.y;
-
-    // Determine the nearest item index
     const selectedIndex = Math.round(offsetY / itemHeight);
 
-    // Ensure index is within bounds and update parent state
     if (selectedIndex >= 0 && selectedIndex < elementsArray.length) {
-      setSelectedNumber(elementsArray[selectedIndex]);
+      setSelectedElement(elementsArray[selectedIndex]);
     }
   };
 
@@ -50,10 +59,10 @@ export default function CustomPicker({
       <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
-        snapToInterval={itemHeight} // Ensures it snaps to item height
+        snapToInterval={itemHeight}
         decelerationRate="fast"
         onScroll={handleScroll}
-        scrollEventThrottle={16} // Ensures frequent updates
+        scrollEventThrottle={16}
       >
         {elementsArray.map((elem, index) => (
           <View key={index} style={styleVwScrollElement}>
@@ -73,3 +82,79 @@ const styles = StyleSheet.create({
     backgroundColor: "#f4f4f4",
   },
 });
+
+// import { useRef } from "react";
+// import { View, Text, ScrollView, StyleSheet } from "react-native";
+
+// export default function CustomPicker({
+//   elementsArray,
+//   itemHeight,
+//   setSelectedElement,
+//   elementsFontSize,
+//   parentViewWidth,
+//   elementPickerBorderRadius,
+//   elementTextColor = "white",
+//   backgroundColor = "#310732",
+// }) {
+//   const scrollViewRef = useRef(null);
+
+//   const handleScroll = (event) => {
+//     // Get current scroll position
+//     const offsetY = event.nativeEvent.contentOffset.y;
+
+//     // Determine the nearest item index
+//     const selectedIndex = Math.round(offsetY / itemHeight);
+
+//     // Ensure index is within bounds and update parent state
+//     if (selectedIndex >= 0 && selectedIndex < elementsArray.length) {
+//       setSelectedElement(elementsArray[selectedIndex]);
+//     }
+//   };
+
+//   // --- Dynamic Styles -----
+//   const styleVwScrollView = {
+//     height: itemHeight,
+//     width: parentViewWidth,
+//     borderRadius: elementPickerBorderRadius,
+//     backgroundColor: backgroundColor,
+//   };
+//   const styleVwScrollElement = {
+//     backgroundColor: "transparent",
+//     height: itemHeight,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   };
+//   const styleTxtScrollElement = {
+//     fontSize: elementsFontSize,
+//     color: elementTextColor,
+//     fontFamily: "ApfelGrotezk",
+//   };
+
+//   return (
+//     <View style={styleVwScrollView}>
+//       <ScrollView
+//         ref={scrollViewRef}
+//         showsVerticalScrollIndicator={false}
+//         snapToInterval={itemHeight} // Ensures it snaps to item height
+//         decelerationRate="fast"
+//         onScroll={handleScroll}
+//         scrollEventThrottle={16} // Ensures frequent updates
+//       >
+//         {elementsArray.map((elem, index) => (
+//           <View key={index} style={styleVwScrollElement}>
+//             <Text style={styleTxtScrollElement}>{elem}</Text>
+//           </View>
+//         ))}
+//       </ScrollView>
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#f4f4f4",
+//   },
+// });
