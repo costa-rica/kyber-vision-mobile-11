@@ -24,6 +24,7 @@ const table01data = {
   User62: "Melody",
 };
 const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
+const table03data = ["Def", "Set", "Att"];
 const setOptions = Array.from({ length: 5 }, (_, i) => i + 1);
 const scoreOptions = Array.from({ length: 25 }, (_, i) => i + 1);
 export default function ScriptingLive({ navigation }) {
@@ -35,16 +36,16 @@ export default function ScriptingLive({ navigation }) {
 
   // Belongs to Set Team Analyzed SinglePickerWithSideBorders
   const [setTeamAnalyzed, setSetTeamAnalyzed] = useState(0);
-
   // Belongs to Score Team Analyzed SinglePickerWithSideBorders
   const [scoreTeamAnalyzed, setScoreTeamAnalyzed] = useState(0);
-
   // Belongs to Score Team Opponentn SinglePickerWithSideBorders
   const [scoreTeamOpponent, setScoreTeamOpponent] = useState(0);
-
   // Belongs to positional formation SinglePickerWithSideBorders
   const [positionalFormation, setPositionalFormation] = useState("P1");
   const [quality, setQuality] = useState(0);
+  const [position, setPosition] = useState(0);
+  const [player, setPlayer] = useState(table02data[0]);
+  const [type, setType] = useState(table03data[0]);
 
   // --- Dynamic styles ---
 
@@ -144,7 +145,7 @@ export default function ScriptingLive({ navigation }) {
       <View style={styles.containerBottom}>
         <View style={styles.vwBlackLineDivider} />
         <View style={styles.vwActionDetails}>
-          <View style={styles.vwScoreSetTeamAnalyzed}>
+          <View style={styles.vwActionDetailsQuality}>
             {/* Belongs to Quailty */}
             <SinglePickerWithSideBorders
               elementsArray={[-2, -1, 0, 1, 2]}
@@ -155,6 +156,43 @@ export default function ScriptingLive({ navigation }) {
               elementPickerBorderRadius={stdPickerBorderRadius}
             />
           </View>
+          <View style={styles.vwActionDetailsPosition}>
+            <SinglePickerWithSideBorders
+              elementsArray={[1, 2, 3, 4, 5, 6]}
+              setSelectedNumber={setPosition} // Pass callback function
+              itemHeight={stdPickerHeight}
+              elementsFontSize={stdPickerFontSize}
+              parentViewWidth={stdPickerParentViewWidth}
+              elementPickerBorderRadius={stdPickerBorderRadius}
+            />
+          </View>
+          <View style={styles.vwActionDetailsPlayer}>
+            <SinglePickerWithSideBorders
+              elementsArray={table02data}
+              setSelectedNumber={setPlayer} // Pass callback function
+              itemHeight={stdPickerHeight}
+              elementsFontSize={stdPickerFontSize}
+              // parentViewWidth={60}
+              parentViewWidth={player.length * 20}
+              elementPickerBorderRadius={stdPickerBorderRadius}
+            />
+            {/* <View style={styles.vwSpacer} /> */}
+            {/* <View style={styles.vwBlackLineDivider} /> */}
+          </View>
+          <View style={styles.vwActionDetailsType}>
+            <SinglePickerWithSideBorders
+              elementsArray={table03data}
+              setSelectedNumber={setType} // Pass callback function
+              itemHeight={stdPickerHeight}
+              elementsFontSize={stdPickerFontSize}
+              parentViewWidth={type.length * 20}
+              // parentViewWidth={stdPickerParentViewWidth}
+              elementPickerBorderRadius={stdPickerBorderRadius}
+            />
+          </View>
+        </View>
+        <View styles={styles.vwTest}>
+          <Text>selected player: {player}</Text>
         </View>
       </View>
     </TemplateView>
@@ -164,7 +202,7 @@ export default function ScriptingLive({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F2EBF2",
   },
   containerTop: {
     // backgroundColor: "green",
@@ -218,13 +256,45 @@ const styles = StyleSheet.create({
 
   containerBottom: {
     flex: 1,
-    // backgroundColor: "purple",
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    // backgroundColor: "#F2EBF2",
+    // backgroundColor: "rgba(0, 0, 0, 0.3)",
   },
   vwBlackLineDivider: {
     width: Dimensions.get("window").width,
     height: 10,
-    backgroundColor: "black",
+    backgroundColor: "#310732",
+  },
+  vwActionDetails: {
+    // paddingLeft: 10,
+    // paddingRight: 10,
+    backgroundColor: "green",
+    // justifyContent: "flex-start",
+    // justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  vwActionDetailsQuality: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    flexDirection: "row",
+  },
+  vwActionDetailsPosition: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    flexDirection: "row",
+  },
+  vwActionDetailsPlayer: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    flexDirection: "row",
+  },
+  vwSpacer: {
+    flex: 1,
+    // backgroundColor: "purple",
+    // height: "100%",
+    // widht: 20,
+    // width: Dimensions.get("window").width,
+    height: 10,
+    backgroundColor: "purple",
   },
   // Goes with Picker to DoublePickerWithSideBorders
   // pickerContainer: {

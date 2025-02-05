@@ -65,7 +65,7 @@ export default function DoublePickerWithSideBorders({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "black",
+    backgroundColor: "#310732",
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 15,

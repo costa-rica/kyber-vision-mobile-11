@@ -24,6 +24,11 @@ EXPO_PUBLIC_PASSWORD=test
 
 - only: EXPO_PUBLIC_API_URL, EXPO_PUBLIC_EMAIL, and EXPO_PUBLIC_PASSWORD are actually used.
 
+## Colors
+
+- screen background: #F2EBF2
+- borders and picker backgrounds: #310732
+
 ## Installations
 
 1. Navigation

@@ -9,7 +9,7 @@ export default function CustomPicker({
   parentViewWidth,
   elementPickerBorderRadius,
   elementTextColor = "white",
-  backgroundColor = "black",
+  backgroundColor = "#310732",
 }) {
   const scrollViewRef = useRef(null);
 

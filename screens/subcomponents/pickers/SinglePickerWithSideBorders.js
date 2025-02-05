@@ -57,26 +57,7 @@ const styles = StyleSheet.create({
   container: {
     // flex: 1,
     backgroundColor: "#fff",
-    // backgroundColor: "rgba(0, 0, 0, 0.3)",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
     borderRadius: 15,
   },
-  // containerTop: {
-  //   // backgroundColor: "green",
-  //   alignItems: "center",
-  // },
-  // vwTitle: {
-  //   borderBottomWidth: 1,
-  //   borderColor: "#970F9A",
-  //   width: Dimensions.get("window").width * 0.8,
-  // },
-  // txtTitleAdmin: {
-  //   fontSize: 20,
-  //   color: "#970F9A",
-  //   fontFamily: "ApfelGrotezk",
-  //   backgroundColor: "#F2EBF2",
-  //   textAlign: "center",
-  // },
-  // vwScore: {
-  //   backgroundColor: "rgba(0, 0, 0, 0.3)",
-  // },
 });

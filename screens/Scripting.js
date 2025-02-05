@@ -498,7 +498,7 @@ export default function Scripting({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(200,200,200,.9)",
+    backgroundColor: "#F2EBF2",
     justifyContent: "center",
   },
 

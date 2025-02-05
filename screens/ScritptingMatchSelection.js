@@ -87,10 +87,6 @@ export default function ScriptingMatchSelection({ navigation }) {
 
   const pressBtnVideo = async (elem) => {
     console.log("pressed pressBtnVideo");
-    // const setTimeStampsObj = {};
-    // elem.setTimeStampsArray.map((setTimeStamp, setIndex) => {
-    //   setTimeStampsObj[`${setIndex}`] = setTimeStamp;
-    // });
 
     dispatch(
       storeVideoDetailsInRedux({
@@ -335,7 +331,7 @@ export default function ScriptingMatchSelection({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F2EBF2",
   },
 
   // ----- MIDDLE Container -----
