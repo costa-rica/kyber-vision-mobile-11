@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "kyber-vision-mobile-06",
-    "slug": "kyber-vision-mobile-06",
+    "name": "kyber-vision-mobile-07",
+    "slug": "kyber-vision-mobile-07",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,9 +24,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-video"
-    ],
+    "plugins": ["expo-video"],
     "extra": {
       "eas": {
         "projectId": "19bda6d6-1261-4ffc-9425-4e157bd11f4b"

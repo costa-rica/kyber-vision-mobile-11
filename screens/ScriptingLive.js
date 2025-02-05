@@ -43,8 +43,8 @@ export default function ScriptingLive({ navigation }) {
   const [scoreTeamOpponent, setScoreTeamOpponent] = useState(0);
   // Belongs to positional formation SinglePickerWithSideBorders
   const [positionalFormation, setPositionalFormation] = useState("P1");
-  const [quality, setQuality] = useState(1);
-  const [position, setPosition] = useState(5);
+  const [quality, setQuality] = useState(0);
+  const [position, setPosition] = useState(1);
   const [player, setPlayer] = useState(table02data[0]);
   const [type, setType] = useState(table03data[0]);
   const [subtype, setSubtype] = useState(table04data[0]);
@@ -189,7 +189,10 @@ export default function ScriptingLive({ navigation }) {
           {/* <Text>selected player: {player}</Text> */}
           <View style={styles.vwScriptingManagementLeft}>
             <ButtonKv
-              onPress={() => console.log("presssed start")}
+              onPress={() => {
+                console.log("start something ... and change position");
+                setPosition((prev) => prev + 1);
+              }}
               colorBackground={"#970F9A"}
               colorText={"white"}
               width={140}
@@ -351,23 +354,17 @@ const styles = StyleSheet.create({
   vwScriptingManagementRight: {
     padding: 20,
     margin: 20,
-    // backgroundColor: "gray",
+    gap: 10,
     flexDirection: "row",
   },
   vwScriptingManagementRightLeft: {
     padding: 10,
-    margin: 10,
+    // margin: 10,
+    gap: 20,
   },
   vwScriptingManagementRightRight: {
     padding: 10,
-    margin: 10,
+    // margin: 10,
+    gap: 20,
   },
-
-  // Goes with Picker to DoublePickerWithSideBorders
-  // pickerContainer: {
-  //   backgroundColor: "black",
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   borderRadius: 15,
-  // },
 });
