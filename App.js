@@ -1,7 +1,9 @@
 import { SafeAreaView, StatusBar, Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Home from "./screens/Home";
+import SplashScreen from "./screens/SplashScreen";
+import LoginScreen from "./screens/Login";
+
 import ScriptingMatchSelection from "./screens/ScritptingMatchSelection";
 import Scripting from "./screens/Scripting";
 import Admin from "./screens/Admin";
@@ -46,7 +48,8 @@ export default function App() {
 
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="SplashScreen" component={SplashScreen} />
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
             <Stack.Screen
               name="ScriptingMatchSelection"
               component={ScriptingMatchSelection}
