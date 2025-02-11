@@ -27,11 +27,20 @@ export default function Register({ navigation }) {
     portraitHeight: Dimensions.get("window").height,
     portraitWidth: Dimensions.get("window").width,
   });
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleClickRegister = async () => {
+    if (password !== passwordRepeat) {
+      setMessage("Passwords do not match");
+      return;
+    }
+
     console.log(
       "Register ---> API URL:",
       `${process.env.EXPO_PUBLIC_API_URL}/users/register`
@@ -40,6 +49,7 @@ export default function Register({ navigation }) {
 
     const bodyObj = { email, password, username };
     console.log(`email: ${email}, ${password}`);
+
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/users/register`,
       {
@@ -58,7 +68,7 @@ export default function Register({ navigation }) {
       resJson = await response.json();
     }
 
-    if (response.ok) {
+    if (response.status === 201) {
       console.log(`response ok`);
       resJson.email = email;
       dispatch(
@@ -67,15 +77,88 @@ export default function Register({ navigation }) {
           token: resJson.token,
         })
       );
+      setMessage("Successfully registered");
       console.log("after dispatch");
       navigation.navigate("Home");
+    } else if (resJson?.error) {
+      setMessage(resJson.error);
     } else {
-      const errorMessage =
-        resJson?.error || `There was a server error: ${response.status}`;
-      alert(errorMessage);
+      setMessage(`There was a server error: ${response.status}`);
     }
   };
 
+  // const handleClickRegister = async () => {
+  //   if (password != passwordRepeat) {
+  //     setMessage("Passwords do not match");
+  //     return;
+  //   }
+
+  //   console.log(
+  //     "Register ---> API URL:",
+  //     `${process.env.EXPO_PUBLIC_API_URL}/users/register`
+  //   );
+  //   console.log("- handleClickRegister  👀");
+
+  //   const bodyObj = { email, password, username };
+  //   console.log(`email: ${email}, ${password}`);
+  //   const response = await fetch(
+  //     `${process.env.EXPO_PUBLIC_API_URL}/users/register`,
+  //     {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(bodyObj),
+  //     }
+  //   );
+
+  //   console.log("Received response:", response.status);
+
+  //   let resJson = null;
+  //   const contentType = response.headers.get("Content-Type");
+
+  //   if (contentType?.includes("application/json")) {
+  //     resJson = await response.json();
+  //   }
+
+  //   if (response.ok) {
+  //     console.log(`response ok`);
+  //     resJson.email = email;
+  //     dispatch(
+  //       loginUser({
+  //         email: resJson.email,
+  //         token: resJson.token,
+  //       })
+  //     );
+  //     console.log("after dispatch");
+  //     navigation.navigate("Home");
+  //     setMessage("Successfully register");
+  //   } else {
+  //     const errorMessage =
+  //       resJson?.error || `There was a server error: ${response.status}`;
+  //     setMessage("This user already exists");
+  //     alert(errorMessage);
+  //   }
+  // };
+
+  const handlePasswordMatching = (text) => {
+    setPassword(text);
+    if (text !== passwordRepeat) {
+      // setMessage("Passwords do not match");
+      setPasswordsMatch(false);
+    } else {
+      setMessage(""); // Clear message when passwords match
+      setPasswordsMatch(true);
+    }
+  };
+  const handlePasswordRepeatMatching = (text) => {
+    setPasswordRepeat(text);
+    if (password !== text) {
+      // setMessage("Passwords do not match");
+      setPasswordsMatch(false);
+    } else {
+      setMessage(""); // Clear message when passwords match
+      setPasswordsMatch(true);
+    }
+  };
   return (
     <TemplateView navigation={navigation}>
       <View style={styles.container}>
@@ -108,30 +191,53 @@ export default function Register({ navigation }) {
                 style={styles.inputEmail}
               />
             </View>
+            <View>
+              <View style={styles.vwInputWhiteLabel}>
+                <TextInput
+                  placeholder={"Password*"}
+                  value={password}
+                  // onChangeText={(text) => setPassword(text)}
+                  onChangeText={(text) => handlePasswordMatching(text)}
+                  style={styles.inputEmail}
+                  secureTextEntry={!showPassword}
+                />
+              </View>
+              {/* <View style={styles.vwSwitchHidePassword}>
+                <Text>Show Password</Text>
+                <Switch
+                  value={showPassword}
+                  onValueChange={(value) => setShowPassword(value)}
+                />
+              </View> */}
+            </View>
             <View style={styles.vwInputWhiteLabel}>
               <TextInput
-                placeholder={"Password*"}
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                style={styles.inputEmail}
-                secureTextEntry={true}
+                placeholder={"Repeat password*"}
+                value={passwordRepeat}
+                onChangeText={(text) => handlePasswordRepeatMatching(text)}
+                // onChangeText={(text) => setPasswordRepeat(text)}
+                style={[
+                  styles.inputEmail,
+                  { borderColor: passwordsMatch ? "#806181" : "red" },
+                ]}
+                secureTextEntry={!showPassword}
               />
             </View>
           </View>
-          <View style={styles.vwButtons}>
-            <TouchableOpacity
-              style={[styles.touchOpButton, { backgroundColor: "#970F9A" }]}
-              onPress={() => console.log("pressed Forgot Password")}
-            >
-              <Text style={styles.txtButton}>Forgot Password</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.touchOpButton, { backgroundColor: "#970F9A" }]}
-              onPress={() => handleClickLogin()}
-            >
-              <Text style={styles.txtButton}>Enter Kyber Vision</Text>
-            </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.containerBottom}>
+          {/* <View style={styles.vwButtons}> */}
+          <TouchableOpacity
+            style={[styles.touchOpButton, { backgroundColor: "#970F9A" }]}
+            onPress={() => {
+              console.log("pressed validate");
+              handleClickRegister();
+            }}
+          >
+            <Text style={styles.txtButton}>Validate</Text>
+          </TouchableOpacity>
+          <Text style={styles.txtMessage}> {message}</Text>
+          {/* </View> */}
         </View>
       </View>
     </TemplateView>
@@ -150,15 +256,11 @@ const styles = StyleSheet.create({
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
-    // backgroundColor: "green",
     display: "flex",
     justifyContent: "center",
+    padding: 20,
   },
-  //   containerMiddleTop: {
-  //     // height: "25%",
-  //     display: "flex",
-  //     justifyContent: "center",
-  //   },
+
   vwLogo: {
     height: 50,
     width: "100%",
@@ -166,36 +268,19 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
   },
-  //   containerMiddleBottom: {
-  //     // flex: 1,
-  //     display: "flex",
-  //     alignItems: "center",
-  //   },
-  vwWelcome: {
-    //   backgroundColor: "gray",
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  txtWelcome: {
-    color: "#8D0B90",
-    fontSize: 50,
-    fontFamily: "ApfelGrotezk",
-    // backgroundColor: "red",
-    textAlign: "center",
-  },
-  containerBottom: {
+  // ---- MIDDLE  ------
+  containerMiddle: {
     flex: 1,
-    // backgroundColor: "gray",
+    paddingTop: 100,
+    // justifyContent: "space-around",
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
-    alignItems: "center",
-    paddingTop: 50,
-    // width: "100%",
   },
   vwInputs: {
     height: 200,
     justifyContent: "space-around",
+    gap: 20,
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
@@ -207,15 +292,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
   },
-  vwLoginLabel: {
-    width: 100,
-    backgroundColor: "#806181",
-    padding: 5,
-    borderColor: "#1AFB01",
-    borderWidth: 1,
-    borderRadius: 12,
-  },
-  txtLoginLabel: { color: "white", textAlign: "center", fontSize: 18 },
   inputEmail: {
     borderColor: "#806181",
     borderWidth: 1,
@@ -225,24 +301,42 @@ const styles = StyleSheet.create({
     paddingLeft: 6,
     fontSize: 20,
   },
-  vwButtons: {
-    flexDirection: "row",
-    // backgroundColor: "tan",
-    justifyContent: "space-around",
+  vwSwitchHidePassword: {
     padding: 10,
-    // width: "100%",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    paddingRight: 30,
+    gap: 20,
+    alignItems: "center",
+  },
+
+  // -------- BOTTOM -------------
+
+  containerBottom: {
+    // flex: 1,
+    // backgroundColor: "gray",
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
+    // alignItems: "center",
+    // width: "100%",
+    // flexDirection: "column",
+    // flexDirection:"column"
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 50,
+    // padding: 50,
+    paddingBottom: 10,
   },
+
   touchOpButton: {
     // backgroundColor: "#A3A3A3",
     // marginTop: 10,
     borderRadius: 35,
     justifyContent: "center",
     alignItems: "center",
-    width: "40%",
-    padding: 5,
+    width: "60%",
+    padding: 15,
     // display: "flex",
     // alignItems: "center",
     // padding: 25,
@@ -253,5 +347,13 @@ const styles = StyleSheet.create({
     fontFamily: "ApfelGrotezk",
     // flexWrap: "wrap",
     textAlign: "center",
+  },
+  txtMessage: {
+    color: "#970F9A",
+    fontSize: 20,
+    fontFamily: "ApfelGrotezk",
+    // flexWrap: "wrap",
+    textAlign: "center",
+    // backgroundColor: "green",
   },
 });
