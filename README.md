@@ -1,10 +1,17 @@
 ![Kyber Vision Mobile Logo](./assets/images/kyberVisionLogo01.png)
 
-#### v 0.7.0
+#### v 0.8.0
 
 ## Description
 
-- works with API06
+Vollyball training application
+
+## Changes from pervious version
+
+- works with API08
+
+### not all yet implemented
+
 - Make the Top navigation bar smaller
 - design a new Portrait mode scripting with new design - must have space to tap.
 - This version will ask for onboarding number of players to script
@@ -15,11 +22,9 @@
 ## .env
 
 ```
-EXPO_PUBLIC_API_URL=https://api.kv06.dashanddata.com
+EXPO_PUBLIC_API_URL=https://api.kv08.dashanddata.com
 EXPO_PUBLIC_API_URL_WORKSTATION=http://192.168.1.193:3000
-EXPO_PUBLIC_API_URL_SERVER=https://api.kv06.dashanddata.com
-EXPO_PUBLIC_EMAIL=nrodrig1@gmail.com
-EXPO_PUBLIC_PASSWORD=test
+EXPO_PUBLIC_API_URL_SERVER=https://api.kv08.dashanddata.com
 ```
 
 - only: EXPO_PUBLIC_API_URL, EXPO_PUBLIC_EMAIL, and EXPO_PUBLIC_PASSWORD are actually used.
