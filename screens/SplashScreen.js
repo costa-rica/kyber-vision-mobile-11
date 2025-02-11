@@ -96,7 +96,7 @@ export default function SplashScreen({ navigation }) {
         <View style={styles.containerBottom}>
           <TouchableOpacity
             style={[styles.touchOpButton, { backgroundColor: "#E1B5D5" }]}
-            onPress={() => navigation.navigate("LoginScreen")}
+            onPress={() => navigation.navigate("Login")}
           >
             <Text style={styles.txtButton}>Login</Text>
           </TouchableOpacity>

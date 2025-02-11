@@ -20,7 +20,7 @@ import { loginUser, reducerSetScreenDimensions } from "../reducers/user";
 import { useSelector } from "react-redux";
 import TemplateView from "./subcomponents/TemplateView";
 
-export default function Login({ navigation }) {
+export default function Register({ navigation }) {
   const dispatch = useDispatch();
   const userReducer = useSelector((state) => state.user);
   const [screenDimensions, setScreenDimensions] = useState({
@@ -29,66 +29,19 @@ export default function Login({ navigation }) {
   });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
 
-  //   useEffect(() => {
-  //     const loginUserApiCall = async () => {
-  //       try {
-  //         console.log(
-  //           `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
-  //         );
-
-  //         const bodyObj = {
-  //           email: process.env.EXPO_PUBLIC_EMAIL,
-  //           password: process.env.EXPO_PUBLIC_PASSWORD,
-  //         };
-
-  //         const response = await fetch(
-  //           `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
-  //           {
-  //             method: "POST",
-  //             headers: { "Content-Type": "application/json" },
-  //             body: JSON.stringify(bodyObj),
-  //           }
-  //         );
-
-  //         console.log("received response");
-
-  //         if (response.status === 200) {
-  //           const resJson = await response.json();
-  //           console.log(resJson);
-
-  //           dispatch(
-  //             loginUser({
-  //               email: process.env.EXPO_PUBLIC_EMAIL,
-  //               token: resJson.token,
-  //               // myArray: [1, 2, 3, 4],
-  //             })
-  //           );
-  //           console.log(`success: ${userReducer.email}`);
-  //         } else {
-  //           console.log(`There was a server error: ${response.status}`);
-  //         }
-  //       } catch (error) {
-  //         console.error("Error logging in:", error);
-  //         console.log(`An error occurred: ${error.message}`);
-  //       }
-  //     };
-
-  //     loginUserApiCall();
-  //     dispatch(reducerSetScreenDimensions(screenDimensions));
-  //   }, [screenDimensions]);
-
-  const handleClickLogin = async () => {
+  const handleClickRegister = async () => {
     console.log(
-      "Login ---> API URL:",
-      `${process.env.EXPO_PUBLIC_API_URL}/users/login`
+      "Register ---> API URL:",
+      `${process.env.EXPO_PUBLIC_API_URL}/users/register`
     );
-    console.log("- handleClickLogin asdfa 👀");
+    console.log("- handleClickRegister  👀");
 
-    const bodyObj = { email, password };
+    const bodyObj = { email, password, username };
     console.log(`email: ${email}, ${password}`);
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
+      `${process.env.EXPO_PUBLIC_API_URL}/users/register`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -108,17 +61,13 @@ export default function Login({ navigation }) {
     if (response.ok) {
       console.log(`response ok`);
       resJson.email = email;
-      // dispatch(loginUser(resJson));
-      //           dispatch(
       dispatch(
         loginUser({
           email: resJson.email,
           token: resJson.token,
-          // myArray: [1, 2, 3, 4],
         })
       );
       console.log("after dispatch");
-      // router.push("/admin-db");
       navigation.navigate("Home");
     } else {
       const errorMessage =
@@ -132,7 +81,6 @@ export default function Login({ navigation }) {
       <View style={styles.container}>
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>
-          {/* <View style={styles.containerMiddleTop}> */}
           <View style={styles.vwLogo}>
             <Image
               style={styles.image}
@@ -141,17 +89,18 @@ export default function Login({ navigation }) {
               resizeMode="contain"
             />
           </View>
-          <View style={styles.vwWelcome}>
-            <Text style={styles.txtWelcome}>Welcome</Text>
-          </View>
-          {/* </View> */}
         </View>
         <View style={styles.containerMiddle}>
           <View style={styles.vwInputs}>
             <View style={styles.vwInputWhiteLabel}>
-              <View style={styles.vwLoginLabel}>
-                <Text style={styles.txtLoginLabel}>Email</Text>
-              </View>
+              <TextInput
+                placeholder={"Username"}
+                value={username}
+                onChangeText={(text) => setUsername(text)}
+                style={styles.inputEmail}
+              />
+            </View>
+            <View style={styles.vwInputWhiteLabel}>
               <TextInput
                 placeholder={"Email"}
                 value={email}
@@ -160,11 +109,8 @@ export default function Login({ navigation }) {
               />
             </View>
             <View style={styles.vwInputWhiteLabel}>
-              <View style={styles.vwLoginLabel}>
-                <Text style={styles.txtLoginLabel}>Password</Text>
-              </View>
               <TextInput
-                placeholder={"Password"}
+                placeholder={"Password*"}
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 style={styles.inputEmail}

@@ -4,6 +4,7 @@ import {
   Image,
   Text,
   StyleSheet,
+  Alert,
   Dimensions,
   Modal,
   Animated,
@@ -26,119 +27,98 @@ import * as ScreenOrientation from "expo-screen-orientation";
 export default function Home({ navigation }) {
   const dispatch = useDispatch();
   const userReducer = useSelector((state) => state.user);
-  const [screenDimensions, setScreenDimensions] = useState({
-    portraitHeight: Dimensions.get("window").height,
-    portraitWidth: Dimensions.get("window").width,
-  });
 
-  useEffect(() => {
-    const loginUserApiCall = async () => {
-      try {
-        console.log(
-          `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
-        );
-
-        const bodyObj = {
-          email: process.env.EXPO_PUBLIC_EMAIL,
-          password: process.env.EXPO_PUBLIC_PASSWORD,
-        };
-
-        const response = await fetch(
-          `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bodyObj),
-          }
-        );
-
-        console.log("received response");
-
-        if (response.status === 200) {
-          const resJson = await response.json();
-          console.log(resJson);
-
-          dispatch(
-            loginUser({
-              email: process.env.EXPO_PUBLIC_EMAIL,
-              token: resJson.token,
-              // myArray: [1, 2, 3, 4],
-            })
-          );
-          console.log(`success: ${userReducer.email}`);
-        } else {
-          console.log(`There was a server error: ${response.status}`);
-        }
-      } catch (error) {
-        console.error("Error logging in:", error);
-        console.log(`An error occurred: ${error.message}`);
-      }
-    };
-
-    loginUserApiCall();
-    dispatch(reducerSetScreenDimensions(screenDimensions));
-  }, [screenDimensions]);
-
-  const pressedGear = () => {
-    console.log("pressed button ⚙️");
-  };
-
-  const correctOrientationFromStart = async () => {
-    console.log("in correctOrientationFromStart");
-    await ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.PORTRAIT_UP
-    );
-    // setOrientation(1);
-    setScreenDimensions({
-      portraitHeight: Dimensions.get("window").height,
-      portraitWidth: Dimensions.get("window").width,
-    });
-    dispatch(reducerSetScreenDimensions(screenDimensions));
-    console.log("height: ", Dimensions.get("window").height);
-  };
-
-  return screenDimensions.portraitHeight > screenDimensions.portraitWidth ? (
-    <TemplateView navigation={navigation} noBackButton={true}>
+  return (
+    <TemplateView navigation={navigation}>
       <View style={styles.container}>
+        {/* -------- TOP ----- */}
+        <View style={styles.containerTop}>
+          <View style={styles.vwLogo}>
+            <Image
+              style={styles.image}
+              source={require("../assets/images/KyberV2shinyV02.png")}
+              alt="logo"
+              resizeMode="contain"
+            />
+          </View>
+          <View style={styles.vwWelcome}>
+            <Text style={styles.txtWelcome}>Welcome to TribeName</Text>
+          </View>
+        </View>
         {/* -------- MIDDLE ----- */}
         <View style={styles.containerMiddle}>
+          {/* <Text> Middle </Text> */}
           <View style={styles.containerMiddleTop}>
-            <View style={styles.vwLogo}>
-              <Image
-                style={styles.image}
-                source={require("../assets/images/KyberV2shinyV02.png")}
-                alt="logo"
-                resizeMode="contain"
-              />
+            <View style={styles.vwButtons}>
+              <TouchableOpacity
+                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                onPress={() => Alert.alert("Scripting")}
+              >
+                <Text style={styles.txtButton}>Scripting</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                onPress={() => Alert.alert("Video Review")}
+              >
+                <Text style={styles.txtButton}>Video Review</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                onPress={() => Alert.alert("Upload")}
+              >
+                <Text style={styles.txtButton}>Upload</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                onPress={() => Alert.alert("Sync")}
+              >
+                <Text style={styles.txtButton}>Sync</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.vwButtons}>
+              <TouchableOpacity
+                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                onPress={() => Alert.alert("Analysis")}
+              >
+                <Text style={styles.txtButton}>Analysis</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                onPress={() => Alert.alert("System Review")}
+              >
+                <Text style={styles.txtButton}>System Review</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                onPress={() => Alert.alert("Setup")}
+              >
+                <Text style={styles.txtButton}>Setup</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                onPress={() => Alert.alert("Admin")}
+              >
+                <Text style={styles.txtButton}>Admin</Text>
+              </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.containerMiddleBottom}>
-            <TouchableOpacity
-              style={styles.touchOpButton}
-              onPress={() => navigation.navigate("ScriptingMatchSelection")}
-            >
-              <Text style={styles.txtButton}>Scripting</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.touchOpButton}>
-              <Text style={styles.txtButton}>Analyse</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.touchOpButton}>
-              <Text style={styles.txtButton}>Revue vidéo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.touchOpButton}
-              onPress={() => navigation.navigate("Admin")}
-            >
-              <Text style={styles.txtButton}>Admin</Text>
-            </TouchableOpacity>
-          </View>
+
+          <TouchableOpacity
+            style={[
+              styles.touchOpButton,
+              { backgroundColor: "#970F9A", fontSize: 35 },
+            ]}
+            onPress={() => Alert.alert("Exit")}
+          >
+            <Text style={styles.txtButton}>Exit</Text>
+          </TouchableOpacity>
         </View>
         {/* -------- BOTTOM ----- */}
         <View style={styles.containerBottom}>
           <View style={styles.vwBottomBand}>
             <TouchableOpacity
               style={styles.touchOpCircleTeamIcon}
-              onPress={() => pressedGear()}
+              onPress={() => Alert.alert("Team Icon")}
             >
               <Image
                 style={styles.imgTeam}
@@ -156,18 +136,6 @@ export default function Home({ navigation }) {
         </View>
       </View>
     </TemplateView>
-  ) : (
-    <View style={styles.container}>
-      <Text>Turn screen over</Text>
-      <ButtonKvImage
-        onPress={() => {
-          console.log("rotate screen to landscape");
-          correctOrientationFromStart();
-        }}
-      >
-        <FontAwesomeIcon icon={faRotate} size={20} />
-      </ButtonKvImage>
-    </View>
   );
 }
 
@@ -177,54 +145,95 @@ const styles = StyleSheet.create({
     backgroundColor: "#F2EBF2",
   },
 
-  // ----- MIDDLE Container -----
-  containerMiddle: {
-    flex: 1,
-    // borderTopWidth: 2, // Adjust thickness as needed
-    // borderTopColor: "gray", // Change color as desired
-    // borderStyle: "dashed",
-  },
-  containerMiddleTop: {
-    height: "25%",
-    display: "flex",
-    justifyContent: "center",
-  },
+  // ----- TOP Container -----
   vwLogo: {
     height: 50,
     width: "100%",
-    // backgroundColor: "green",
     display: "flex",
     alignItems: "center",
   },
-  containerMiddleBottom: {
+  vwWelcome: {
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  txtWelcome: {
+    color: "#8D0B90",
+    fontSize: 32,
+    fontFamily: "ApfelGrotezk",
+    textAlign: "center",
+  },
+  // ----- MIDDLE Container -----
+  containerMiddle: {
     flex: 1,
-    display: "flex",
-    alignItems: "center",
+    padding: 20,
+    justifyContent: "space-around",
+    // borderWidth: 2, // Adjust thickness as needed
+    // borderColor: "gray", // Change color as desired
+    // borderStyle: "dashed",
   },
+  containerMiddleTop: {
+    flexDirection: "row",
+    // height: "25%",
+    display: "flex",
+    justifyContent: "center",
+  },
+
+  // containerMiddleBottom: {
+  //   flex: 1,
+  //   display: "flex",
+  //   alignItems: "center",
+  // },
+  vwButtons: {
+    flex: 1,
+    padding: 5,
+    gap: 10,
+    // borderWidth: 2, // Adjust thickness as needed
+    // borderColor: "gray", // Change color as desired
+    // borderStyle: "dashed",
+  },
+  // vwButtonsLeft: {
+  //   flex: 1,
+  //   borderWidth: 2, // Adjust thickness as needed
+  //   borderColor: "gray", // Change color as desired
+  //   borderStyle: "dashed",
+  // },
   touchOpButton: {
-    backgroundColor: "#A3A3A3",
-    marginTop: 10,
     borderRadius: 35,
     justifyContent: "center",
-    alignItems: "flex-end",
-    width: "75%",
-    padding: 5,
-    display: "flex",
     alignItems: "center",
-    padding: 25,
+    padding: 15,
   },
   txtButton: {
     color: "white",
     fontSize: 20,
     fontFamily: "ApfelGrotezk",
+    // flexWrap: "wrap",
+    textAlign: "center",
   },
+  // touchOpButton: {
+  //   backgroundColor: "#A3A3A3",
+  //   marginTop: 10,
+  //   borderRadius: 35,
+  //   justifyContent: "center",
+  //   alignItems: "flex-end",
+  //   width: "75%",
+  //   padding: 5,
+  //   display: "flex",
+  //   alignItems: "center",
+  //   padding: 25,
+  // },
+  // txtButton: {
+  //   color: "white",
+  //   fontSize: 20,
+  //   fontFamily: "ApfelGrotezk",
+  // },
 
   // ----- BOTTOM Container -----
   containerBottom: {
     // borderTopWidth: 2, // Adjust thickness as needed
     // borderTopColor: "gray", // Change color as desired
     // borderStyle: "dashed",
-    height: "15%",
+    // height: "15%",
     display: "flex",
     alignItems: "center",
   },
