@@ -149,7 +149,9 @@ export default function ScriptingMatchSelection({ navigation }) {
       console.log("1 -> triggering download video");
       setIsDownloadModalVisible(true); // Show modal
       try {
-        await downloadVideo(elem.filename);
+        // await downloadVideo(elem.filename);
+        console.log(`----> tryign to download for videoId: ${elem.id}`);
+        await downloadVideo(elem.id);
       } catch (error) {
         setDownloadProgress(0);
         console.error("Download failed:", error);
@@ -162,15 +164,16 @@ export default function ScriptingMatchSelection({ navigation }) {
     console.log("go to Scripting screen ....");
     navigation.navigate("Scripting", {
       matchName: elem.matchName,
-      videoUri: `${FileSystem.documentDirectory}${elem.filename}`,
+      videoUri: `${FileSystem.documentDirectory}${elem.id}`,
     });
   };
 
-  const downloadVideo = async (filename) => {
+  // const downloadVideo = async (filename) => {
+  const downloadVideo = async (videoId) => {
     console.log("--- in downloadVideo");
-    const videoUrl = `${process.env.EXPO_PUBLIC_API_URL}/videos/${filename}`;
+    const videoUrl = `${process.env.EXPO_PUBLIC_API_URL}/videos/${videoId}`;
     console.log(`calling: ${videoUrl}`);
-    const fileUri = `${FileSystem.documentDirectory}${filename}`;
+    const fileUri = `${FileSystem.documentDirectory}${videoId}`;
 
     const downloadResumable = FileSystem.createDownloadResumable(
       videoUrl,
