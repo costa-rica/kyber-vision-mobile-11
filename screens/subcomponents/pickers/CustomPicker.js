@@ -39,7 +39,7 @@ export default function CustomPicker({
     const offsetY = event.nativeEvent.contentOffset.y;
     const selectedIndex = Math.round(offsetY / itemHeight);
 
-    console.log(`- handleScroll ${offsetY}, index: ${selectedIndex}`);
+    // console.log(`- handleScroll ${offsetY}, index: ${selectedIndex}`);
 
     if (selectedIndex >= 0 && selectedIndex < elementsArray.length) {
       setIsScrolling(true);

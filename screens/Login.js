@@ -27,56 +27,14 @@ export default function Login({ navigation }) {
     portraitHeight: Dimensions.get("window").height,
     portraitWidth: Dimensions.get("window").width,
   });
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  //   useEffect(() => {
-  //     const loginUserApiCall = async () => {
-  //       try {
-  //         console.log(
-  //           `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
-  //         );
-
-  //         const bodyObj = {
-  //           email: process.env.EXPO_PUBLIC_EMAIL,
-  //           password: process.env.EXPO_PUBLIC_PASSWORD,
-  //         };
-
-  //         const response = await fetch(
-  //           `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
-  //           {
-  //             method: "POST",
-  //             headers: { "Content-Type": "application/json" },
-  //             body: JSON.stringify(bodyObj),
-  //           }
-  //         );
-
-  //         console.log("received response");
-
-  //         if (response.status === 200) {
-  //           const resJson = await response.json();
-  //           console.log(resJson);
-
-  //           dispatch(
-  //             loginUser({
-  //               email: process.env.EXPO_PUBLIC_EMAIL,
-  //               token: resJson.token,
-  //               // myArray: [1, 2, 3, 4],
-  //             })
-  //           );
-  //           console.log(`success: ${userReducer.email}`);
-  //         } else {
-  //           console.log(`There was a server error: ${response.status}`);
-  //         }
-  //       } catch (error) {
-  //         console.error("Error logging in:", error);
-  //         console.log(`An error occurred: ${error.message}`);
-  //       }
-  //     };
-
-  //     loginUserApiCall();
-  //     dispatch(reducerSetScreenDimensions(screenDimensions));
-  //   }, [screenDimensions]);
+  const [email, setEmail] = useState(
+    process.env.EXPO_PUBLIC_ENVIRONMENT == "workstation"
+      ? "nrodrig1@gmail.com"
+      : ""
+  );
+  const [password, setPassword] = useState(
+    process.env.EXPO_PUBLIC_ENVIRONMENT == "workstation" ? "test" : ""
+  );
 
   const handleClickLogin = async () => {
     console.log(

@@ -40,50 +40,98 @@ export default function ScriptingMatchSelection({ navigation }) {
   const fetchVideoListApiCall = async () => {
     console.log(`API URL: ${process.env.EXPO_PUBLIC_API_URL}/videos`);
 
-    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/videos`);
+    try {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/videos`);
+      if (response.status !== 200) {
+        console.log(`There was a server error: ${response.status}`);
+        return;
+      }
 
-    if (response.status === 200) {
       const resJson = await response.json();
+      console.log(`--- response object ----`);
+      console.log(resJson);
 
       const statuses = {};
       for (const elem of resJson.videos) {
-        console.log(`checking for: ${elem.filename} `);
+        console.log(`checking for: ${elem.filename}`);
         const fileUri = `${FileSystem.documentDirectory}${elem.filename}`;
         const fileInfo = await FileSystem.getInfoAsync(fileUri);
-        statuses[elem.filename] = fileInfo.exists; // Save download status (true/false)
-        console.log(`this file exists: ${fileInfo.exists} `);
+        statuses[elem.filename] = fileInfo.exists;
+        console.log(`this file exists: ${fileInfo.exists}`);
       }
-      setDownloadStatuses(statuses);
-      console.log(`--- response object ----`);
-      console.log(resJson);
-      const videosObjArray = resJson.videos.map((elem, i) => {
-        console.log(
-          `creating object for: ${elem.filename}, the file exits: ${
-            downloadStatuses[elem.filename]
-          }`
-        );
+
+      // Map API response to videosList with `matchDate` included
+      const videosObjArray = resJson.videos.map((elem) => {
+        console.log(`creating object for: ${elem.filename}`);
 
         return {
           id: `${elem.id}`,
-          name: `${elem.matchName}`,
-          date: elem.date,
-          matchName: `${elem.matchName}`,
+          name: elem.match ? elem.match.matchName : "Unknown Match",
+          date: elem.match ? elem.match.matchDate : null, // Ensure matchDate is included
+          match: elem.match || {}, // Ensure `match` is always an object
+          matchName: elem.match ? elem.match.matchName : "Unknown Match",
           scripted: false,
-          // downloaded: downloadStatuses[elem.filename] ? true : false,
-          downloaded: statuses[elem.filename] ? true : false, // Use statuses here
+          downloaded: statuses[elem.filename] || false,
           apiDownloadUrl: `${process.env.EXPO_PUBLIC_API_URL}/videos/${elem.filename}`,
           durationOfMatch: elem.durationString,
           filename: elem.filename,
-          // setTimeStamps: elem.setTimeStampsArray,
           setTimeStampsArray: elem.setTimeStampsArray,
         };
       });
+
       setVideosList(videosObjArray);
-      checkDownloadedStatus(data.videos);
-    } else {
-      console.log(`There was a server error: ${response.status}`);
+    } catch (error) {
+      console.error("Error fetching videos:", error);
     }
   };
+
+  // const fetchVideoListApiCall = async () => {
+  //   console.log(`API URL: ${process.env.EXPO_PUBLIC_API_URL}/videos`);
+
+  //   const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/videos`);
+
+  //   if (response.status === 200) {
+  //     const resJson = await response.json();
+
+  //     const statuses = {};
+  //     for (const elem of resJson.videos) {
+  //       console.log(`checking for: ${elem.filename} `);
+  //       const fileUri = `${FileSystem.documentDirectory}${elem.filename}`;
+  //       const fileInfo = await FileSystem.getInfoAsync(fileUri);
+  //       statuses[elem.filename] = fileInfo.exists; // Save download status (true/false)
+  //       console.log(`this file exists: ${fileInfo.exists} `);
+  //     }
+  //     setDownloadStatuses(statuses);
+  //     console.log(`--- response object ----`);
+  //     console.log(resJson);
+  //     const videosObjArray = resJson.videos.map((elem, i) => {
+  //       console.log(
+  //         `creating object for: ${elem.filename}, the file exits: ${
+  //           downloadStatuses[elem.filename]
+  //         }`
+  //       );
+
+  //       return {
+  //         id: `${elem.id}`,
+  //         name: `${elem.matchName}`,
+  //         date: elem.date,
+  //         matchName: `${elem.matchName}`,
+  //         scripted: false,
+  //         // downloaded: downloadStatuses[elem.filename] ? true : false,
+  //         downloaded: statuses[elem.filename] ? true : false, // Use statuses here
+  //         apiDownloadUrl: `${process.env.EXPO_PUBLIC_API_URL}/videos/${elem.filename}`,
+  //         durationOfMatch: elem.durationString,
+  //         filename: elem.filename,
+  //         // setTimeStamps: elem.setTimeStampsArray,
+  //         setTimeStampsArray: elem.setTimeStampsArray,
+  //       };
+  //     });
+  //     setVideosList(videosObjArray);
+  //     checkDownloadedStatus(data.videos);
+  //   } else {
+  //     console.log(`There was a server error: ${response.status}`);
+  //   }
+  // };
 
   const pressBtnVideo = async (elem) => {
     console.log("pressed pressBtnVideo");
@@ -198,13 +246,13 @@ export default function ScriptingMatchSelection({ navigation }) {
     const options = { day: "numeric", month: "short" }; // Example: "10 Dec"
     return new Intl.DateTimeFormat("en-GB", options).format(new Date(date));
   };
+
   const TableRow = ({ item }) => (
     <View style={styles.vwRow}>
       <TouchableOpacity
         style={styles.vwRowLeft}
         onPress={() => console.log("download game")}
       >
-        {/* {item.downloaded ? ( */}
         {downloadStatuses[item.filename] ? (
           <Image
             source={require("../assets/images/iconPhone.png")}
@@ -219,16 +267,30 @@ export default function ScriptingMatchSelection({ navigation }) {
           />
         )}
       </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.vwRowRight}
         onPress={() => pressBtnVideo(item)}
       >
         <View style={styles.vwRowRightOne}>
-          <Text style={styles.txtVwRowRightOne}>{item.matchName}</Text>
+          <Text style={styles.txtVwRowRightOne}>
+            Match Name:{" "}
+            {item.match && item.match.matchDate
+              ? item.match.teamIdAnalyzed
+              : "download fail"}{" "}
+            vs{" "}
+            {item.match && item.match.matchDate
+              ? item.match.teamIdOpponent
+              : "download fail"}
+          </Text>
           <Text style={styles.txtVwRowRightOneDuration}>
-            ({item.durationOfMatch})
+            {/* ({item.durationOfMatch}) */}
+            {item.match && item.match.matchDate
+              ? item.match.city
+              : "download fail"}
           </Text>
         </View>
+
         <View style={styles.vwRowRightTwo}>
           {item.scripted ? (
             <Image
@@ -238,12 +300,66 @@ export default function ScriptingMatchSelection({ navigation }) {
             />
           ) : null}
         </View>
+
         <View style={styles.vwRowRightThree}>
-          <Text style={styles.txtVwRowRightThree}>{formatDate(item.date)}</Text>
+          <Text style={styles.txtVwRowRightThree}>
+            {item.match && item.match.matchDate
+              ? formatDate(item.match.matchDate)
+              : "Date Unknown"}
+          </Text>
         </View>
       </TouchableOpacity>
     </View>
   );
+
+  // const TableRow = ({ item }) => (
+  //   <View style={styles.vwRow}>
+  //     <TouchableOpacity
+  //       style={styles.vwRowLeft}
+  //       onPress={() => console.log("download game")}
+  //     >
+  //       {/* {item.downloaded ? ( */}
+  //       {downloadStatuses[item.filename] ? (
+  //         <Image
+  //           source={require("../assets/images/iconPhone.png")}
+  //           alt="logo"
+  //           resizeMode="contain"
+  //         />
+  //       ) : (
+  //         <Image
+  //           source={require("../assets/images/btnDownload.png")}
+  //           alt="logo"
+  //           resizeMode="contain"
+  //         />
+  //       )}
+  //     </TouchableOpacity>
+  //     <TouchableOpacity
+  //       style={styles.vwRowRight}
+  //       onPress={() => pressBtnVideo(item)}
+  //     >
+  //       <View style={styles.vwRowRightOne}>
+  //         <Text style={styles.txtVwRowRightOne}>{item.matchName}</Text>
+  //         <Text style={styles.txtVwRowRightOneDuration}>
+  //           ({item.durationOfMatch})
+  //         </Text>
+  //       </View>
+  //       <View style={styles.vwRowRightTwo}>
+  //         {item.scripted ? (
+  //           <Image
+  //             source={require("../assets/images/imgNotScripted.png")}
+  //             alt="logo"
+  //             resizeMode="contain"
+  //           />
+  //         ) : null}
+  //       </View>
+  //       <View style={styles.vwRowRightThree}>
+  //         <Text style={styles.txtVwRowRightThree}>
+  //           {formatDate(item.match.matchDate)}
+  //         </Text>
+  //       </View>
+  //     </TouchableOpacity>
+  //   </View>
+  // );
 
   return (
     <TemplateView navigation={navigation}>

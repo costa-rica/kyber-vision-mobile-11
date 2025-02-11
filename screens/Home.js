@@ -52,7 +52,7 @@ export default function Home({ navigation }) {
             <View style={styles.vwButtons}>
               <TouchableOpacity
                 style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
-                onPress={() => Alert.alert("Scripting")}
+                onPress={() => navigation.navigate("ScriptingMatchSelection")}
               >
                 <Text style={styles.txtButton}>Scripting</Text>
               </TouchableOpacity>
