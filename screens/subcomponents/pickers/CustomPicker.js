@@ -19,7 +19,7 @@ export default function CustomPicker({
   // Scroll to initially selected item
   useEffect(() => {
     const initialIndex = arrayElements.indexOf(selectedElement);
-    if (Platform == "android") {
+    if (Platform.OS == "android") {
       scrollViewRef.current.scrollTo({
         y: initialIndex * itemHeight,
         animated: false,
