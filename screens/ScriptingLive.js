@@ -13,9 +13,9 @@ import {
 import TemplateView from "./subcomponents/TemplateView";
 import ButtonKv from "./subcomponents/ButtonKv";
 import SwitchKv from "./subcomponents/SwitchKv";
-import CustomPicker from "./subcomponents/pickers/CustomPicker";
 import SinglePickerWithSideBorders from "./subcomponents/pickers/SinglePickerWithSideBorders";
 import DoublePickerWithSideBorders from "./subcomponents/pickers/DoublePickerWithSideBorders";
+import CustomPicker from "./subcomponents/pickers/CustomPicker";
 
 const table01data = {
   User41: "Ted",
@@ -38,9 +38,10 @@ export default function ScriptingLive({ navigation }) {
   // Belongs to Set Team Analyzed SinglePickerWithSideBorders
   const [setTeamAnalyzed, setSetTeamAnalyzed] = useState(2);
   // Belongs to Score Team Analyzed SinglePickerWithSideBorders
-  const [scoreTeamAnalyzed, setScoreTeamAnalyzed] = useState(0);
+  const [scoreTeamAnalyzed, setScoreTeamAnalyzed] = useState(15);
   // Belongs to Score Team Opponentn SinglePickerWithSideBorders
-  const [scoreTeamOpponent, setScoreTeamOpponent] = useState(0);
+  const [scoreTeamOpponent, setScoreTeamOpponent] = useState(10);
+  const [setTeamOpponent, setSetTeamOpponent] = useState(2);
   // Belongs to positional formation SinglePickerWithSideBorders
   const [positionalFormation, setPositionalFormation] = useState("P1");
   const [quality, setQuality] = useState(0);
@@ -63,21 +64,21 @@ export default function ScriptingLive({ navigation }) {
           <View style={styles.vwScoreSubGroup}>
             <View style={styles.vwScoreSetTeamAnalyzed}>
               {/* Belongs to Set Team Analyzed SinglePickerWithSideBorders */}
-              <SinglePickerWithSideBorders
-                elementsArray={setOptions}
-                setSelectedElement={setSetTeamAnalyzed} // Pass callback function
-                itemHeight={stdPickerHeight}
-                elementsFontSize={stdPickerFontSize}
-                parentViewWidth={stdPickerParentViewWidth}
-                elementPickerBorderRadius={stdPickerBorderRadius}
+              <CustomPicker
+                width={stdPickerParentViewWidth}
+                arrayPickerElements={setOptions}
+                selectedElement={setTeamAnalyzed}
+                setSelectedElement={setSetTeamAnalyzed}
               />
             </View>
             {/* <View style={{ flex: 1 }} /> */}
             <View style={styles.vwScoreBothTeamsScores}>
               <DoublePickerWithSideBorders
                 elementsArray={scoreOptions}
-                setSelectedElement={setScoreTeamAnalyzed} // Pass callback function
-                setSelectedElement02={setScoreTeamOpponent} // Pass callback function
+                setSelectedElement={setScoreTeamAnalyzed}
+                selectedElement={scoreTeamAnalyzed}
+                setSelectedElement02={setScoreTeamOpponent}
+                selectedElement02={scoreTeamOpponent}
                 itemHeight={stdPickerHeight}
                 elementsFontSize={stdPickerFontSize}
                 parentViewWidth={stdPickerParentViewWidth}
@@ -87,10 +88,10 @@ export default function ScriptingLive({ navigation }) {
 
             {/* Belongs to Score SinglePickerWithSideBorders */}
             <View style={styles.vwScoreSetTeamOpponent}>
-              {/* <View style={{ flex: 1 }} /> */}
               <SinglePickerWithSideBorders
                 elementsArray={setOptions}
-                setSelectedElement={setScoreTeamOpponent} // Pass callback function
+                setSelectedElement={setSetTeamOpponent}
+                selectedElement={setTeamOpponent}
                 itemHeight={stdPickerHeight}
                 elementsFontSize={stdPickerFontSize}
                 parentViewWidth={stdPickerParentViewWidth}
@@ -102,7 +103,8 @@ export default function ScriptingLive({ navigation }) {
           <View style={styles.vwScorePoistionalFormation}>
             <SinglePickerWithSideBorders
               elementsArray={["P1", "P2", "P3"]}
-              setSelectedElement={setPositionalFormation} // Pass callback function
+              setSelectedElement={setPositionalFormation}
+              selectedElement={positionalFormation}
               itemHeight={stdPickerHeight}
               elementsFontSize={20}
               parentViewWidth={40}
@@ -178,7 +180,7 @@ export default function ScriptingLive({ navigation }) {
               setSelectedElement={setSubtype} // Pass callback function
               selectedElement={subtype}
               itemHeight={stdPickerHeight}
-              elementsFontSize={20}
+              elementsFontSize={15}
               parentViewWidth={subtype.length * 15}
               // parentViewWidth={stdPickerParentViewWidth}
               elementPickerBorderRadius={stdPickerBorderRadius}

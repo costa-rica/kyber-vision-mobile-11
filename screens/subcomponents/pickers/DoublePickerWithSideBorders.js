@@ -42,26 +42,36 @@ export default function DoublePickerWithSideBorders({
       <View style={styleVwVerticalLineRight} />
       {/* <View style={styles.vwScoreTeamAnalyzedPicker}> */}
       <CustomPicker
-        elementsArray={elementsArray}
-        setSelectedElement={setSelectedElement} // Pass callback function
+        width={parentViewWidth}
+        arrayPickerElements={elementsArray}
         selectedElement={selectedElement}
+        setSelectedElement={setSelectedElement}
         itemHeight={itemHeight}
-        elementsFontSize={elementsFontSize}
-        parentViewWidth={parentViewWidth}
-        elementPickerBorderRadius={elementPickerBorderRadius}
+        // elementsArray={elementsArray}
+        // setSelectedElement={setSelectedElement} // Pass callback function
+        // selectedElement={selectedElement}
+        // itemHeight={itemHeight}
+        // elementsFontSize={elementsFontSize}
+        // parentViewWidth={parentViewWidth}
+        // elementPickerBorderRadius={elementPickerBorderRadius}
       />
       {/* </View> */}
       <View>
         <Text style={{ color: "white" }}>-</Text>
       </View>
       <CustomPicker
-        elementsArray={elementsArray}
-        setSelectedElement={setSelectedElement02} // Pass callback function
-        selectedElement={selectedElement}
+        width={parentViewWidth}
+        arrayPickerElements={elementsArray}
+        selectedElement={selectedElement02}
+        setSelectedElement={setSelectedElement02}
         itemHeight={itemHeight}
-        elementsFontSize={elementsFontSize}
-        parentViewWidth={parentViewWidth}
-        elementPickerBorderRadius={elementPickerBorderRadius}
+        // elementsArray={elementsArray}
+        // setSelectedElement={setSelectedElement02} // Pass callback function
+        // selectedElement={selectedElement}
+        // itemHeight={itemHeight}
+        // elementsFontSize={elementsFontSize}
+        // parentViewWidth={parentViewWidth}
+        // elementPickerBorderRadius={elementPickerBorderRadius}
       />
     </View>
   );
