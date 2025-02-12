@@ -6,14 +6,13 @@ import {
   StyleSheet,
   Dimensions,
   TextInput,
-  Modal,
-  Animated,
-  Easing,
-  Switch,
-  StatusBar,
-  SafeAreaView,
+  ScrollView,
+  KeyboardAvoidingView,
   Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"; // Import library
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser, reducerSetScreenDimensions } from "../reducers/user";
@@ -161,98 +160,107 @@ export default function Register({ navigation }) {
   };
   return (
     <TemplateView navigation={navigation}>
-      <View style={styles.container}>
-        {/* -------- TOP ----- */}
-        <View style={styles.containerTop}>
-          <View style={styles.vwLogo}>
-            <Image
-              style={styles.image}
-              source={require("../assets/images/KyberV2shinyV02.png")}
-              alt="logo"
-              resizeMode="contain"
-            />
-          </View>
-        </View>
-        <View style={styles.containerMiddle}>
-          <View style={styles.vwInputs}>
-            <View style={styles.vwInputWhiteLabel}>
-              <TextInput
-                placeholder={"Username"}
-                value={username}
-                onChangeText={(text) => setUsername(text)}
-                style={styles.inputEmail}
-              />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAwareScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          enableOnAndroid={true} // Ensures it works on Android
+          extraScrollHeight={Platform.OS === "android" ? 80 : 0} // Pushes up slightly when keyboard opens
+          enableAutomaticScroll={true} // Ensures inputs are visible when keyboard is open
+          keyboardShouldPersistTaps="handled" // Allows tapping outside to dismiss keyboard
+        >
+          <View style={styles.container}>
+            {/* -------- TOP ----- */}
+            <View style={styles.containerTop}>
+              <View style={styles.vwLogo}>
+                <Image
+                  style={styles.image}
+                  source={require("../assets/images/KyberV2shinyV02.png")}
+                  alt="logo"
+                  resizeMode="contain"
+                />
+              </View>
             </View>
-            <View style={styles.vwInputWhiteLabel}>
-              <TextInput
-                placeholder={"Email"}
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                style={styles.inputEmail}
-              />
-            </View>
-            <View>
+            <View style={styles.containerMiddle}>
               <View style={styles.vwInputWhiteLabel}>
                 <TextInput
-                  placeholder={"Password*"}
-                  value={password}
-                  // onChangeText={(text) => setPassword(text)}
-                  onChangeText={(text) => handlePasswordMatching(text)}
+                  placeholder={"Username"}
+                  value={username}
+                  onChangeText={(text) => setUsername(text)}
                   style={styles.inputEmail}
+                />
+              </View>
+              <View style={styles.vwInputWhiteLabel}>
+                <TextInput
+                  placeholder={"Email"}
+                  value={email}
+                  onChangeText={(text) => setEmail(text)}
+                  style={styles.inputEmail}
+                />
+              </View>
+              <View>
+                <View style={styles.vwInputWhiteLabel}>
+                  <TextInput
+                    placeholder={"Password*"}
+                    value={password}
+                    // onChangeText={(text) => setPassword(text)}
+                    onChangeText={(text) => handlePasswordMatching(text)}
+                    style={styles.inputEmail}
+                    secureTextEntry={!showPassword}
+                  />
+                </View>
+                {/* <View style={styles.vwSwitchHidePassword}>
+                        <Text>Show Password</Text>
+                        <Switch
+                          value={showPassword}
+                          onValueChange={(value) => setShowPassword(value)}
+                        />
+                      </View> */}
+              </View>
+              <View style={styles.vwInputWhiteLabel}>
+                <TextInput
+                  placeholder={"Repeat password*"}
+                  value={passwordRepeat}
+                  onChangeText={(text) => handlePasswordRepeatMatching(text)}
+                  // onChangeText={(text) => setPasswordRepeat(text)}
+                  style={[
+                    styles.inputEmail,
+                    { borderColor: passwordsMatch ? "#806181" : "red" },
+                  ]}
                   secureTextEntry={!showPassword}
                 />
               </View>
-              {/* <View style={styles.vwSwitchHidePassword}>
-                <Text>Show Password</Text>
-                <Switch
-                  value={showPassword}
-                  onValueChange={(value) => setShowPassword(value)}
-                />
-              </View> */}
             </View>
-            <View style={styles.vwInputWhiteLabel}>
-              <TextInput
-                placeholder={"Repeat password*"}
-                value={passwordRepeat}
-                onChangeText={(text) => handlePasswordRepeatMatching(text)}
-                // onChangeText={(text) => setPasswordRepeat(text)}
-                style={[
-                  styles.inputEmail,
-                  { borderColor: passwordsMatch ? "#806181" : "red" },
-                ]}
-                secureTextEntry={!showPassword}
-              />
+            {/* container Middle */}
+            <View style={styles.containerBottom}>
+              {/* <View style={styles.vwButtons}> */}
+              <TouchableOpacity
+                style={[styles.touchOpButton, { backgroundColor: "#970F9A" }]}
+                onPress={() => {
+                  console.log("pressed validate");
+                  handleClickRegister();
+                }}
+              >
+                <Text style={styles.txtButton}>Validate</Text>
+              </TouchableOpacity>
+              <Text style={styles.txtMessage}> {message}</Text>
+              {/* </View> */}
             </View>
           </View>
-        </View>
-        <View style={styles.containerBottom}>
-          {/* <View style={styles.vwButtons}> */}
-          <TouchableOpacity
-            style={[styles.touchOpButton, { backgroundColor: "#970F9A" }]}
-            onPress={() => {
-              console.log("pressed validate");
-              handleClickRegister();
-            }}
-          >
-            <Text style={styles.txtButton}>Validate</Text>
-          </TouchableOpacity>
-          <Text style={styles.txtMessage}> {message}</Text>
-          {/* </View> */}
-        </View>
-      </View>
+        </KeyboardAwareScrollView>
+      </TouchableWithoutFeedback>
     </TemplateView>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: "#F2EBF2",
     // width: "100%",
   },
 
   // ----- Top Container -----
   containerTop: {
-    // flex: 1,
+    flex: 1,
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
@@ -271,20 +279,18 @@ const styles = StyleSheet.create({
   // ---- MIDDLE  ------
   containerMiddle: {
     flex: 1,
-    paddingTop: 100,
+    // height: 500,
+    // minHeight: 500,
+    paddingTop: 75,
+    paddingBottom: 75,
+    justifyContent: "space-around",
+    gap: 20,
     // justifyContent: "space-around",
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
   },
-  vwInputs: {
-    height: 200,
-    justifyContent: "space-around",
-    gap: 20,
-    // borderWidth: 2, // Adjust thickness as needed
-    // borderColor: "gray", // Change color as desired
-    // borderStyle: "dashed",
-  },
+
   vwInputWhiteLabel: {
     backgroundColor: "white",
     width: Dimensions.get("window").width,
@@ -314,6 +320,7 @@ const styles = StyleSheet.create({
 
   containerBottom: {
     // flex: 1,
+    // height: 200,
     // backgroundColor: "gray",
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
