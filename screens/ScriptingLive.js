@@ -30,7 +30,7 @@ const setOptions = Array.from({ length: 5 }, (_, i) => i + 1);
 const scoreOptions = Array.from({ length: 25 }, (_, i) => i + 1);
 export default function ScriptingLive({ navigation }) {
   // Standardized Picker UI Parameters
-  const stdPickerHeight = 40;
+  const stdPickerHeight = 60;
   const stdPickerFontSize = 25;
   const stdPickerParentViewWidth = 40;
   const stdPickerBorderRadius = 15;
@@ -64,11 +64,21 @@ export default function ScriptingLive({ navigation }) {
           <View style={styles.vwScoreSubGroup}>
             <View style={styles.vwScoreSetTeamAnalyzed}>
               {/* Belongs to Set Team Analyzed SinglePickerWithSideBorders */}
-              <CustomPicker
-                width={stdPickerParentViewWidth}
-                arrayPickerElements={setOptions}
-                selectedElement={setTeamAnalyzed}
+              {/* <CustomPicker
+                arrayElements={setOptions}
                 setSelectedElement={setSetTeamAnalyzed}
+                selectedElement={setTeamAnalyzed}
+                itemHeight={stdPickerHeight}
+                fontSize={stdPickerFontSize}
+                width={stdPickerParentViewWidth}
+              /> */}
+              <SinglePickerWithSideBorders
+                elementsArray={setOptions}
+                itemHeight={stdPickerHeight}
+                setSelectedElement={setSetTeamAnalyzed}
+                selectedElement={setTeamAnalyzed}
+                elementsFontSize={stdPickerFontSize}
+                parentViewWidth={stdPickerParentViewWidth}
               />
             </View>
             {/* <View style={{ flex: 1 }} /> */}
@@ -102,7 +112,7 @@ export default function ScriptingLive({ navigation }) {
 
           <View style={styles.vwScorePoistionalFormation}>
             <SinglePickerWithSideBorders
-              elementsArray={["P1", "P2", "P3"]}
+              elementsArray={["P1", "P2", "P3", "P4", "P5", "P6"]}
               setSelectedElement={setPositionalFormation}
               selectedElement={positionalFormation}
               itemHeight={stdPickerHeight}

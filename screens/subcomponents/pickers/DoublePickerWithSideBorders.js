@@ -40,38 +40,25 @@ export default function DoublePickerWithSideBorders({
     <View style={styles.container}>
       <View style={styleVwVerticalLineLeft} />
       <View style={styleVwVerticalLineRight} />
-      {/* <View style={styles.vwScoreTeamAnalyzedPicker}> */}
       <CustomPicker
-        width={parentViewWidth}
-        arrayPickerElements={elementsArray}
-        selectedElement={selectedElement}
+        arrayElements={elementsArray}
         setSelectedElement={setSelectedElement}
+        selectedElement={selectedElement}
         itemHeight={itemHeight}
-        // elementsArray={elementsArray}
-        // setSelectedElement={setSelectedElement} // Pass callback function
-        // selectedElement={selectedElement}
-        // itemHeight={itemHeight}
-        // elementsFontSize={elementsFontSize}
-        // parentViewWidth={parentViewWidth}
-        // elementPickerBorderRadius={elementPickerBorderRadius}
+        fontSize={elementsFontSize}
+        width={parentViewWidth}
       />
-      {/* </View> */}
+
       <View>
         <Text style={{ color: "white" }}>-</Text>
       </View>
       <CustomPicker
-        width={parentViewWidth}
-        arrayPickerElements={elementsArray}
-        selectedElement={selectedElement02}
+        arrayElements={elementsArray}
         setSelectedElement={setSelectedElement02}
+        selectedElement={selectedElement02}
         itemHeight={itemHeight}
-        // elementsArray={elementsArray}
-        // setSelectedElement={setSelectedElement02} // Pass callback function
-        // selectedElement={selectedElement}
-        // itemHeight={itemHeight}
-        // elementsFontSize={elementsFontSize}
-        // parentViewWidth={parentViewWidth}
-        // elementPickerBorderRadius={elementPickerBorderRadius}
+        fontSize={elementsFontSize}
+        width={parentViewWidth}
       />
     </View>
   );

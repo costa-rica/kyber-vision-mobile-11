@@ -40,12 +40,32 @@ export default function SinglePickerWithSideBorders({
       <View style={styleVwVerticalLineRight} />
       <View style={styles.vwSetTeamAnalyzedPicker}>
         <CustomPicker
-          width={parentViewWidth}
-          arrayPickerElements={elementsArray}
-          selectedElement={selectedElement}
+          arrayElements={elementsArray}
           setSelectedElement={setSelectedElement}
-          // elementsArray={elementsArray}
+          selectedElement={selectedElement}
           itemHeight={itemHeight}
+          fontSize={elementsFontSize}
+          width={parentViewWidth}
+          // old
+          // arrayElements={elementsArray}
+          // selectedElement={selectedElement}
+          // setSelectedElement={setSelectedElement}
+          // backgroundColor={backgroundColor}
+          // color={elementTextColor}
+          // itemHeight={itemHeight}
+          // width={parentViewWidth}
+          // fontSize={elementsFontSize}
+
+          // older
+          // width={parentViewWidth}
+          // arrayPickerElements={elementsArray}
+          // selectedElement={selectedElement}
+          // setSelectedElement={setSelectedElement}
+          // itemHeight={itemHeight}
+
+          // OLder
+
+          // elementsArray={elementsArray}
           // setSelectedElement={setSelectedElement} // Pass callback function
           // selectedElement={selectedElement}
           // elementsFontSize={elementsFontSize}
