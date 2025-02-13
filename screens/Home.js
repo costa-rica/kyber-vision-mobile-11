@@ -29,7 +29,7 @@ export default function Home({ navigation }) {
   const userReducer = useSelector((state) => state.user);
 
   return (
-    <TemplateView navigation={navigation}>
+    <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>
       <View style={styles.container}>
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>

@@ -365,7 +365,7 @@ export default function ScriptingMatchSelection({ navigation }) {
   // );
 
   return (
-    <TemplateView navigation={navigation}>
+    <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>
       <View style={styles.container}>
         {/* Download Modal */}
 

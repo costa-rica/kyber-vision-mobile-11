@@ -159,7 +159,7 @@ export default function Register({ navigation }) {
     }
   };
   return (
-    <TemplateView navigation={navigation}>
+    <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAwareScrollView
           contentContainerStyle={{ flexGrow: 1 }}

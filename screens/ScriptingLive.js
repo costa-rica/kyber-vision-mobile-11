@@ -26,7 +26,7 @@ const table01data = {
 const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
 const table03data = ["Def", "Set", "Att"];
 const table04data = ["DefSub", "SetSub", "AttSub"];
-const setOptions = Array.from({ length: 5 }, (_, i) => i + 1);
+const setOptions = Array.from({ length: 3 }, (_, i) => i + 1);
 const scoreOptions = Array.from({ length: 25 }, (_, i) => i + 1);
 export default function ScriptingLive({ navigation }) {
   // Standardized Picker UI Parameters
@@ -36,12 +36,12 @@ export default function ScriptingLive({ navigation }) {
   const stdPickerBorderRadius = 15;
 
   // Belongs to Set Team Analyzed SinglePickerWithSideBorders
-  const [setTeamAnalyzed, setSetTeamAnalyzed] = useState(2);
+  const [setTeamAnalyzed, setSetTeamAnalyzed] = useState(1);
   // Belongs to Score Team Analyzed SinglePickerWithSideBorders
-  const [scoreTeamAnalyzed, setScoreTeamAnalyzed] = useState(15);
+  const [scoreTeamAnalyzed, setScoreTeamAnalyzed] = useState(1);
   // Belongs to Score Team Opponentn SinglePickerWithSideBorders
-  const [scoreTeamOpponent, setScoreTeamOpponent] = useState(10);
-  const [setTeamOpponent, setSetTeamOpponent] = useState(2);
+  const [scoreTeamOpponent, setScoreTeamOpponent] = useState(1);
+  const [setTeamOpponent, setSetTeamOpponent] = useState(1);
   // Belongs to positional formation SinglePickerWithSideBorders
   const [positionalFormation, setPositionalFormation] = useState("P1");
   const [quality, setQuality] = useState(0);
@@ -52,6 +52,11 @@ export default function ScriptingLive({ navigation }) {
 
   useEffect(() => {}, [position]);
   // --- Dynamic styles ---
+  const truncateArrayElements = (arr, maxLength) => {
+    return arr.map((item) =>
+      item.length > maxLength ? item.substring(0, maxLength) : item
+    );
+  };
 
   return (
     <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>
@@ -64,14 +69,7 @@ export default function ScriptingLive({ navigation }) {
           <View style={styles.vwScoreSubGroup}>
             <View style={styles.vwScoreSetTeamAnalyzed}>
               {/* Belongs to Set Team Analyzed SinglePickerWithSideBorders */}
-              {/* <CustomPicker
-                arrayElements={setOptions}
-                setSelectedElement={setSetTeamAnalyzed}
-                selectedElement={setTeamAnalyzed}
-                itemHeight={stdPickerHeight}
-                fontSize={stdPickerFontSize}
-                width={stdPickerParentViewWidth}
-              /> */}
+
               <SinglePickerWithSideBorders
                 elementsArray={setOptions}
                 itemHeight={stdPickerHeight}
@@ -160,14 +158,15 @@ export default function ScriptingLive({ navigation }) {
           </View>
           <View style={styles.vwActionDetailsPlayer}>
             <SinglePickerWithSideBorders
-              elementsArray={table02data}
+              // elementsArray={table02data}
+              elementsArray={truncateArrayElements(table02data, 4)}
               setSelectedElement={setPlayer}
               selectedElement={player}
               itemHeight={stdPickerHeight}
-              elementsFontSize={stdPickerFontSize}
-              // parentViewWidth={60}
-              parentViewWidth={player.length * 20}
+              elementsFontSize={18}
+              parentViewWidth={60}
               elementPickerBorderRadius={stdPickerBorderRadius}
+              cutoff={4}
             />
             {/* <View style={styles.vwSpacer} /> */}
             {/* <View style={styles.vwBlackLineDivider} /> */}
@@ -179,20 +178,18 @@ export default function ScriptingLive({ navigation }) {
               selectedElement={type}
               itemHeight={stdPickerHeight}
               elementsFontSize={20}
-              parentViewWidth={type.length * 16}
-              // parentViewWidth={stdPickerParentViewWidth}
+              parentViewWidth={50}
               elementPickerBorderRadius={stdPickerBorderRadius}
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
             <SinglePickerWithSideBorders
-              elementsArray={table04data}
+              elementsArray={truncateArrayElements(table04data, 4)}
               setSelectedElement={setSubtype} // Pass callback function
               selectedElement={subtype}
               itemHeight={stdPickerHeight}
               elementsFontSize={15}
-              parentViewWidth={subtype.length * 15}
-              // parentViewWidth={stdPickerParentViewWidth}
+              parentViewWidth={60}
               elementPickerBorderRadius={stdPickerBorderRadius}
             />
           </View>

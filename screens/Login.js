@@ -86,7 +86,7 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <TemplateView navigation={navigation}>
+    <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>
       <View style={styles.container}>
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>

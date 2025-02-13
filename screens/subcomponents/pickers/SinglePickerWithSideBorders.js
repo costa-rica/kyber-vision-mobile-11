@@ -46,33 +46,6 @@ export default function SinglePickerWithSideBorders({
           itemHeight={itemHeight}
           fontSize={elementsFontSize}
           width={parentViewWidth}
-          // old
-          // arrayElements={elementsArray}
-          // selectedElement={selectedElement}
-          // setSelectedElement={setSelectedElement}
-          // backgroundColor={backgroundColor}
-          // color={elementTextColor}
-          // itemHeight={itemHeight}
-          // width={parentViewWidth}
-          // fontSize={elementsFontSize}
-
-          // older
-          // width={parentViewWidth}
-          // arrayPickerElements={elementsArray}
-          // selectedElement={selectedElement}
-          // setSelectedElement={setSelectedElement}
-          // itemHeight={itemHeight}
-
-          // OLder
-
-          // elementsArray={elementsArray}
-          // setSelectedElement={setSelectedElement} // Pass callback function
-          // selectedElement={selectedElement}
-          // elementsFontSize={elementsFontSize}
-          // parentViewWidth={parentViewWidth}
-          // elementPickerBorderRadius={elementPickerBorderRadius}
-          // elementTextColor={elementTextColor}
-          // backgroundColor={backgroundColor}
         />
       </View>
     </View>

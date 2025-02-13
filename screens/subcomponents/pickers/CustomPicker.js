@@ -13,8 +13,6 @@ export default function CustomPicker({
   fontSize,
 }) {
   const scrollViewRef = useRef(null);
-  // const [scrollHeight, setScrollHeight] = useState(null);
-  // const [scrollY, setScrollY] = useState(null);
 
   // Scroll to initially selected item
   useEffect(() => {
@@ -29,23 +27,14 @@ export default function CustomPicker({
 
   // Handles the selection when scrolling stops
   const handleScrollEnd = (event) => {
-    // setScrollHeight(event.nativeEvent.contentSize.height);
     const offsetY = event.nativeEvent.contentOffset.y;
-    // setScrollY(offsetY);
     let index = Math.round(offsetY / itemHeight);
-    // console.log(`offsetY: ${offsetY}`);
     // Ensure the selected index is within bounds
     index = Math.max(0, Math.min(index, arrayElements.length - 1));
 
     setSelectedElement(arrayElements[index]);
   };
 
-  // const handleScrollViewOnLayout = (event) => {
-  //   console.log(`event.nativeEvent.layout:`);
-  //   console.log(event.nativeEvent.layout);
-  //   console.log(event.nativeEvent);
-  //   // setScrollHeight(event.nativeEvent.contentSize.height);
-  // };
   const styles = StyleSheet.create({
     vwPickerWrapper: {
       width: width, // Adjust based on the expected width of the selected text
@@ -69,9 +58,12 @@ export default function CustomPicker({
       textAlign: "center",
     },
     selectedText: {
-      fontWeight: "bold",
+      // fontWeight: "bold",
       fontSize: fontSize,
     },
+  });
+
+  const stylesIos = StyleSheet.create({
     vwPicker: {
       width: 120, // Keep it wider so it allows scrolling
       alignItems: "center",
@@ -88,7 +80,7 @@ export default function CustomPicker({
   return (
     <View style={[styles.vwPickerWrapper, { backgroundColor }]}>
       {Platform.OS === "ios" ? (
-        <View style={styles.vwPicker}>
+        <View style={stylesIos.vwPicker}>
           <Picker
             selectedValue={selectedElement.toString()} // 🔹 Convert to string
             onValueChange={(itemValue) =>
@@ -96,7 +88,7 @@ export default function CustomPicker({
                 isNaN(itemValue) ? itemValue : Number(itemValue)
               )
             }
-            style={styles.picker}
+            style={stylesIos.picker}
             itemStyle={{
               color: "white",
               fontWeight: "bold",
@@ -121,7 +113,6 @@ export default function CustomPicker({
           onMomentumScrollEnd={handleScrollEnd}
           contentContainerStyle={styles.scrollViewContainer}
           scrollEventThrottle={16} // Ensures frequent updates
-          // onLayout={(event) => handleScrollViewOnLayout(event)}
         >
           {arrayElements.map((item, index) => (
             <View key={index} style={[styles.item, { height: itemHeight }]}>

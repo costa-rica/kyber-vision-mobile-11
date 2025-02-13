@@ -20,62 +20,20 @@ import { useSelector } from "react-redux";
 import TemplateView from "./subcomponents/TemplateView";
 
 export default function SplashScreen({ navigation }) {
-  const dispatch = useDispatch();
-  const userReducer = useSelector((state) => state.user);
-  const [screenDimensions, setScreenDimensions] = useState({
-    portraitHeight: Dimensions.get("window").height,
-    portraitWidth: Dimensions.get("window").width,
-  });
+  // const dispatch = useDispatch();
+  // const userReducer = useSelector((state) => state.user);
+  // const [screenDimensions, setScreenDimensions] = useState({
+  //   portraitHeight: Dimensions.get("window").height,
+  //   portraitWidth: Dimensions.get("window").width,
+  // });
 
-  //   useEffect(() => {
-  //     const loginUserApiCall = async () => {
-  //       try {
-  //         console.log(
-  //           `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
-  //         );
-
-  //         const bodyObj = {
-  //           email: process.env.EXPO_PUBLIC_EMAIL,
-  //           password: process.env.EXPO_PUBLIC_PASSWORD,
-  //         };
-
-  //         const response = await fetch(
-  //           `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
-  //           {
-  //             method: "POST",
-  //             headers: { "Content-Type": "application/json" },
-  //             body: JSON.stringify(bodyObj),
-  //           }
-  //         );
-
-  //         console.log("received response");
-
-  //         if (response.status === 200) {
-  //           const resJson = await response.json();
-  //           console.log(resJson);
-
-  //           dispatch(
-  //             loginUser({
-  //               email: process.env.EXPO_PUBLIC_EMAIL,
-  //               token: resJson.token,
-  //               // myArray: [1, 2, 3, 4],
-  //             })
-  //           );
-  //           console.log(`success: ${userReducer.email}`);
-  //         } else {
-  //           console.log(`There was a server error: ${response.status}`);
-  //         }
-  //       } catch (error) {
-  //         console.error("Error logging in:", error);
-  //         console.log(`An error occurred: ${error.message}`);
-  //       }
-  //     };
-
-  //     loginUserApiCall();
-  //     dispatch(reducerSetScreenDimensions(screenDimensions));
-  //   }, [screenDimensions]);
   return (
-    <TemplateView navigation={navigation} noBackButton={true}>
+    <TemplateView
+      navigation={navigation}
+      noBackButton={true}
+      hideSettings={true}
+      noGrayBand={true}
+    >
       <View style={styles.container}>
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>
@@ -121,23 +79,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F2EBF2",
+    // justifyContent: "center",
+    paddingTop: 100,
   },
 
-  // ----- MIDDLE Container -----
-  containerMiddle: {
+  // ----- TOP -----
+  containerTop: {
     // flex: 1,
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
     // backgroundColor: "green",
-    display: "flex",
+    // display: "flex",
     justifyContent: "center",
   },
-  //   containerMiddleTop: {
-  //     // height: "25%",
-  //     display: "flex",
-  //     justifyContent: "center",
-  //   },
+
   vwLogo: {
     height: 50,
     width: "100%",
@@ -145,11 +101,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
   },
-  //   containerMiddleBottom: {
-  //     // flex: 1,
-  //     display: "flex",
-  //     alignItems: "center",
-  //   },
+
   vwWelcome: {
     //   backgroundColor: "gray",
     paddingTop: 10,
@@ -163,7 +115,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   containerBottom: {
-    flex: 1,
+    // flex: 1,
     // backgroundColor: "gray",
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
