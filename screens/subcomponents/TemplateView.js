@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import VwSettings from "./VwSettings";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 export default function TemplateView(props) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -62,6 +63,13 @@ export default function TemplateView(props) {
     padding: 5,
   };
 
+  const handleBackPress = async (navigation) => {
+    await ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.PORTRAIT_UP
+    );
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -80,7 +88,8 @@ export default function TemplateView(props) {
                 if (props.player) {
                   props.player.pause();
                 }
-                props.navigation.goBack();
+                // props.navigation.goBack();
+                handleBackPress(props.navigation);
               }}
             >
               {/* <Text> User: {userReducer.email}</Text> */}

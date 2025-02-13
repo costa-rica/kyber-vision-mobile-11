@@ -12,11 +12,11 @@ import {
 } from "react-native";
 import TemplateView from "./subcomponents/TemplateView";
 import ButtonKv from "./subcomponents/ButtonKv";
-import SwitchKv from "./subcomponents/SwitchKv";
 import SinglePickerWithSideBorders from "./subcomponents/pickers/SinglePickerWithSideBorders";
 import DoublePickerWithSideBorders from "./subcomponents/pickers/DoublePickerWithSideBorders";
-import CustomPicker from "./subcomponents/pickers/CustomPicker";
-
+import * as ScreenOrientation from "expo-screen-orientation";
+import ScriptingLandscapeLive from "./subcomponents/ScriptingLandscapeLive";
+import ScriptingPortraitLive from "./subcomponents/ScriptingPortraitLive";
 const table01data = {
   User41: "Ted",
   User42: "Sarah",
@@ -34,14 +34,16 @@ export default function ScriptingLive({ navigation }) {
   const stdPickerFontSize = 25;
   const stdPickerParentViewWidth = 40;
   const stdPickerBorderRadius = 15;
+  const stdPickerHeightLandscape = 40;
+  const stdPickerFontSizeLandscape = 20;
 
   // Belongs to Set Team Analyzed SinglePickerWithSideBorders
-  const [setTeamAnalyzed, setSetTeamAnalyzed] = useState(1);
+  const [setsTeamAnalyzed, setSetsTeamAnalyzed] = useState(0);
   // Belongs to Score Team Analyzed SinglePickerWithSideBorders
-  const [scoreTeamAnalyzed, setScoreTeamAnalyzed] = useState(1);
+  const [scoreTeamAnalyzed, setScoreTeamAnalyzed] = useState(0);
   // Belongs to Score Team Opponentn SinglePickerWithSideBorders
-  const [scoreTeamOpponent, setScoreTeamOpponent] = useState(1);
-  const [setTeamOpponent, setSetTeamOpponent] = useState(1);
+  const [scoreTeamOpponent, setScoreTeamOpponent] = useState(0);
+  const [setsTeamOpponent, setSetsTeamOpponent] = useState(0);
   // Belongs to positional formation SinglePickerWithSideBorders
   const [positionalFormation, setPositionalFormation] = useState("P1");
   const [quality, setQuality] = useState(0);
@@ -50,210 +52,136 @@ export default function ScriptingLive({ navigation }) {
   const [type, setType] = useState(table03data[0]);
   const [subtype, setSubtype] = useState(table04data[0]);
 
+  // orientation
+  const [orientation, setOrientation] = useState("portrait");
+
+  useEffect(() => {
+    console.log("- Position useEffect");
+    ScreenOrientation.unlockAsync();
+    checkOrientation();
+    const subscriptionScreenOrientation =
+      ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+
+    return () => {
+      subscriptionScreenOrientation.remove();
+      ScreenOrientation.lockAsync();
+    };
+  });
+
+  const checkOrientation = async () => {
+    console.log("in checkOrientation");
+    const orientation = await ScreenOrientation.getOrientationAsync();
+    console.log(`orientation is ${orientation}`);
+    if (
+      o.orientationInfo.orientation == 4 ||
+      o.orientationInfo.orientation == 3
+    ) {
+      setOrientation("landscape");
+    } else {
+      setOrientation("portrait");
+    }
+  };
+  const handleOrientationChange = async (o) => {
+    console.log(
+      `o.orientationInfo.orientation: ${o.orientationInfo.orientation}`
+    );
+    setOrientation(o.orientationInfo.orientation);
+    if (
+      o.orientationInfo.orientation == 4 ||
+      o.orientationInfo.orientation == 3
+    ) {
+      setOrientation("landscape");
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+      );
+    } else {
+      setOrientation("portrait");
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP
+      );
+    }
+  };
+
   useEffect(() => {}, [position]);
   // --- Dynamic styles ---
   const truncateArrayElements = (arr, maxLength) => {
+    // console.log("- in trucnateArrayEleements");
+    // console.log(arr);
     return arr.map((item) =>
       item.length > maxLength ? item.substring(0, maxLength) : item
     );
   };
 
-  return (
+  // Handles set selection for a team
+  // team: "analyzed" | "opponent"
+  const handleSetCirclePress = (team, setIndex) => {
+    if (team === "analyzed") {
+      if (setsTeamAnalyzed === setIndex) {
+        setSetsTeamAnalyzed(setIndex - 1);
+      } else if (setsTeamAnalyzed + 1 === setIndex) {
+        setSetsTeamAnalyzed(setIndex);
+      }
+    } else {
+      if (setsTeamOpponent === setIndex) {
+        setSetsTeamOpponent(setIndex - 1);
+      } else if (setsTeamOpponent + 1 === setIndex) {
+        setSetsTeamOpponent(setIndex);
+      }
+    }
+  };
+
+  return orientation == "landscape" ? (
+    // ------ LANDSCAPE ---------
+    <ScriptingLandscapeLive
+      setPositionalFormation={setPositionalFormation}
+      positionalFormation={positionalFormation}
+      // stdPickerHeight={stdPickerHeight}
+      stdPickerHeightLandscape={stdPickerHeightLandscape}
+      stdPickerFontSizeLandscape={stdPickerFontSizeLandscape}
+      handleSetCirclePress={handleSetCirclePress}
+      setsTeamAnalyzed={setsTeamAnalyzed}
+      scoreOptions={scoreOptions}
+      setScoreTeamAnalyzed={setScoreTeamAnalyzed}
+      scoreTeamAnalyzed={scoreTeamAnalyzed}
+      setScoreTeamOpponent={setScoreTeamOpponent}
+      scoreTeamOpponent={scoreTeamOpponent}
+      stdPickerParentViewWidth={stdPickerParentViewWidth}
+      setsTeamOpponent={setsTeamOpponent}
+    />
+  ) : (
     <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>
-      <View style={styles.containerTop}>
-        <Text>Live Scripting</Text>
-        <View style={styles.vwTitle}>
-          <Text style={styles.txtTitleAdmin}>AUC vs Arles</Text>
-        </View>
-        <View style={styles.vwScore}>
-          <View style={styles.vwScoreSubGroup}>
-            <View style={styles.vwScoreSetTeamAnalyzed}>
-              {/* Belongs to Set Team Analyzed SinglePickerWithSideBorders */}
-
-              <SinglePickerWithSideBorders
-                elementsArray={setOptions}
-                itemHeight={stdPickerHeight}
-                setSelectedElement={setSetTeamAnalyzed}
-                selectedElement={setTeamAnalyzed}
-                elementsFontSize={stdPickerFontSize}
-                parentViewWidth={stdPickerParentViewWidth}
-              />
-            </View>
-            {/* <View style={{ flex: 1 }} /> */}
-            <View style={styles.vwScoreBothTeamsScores}>
-              <DoublePickerWithSideBorders
-                elementsArray={scoreOptions}
-                setSelectedElement={setScoreTeamAnalyzed}
-                selectedElement={scoreTeamAnalyzed}
-                setSelectedElement02={setScoreTeamOpponent}
-                selectedElement02={scoreTeamOpponent}
-                itemHeight={stdPickerHeight}
-                elementsFontSize={stdPickerFontSize}
-                parentViewWidth={stdPickerParentViewWidth}
-                elementPickerBorderRadius={stdPickerBorderRadius}
-              />
-            </View>
-
-            {/* Belongs to Score SinglePickerWithSideBorders */}
-            <View style={styles.vwScoreSetTeamOpponent}>
-              <SinglePickerWithSideBorders
-                elementsArray={setOptions}
-                setSelectedElement={setSetTeamOpponent}
-                selectedElement={setTeamOpponent}
-                itemHeight={stdPickerHeight}
-                elementsFontSize={stdPickerFontSize}
-                parentViewWidth={stdPickerParentViewWidth}
-                elementPickerBorderRadius={stdPickerBorderRadius}
-              />
-            </View>
-          </View>
-
-          <View style={styles.vwScorePoistionalFormation}>
-            <SinglePickerWithSideBorders
-              elementsArray={["P1", "P2", "P3", "P4", "P5", "P6"]}
-              setSelectedElement={setPositionalFormation}
-              selectedElement={positionalFormation}
-              itemHeight={stdPickerHeight}
-              elementsFontSize={20}
-              parentViewWidth={40}
-              elementPickerBorderRadius={15}
-            />
-          </View>
-        </View>
-        <View style={styles.vwVollyballCourt}>
-          <Image
-            // source={require("../../assets/images/imgVollyballCourt.png")}
-            source={require("../assets/images/imgVollyballCourt.png")}
-            alt="imgVollyballCourt"
-            resizeMode="contain"
-          />
-        </View>
-      </View>
-      <View style={styles.containerBottom}>
-        <View style={styles.vwBlackLineDivider} />
-        <View style={styles.vwActionDetails}>
-          <View style={styles.vwActionDetailsQuality}>
-            {/* Belongs to Quailty */}
-            <SinglePickerWithSideBorders
-              elementsArray={[-2, -1, 0, 1, 2]}
-              setSelectedElement={setQuality}
-              selectedElement={quality}
-              itemHeight={stdPickerHeight}
-              elementsFontSize={stdPickerFontSize}
-              parentViewWidth={stdPickerParentViewWidth}
-              elementPickerBorderRadius={stdPickerBorderRadius}
-            />
-          </View>
-          <View style={styles.vwActionDetailsPosition}>
-            <SinglePickerWithSideBorders
-              elementsArray={[1, 2, 3, 4, 5, 6]}
-              setSelectedElement={setPosition}
-              selectedElement={position}
-              // selectedElement={5}
-              itemHeight={stdPickerHeight}
-              elementsFontSize={stdPickerFontSize}
-              parentViewWidth={stdPickerParentViewWidth}
-              elementPickerBorderRadius={stdPickerBorderRadius}
-            />
-          </View>
-          <View style={styles.vwActionDetailsPlayer}>
-            <SinglePickerWithSideBorders
-              // elementsArray={table02data}
-              elementsArray={truncateArrayElements(table02data, 4)}
-              setSelectedElement={setPlayer}
-              selectedElement={player}
-              itemHeight={stdPickerHeight}
-              elementsFontSize={18}
-              parentViewWidth={60}
-              elementPickerBorderRadius={stdPickerBorderRadius}
-              cutoff={4}
-            />
-            {/* <View style={styles.vwSpacer} /> */}
-            {/* <View style={styles.vwBlackLineDivider} /> */}
-          </View>
-          <View style={styles.vwActionDetailsType}>
-            <SinglePickerWithSideBorders
-              elementsArray={table03data}
-              setSelectedElement={setType} // Pass callback function
-              selectedElement={type}
-              itemHeight={stdPickerHeight}
-              elementsFontSize={20}
-              parentViewWidth={50}
-              elementPickerBorderRadius={stdPickerBorderRadius}
-            />
-          </View>
-          <View style={styles.vwActionDetailsSubtype}>
-            <SinglePickerWithSideBorders
-              elementsArray={truncateArrayElements(table04data, 4)}
-              setSelectedElement={setSubtype} // Pass callback function
-              selectedElement={subtype}
-              itemHeight={stdPickerHeight}
-              elementsFontSize={15}
-              parentViewWidth={60}
-              elementPickerBorderRadius={stdPickerBorderRadius}
-            />
-          </View>
-        </View>
-        <View style={styles.vwScriptingManagement}>
-          {/* <Text>selected player: {player}</Text> */}
-          <View style={styles.vwScriptingManagementLeft}>
-            <ButtonKv
-              onPress={() => {
-                console.log("start something ... and change position");
-                setPosition((prev) => prev + 1);
-              }}
-              colorBackground={"#970F9A"}
-              colorText={"white"}
-              width={140}
-              fontSize={20}
-            >
-              Start
-            </ButtonKv>
-          </View>
-          <View style={styles.vwScriptingManagementRight}>
-            <View style={styles.vwScriptingManagementRightLeft}>
-              <ButtonKv
-                onPress={() => console.log("presssed S")}
-                colorBackground={"#310732"}
-                colorText={"white"}
-                width={40}
-                fontSize={20}
-              >
-                S
-              </ButtonKv>
-              <ButtonKv
-                onPress={() => console.log("presssed R")}
-                colorBackground={"#310732"}
-                colorText={"white"}
-                width={40}
-                fontSize={20}
-              >
-                R
-              </ButtonKv>
-            </View>
-            <View style={styles.vwScriptingManagementRightRight}>
-              <ButtonKv
-                onPress={() => console.log("presssed W")}
-                colorBackground={"#970F9A"}
-                colorText={"white"}
-                width={40}
-                fontSize={20}
-              >
-                W
-              </ButtonKv>
-              <ButtonKv
-                onPress={() => console.log("presssed L")}
-                colorBackground={"#970F9A"}
-                colorText={"white"}
-                width={40}
-                fontSize={20}
-              >
-                L
-              </ButtonKv>
-            </View>
-          </View>
-        </View>
-      </View>
+      <ScriptingPortraitLive
+        stdPickerBorderRadius={stdPickerBorderRadius}
+        stdPickerFontSize={stdPickerFontSize}
+        stdPickerParentViewWidth={stdPickerParentViewWidth}
+        stdPickerHeight={stdPickerHeight}
+        setOptions={setOptions}
+        setSetsTeamAnalyzed={setSetsTeamAnalyzed}
+        setsTeamAnalyzed={setsTeamAnalyzed}
+        scoreOptions={scoreOptions}
+        setScoreTeamAnalyzed={setScoreTeamAnalyzed}
+        scoreTeamAnalyzed={scoreTeamAnalyzed}
+        setScoreTeamOpponent={setScoreTeamOpponent}
+        scoreTeamOpponent={scoreTeamOpponent}
+        setSetsTeamOpponent={setSetsTeamOpponent}
+        setsTeamOpponent={setsTeamOpponent}
+        setPositionalFormation={setPositionalFormation}
+        positionalFormation={positionalFormation}
+        setQuality={setQuality}
+        quality={quality}
+        setPosition={setPosition}
+        position={position}
+        truncateArrayElements={truncateArrayElements}
+        table02data={table02data}
+        setPlayer={setPlayer}
+        player={player}
+        table03data={table03data}
+        setType={setType}
+        type={type}
+        setSubtype={setSubtype}
+        subtype={subtype}
+        table04data={table04data}
+      />
     </TemplateView>
   );
 }
@@ -262,118 +190,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F2EBF2",
-  },
-  containerTop: {
-    flex: 1,
-    // backgroundColor: "green",
-    alignItems: "center",
-  },
-  vwTitle: {
-    borderBottomWidth: 1,
-    borderColor: "#970F9A",
-    width: Dimensions.get("window").width * 0.8,
-  },
-  txtTitleAdmin: {
-    fontSize: 20,
-    color: "#970F9A",
-    fontFamily: "ApfelGrotezk",
-    backgroundColor: "#F2EBF2",
-    textAlign: "center",
-  },
-  vwScore: {
-    // flex: 1,
-    width: Dimensions.get("window").width * 0.9,
-    flexDirection: "row",
-    // backgroundColor: "rgba(0, 0, 0, 0.3)",
-    justifyContent: "space-between",
-    margin: 10,
-    borderRadius: 15,
-  },
-  vwScoreSubGroup: {
-    flexDirection: "row",
-  },
-  vwScoreSetTeamAnalyzed: {
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  vwScoreBothTeamsScores: {
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  vwScoreSetTeamOpponent: {
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  vwScorePoistionalFormation: {
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  vwVollyballCourt: {
-    flex: 1,
-    paddingTop: 20,
-    justifyContent: "center",
-  },
-
-  // -------- BOTTOM --------
-
-  containerBottom: {
-    // flex: 1,
-    // backgroundColor: "#F2EBF2",
-    // backgroundColor: "rgba(0, 0, 0, 0.3)",
-    minHeight: 200,
-  },
-  vwBlackLineDivider: {
-    width: Dimensions.get("window").width,
-    height: 10,
-    backgroundColor: "#310732",
-  },
-  vwActionDetails: {
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 10,
-    paddingRight: 10,
-    backgroundColor: "white",
-    justifyContent: "space-between",
-    flexDirection: "row",
-    minHeight: 100,
-    alignItems: "flex-start",
-  },
-  vwActionDetailsQuality: {
-    flexDirection: "row",
-  },
-  vwActionDetailsPosition: {
-    flexDirection: "row",
-  },
-  vwActionDetailsPlayer: {
-    flexDirection: "row",
-  },
-  vwScriptingManagement: {
-    // flex: 1,
-    backgroundColor: "transparent",
-    // width: Dimensions.get("window").width,
-    // height: 50,
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  vwScriptingManagementLeft: {
-    padding: 20,
-    // backgroundColor: "gray",
-    margin: 20,
-  },
-  vwScriptingManagementRight: {
-    padding: 20,
-    margin: 20,
-    gap: 10,
-    flexDirection: "row",
-  },
-  vwScriptingManagementRightLeft: {
-    padding: 10,
-    // margin: 10,
-    gap: 20,
-  },
-  vwScriptingManagementRightRight: {
-    padding: 10,
-    // margin: 10,
-    gap: 20,
   },
 });

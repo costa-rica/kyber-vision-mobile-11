@@ -6,7 +6,7 @@ export default function CustomPicker({
   arrayElements,
   selectedElement,
   setSelectedElement,
-  backgroundColor = "black",
+  backgroundColor = "#310732",
   color = "white",
   itemHeight,
   width,
@@ -14,6 +14,8 @@ export default function CustomPicker({
 }) {
   const scrollViewRef = useRef(null);
 
+  // console.log(arrayElements);
+  // console.log(selectedElement);
   // Scroll to initially selected item
   useEffect(() => {
     const initialIndex = arrayElements.indexOf(selectedElement);
@@ -91,7 +93,7 @@ export default function CustomPicker({
             style={stylesIos.picker}
             itemStyle={{
               color: "white",
-              fontWeight: "bold",
+              // fontWeight: "bold",
               fontSize: fontSize,
             }}
           >
