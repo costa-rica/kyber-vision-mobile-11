@@ -71,7 +71,7 @@ export default function ScriptingLive({ navigation }) {
   const [positionalFormation, setPositionalFormation] = useState("P1");
   const [quality, setQuality] = useState(0);
   const [position, setPosition] = useState(1);
-  const [player, setPlayer] = useState(table02data[0]);
+  const [playerName, setPlayerName] = useState(table02data[0]);
   const [type, setType] = useState(table03data[0]);
   const [subtype, setSubtype] = useState(table04data[0]);
 
@@ -173,8 +173,8 @@ export default function ScriptingLive({ navigation }) {
       position={position}
       truncateArrayElements={truncateArrayElements}
       table02data={table02data}
-      setPlayer={setPlayer}
-      player={player}
+      setPlayerName={setPlayerName}
+      playerName={playerName}
       table03data={table03data}
       setType={setType}
       type={type}
@@ -205,8 +205,8 @@ export default function ScriptingLive({ navigation }) {
       position={position}
       truncateArrayElements={truncateArrayElements}
       table02data={table02data}
-      setPlayer={setPlayer}
-      player={player}
+      setPlayerName={setPlayerName}
+      playerName={playerName}
       table03data={table03data}
       setType={setType}
       type={type}

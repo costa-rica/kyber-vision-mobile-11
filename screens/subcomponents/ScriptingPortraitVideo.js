@@ -1,283 +1,365 @@
-import { useState, useEffect } from "react";
 import {
-  View,
+  Platform,
   StyleSheet,
-  Dimensions,
   Text,
+  View,
   TouchableOpacity,
   Image,
+  Dimensions,
   Alert,
-  Platform,
-  ScrollView,
 } from "react-native";
-import { useVideoPlayer, VideoView } from "expo-video";
-import {
-  GestureHandlerRootView,
-  GestureDetector,
-  Gesture,
-} from "react-native-gesture-handler";
-import Timeline from "./Timeline";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faRotate } from "@fortawesome/free-solid-svg-icons";
-import ButtonKvImage from "./ButtonKvImage";
+import SinglePickerWithSideBorders from "./pickers/SinglePickerWithSideBorders";
+import DoublePickerWithSideBorders from "./pickers/DoublePickerWithSideBorders";
+import { useState } from "react";
 import ButtonKv from "./ButtonKv";
 
 export default function ScriptingPortraitVideo(props) {
-  useEffect(() => {
-    console.log("in ScriptingPortraitVideo useEffect");
-  }, [props.scriptReducerActionArray, props.scriptId]);
-
-  const viewLastAction = (
-    <View style={styles.vwLastActionSub}>
-      <View style={styles.vwLastActionSubBox}>
-        <Text style={styles.txtVwLastActionSubBoxTitle}>Time</Text>
-        <Text style={styles.txtVwLastActionSubBoxValue}>
-          {props.currentAction &&
-            Math.round(props.currentAction?.timeStamp * 10) / 10}
-        </Text>
-      </View>
-      <View style={styles.vwLastActionSubBox}>
-        <Text style={styles.txtVwLastActionSubBoxTitle}>Action:</Text>
-        <Text style={styles.txtVwLastActionSubBoxValue}>
-          {props.currentAction?.type}
-        </Text>
-      </View>
-      <View style={styles.vwLastActionSubBox}>
-        <Text style={styles.txtVwLastActionSubBoxTitle}>Quality:</Text>
-        <Text style={styles.txtVwLastActionSubBoxValue}>
-          {props.currentAction?.quality}
-        </Text>
-      </View>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
-      <GestureHandlerRootView style={styles.vwGestureAndVideo}>
-        <GestureDetector
-          style={styles.vwGestureDectorVideo}
-          gesture={props.combinedGesturesScripting}
+      <View style={styles.vwBtnBackArrow}>
+        <TouchableOpacity
+          style={styles.touchOpBtnBackArrow}
+          onPress={() => {
+            props.navigation.goBack();
+          }}
         >
-          <VideoView
-            style={styles.vwVideo}
-            player={props.player}
-            nativeControls={false}
+          <Image
+            style={styles.imgBtnBackArrow}
+            source={require("../../assets/images/btnBackArrow.png")}
+            alt="logo"
+            resizeMode="contain"
           />
-        </GestureDetector>
-      </GestureHandlerRootView>
-      <View style={styles.vwTimelineAndPlayerControls}>
-        {/* Custom Timeline */}
-        <GestureHandlerRootView style={styles.gestureViewTimeline}>
-          <Timeline
-            progress={props.progress}
-            setCurrentTimeManager={props.setCurrentTimeManager}
-            timelineWidth={props.timelineWidth}
-            player={props.player}
-            // scriptReducerActionArray={props.scriptReducerActionArray}
-          />
-        </GestureHandlerRootView>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.containerTop}>
+        <Text>Live Scripting</Text>
+        <View style={styles.vwTitle}>
+          <Text style={styles.txtTitleAdmin}>AUC vs Arles</Text>
+        </View>
+        <View style={styles.vwScore}>
+          <View style={styles.vwScoreSubGroup}>
+            <View style={styles.vwScoreSetTeamAnalyzed}>
+              {/* Belongs to Set Team Analyzed SinglePickerWithSideBorders */}
 
-        {/* Set Selection */}
-        <View style={styles.vwControls}>
-          <View style={styles.vwQuality}>
-            <ButtonKvImage
-              onPress={() => {
-                props.changeQuality(-1);
-              }}
-            >
-              <Image
-                source={require("../../assets/images/btnQualityNegative.png")}
-                alt="logo"
-                resizeMode="contain"
+              <SinglePickerWithSideBorders
+                arrayElements={props.setOptions}
+                itemHeight={props.stdPickerHeight}
+                onChange={props.setSetsTeamAnalyzed}
+                value={props.setsTeamAnalyzed}
+                style={props.stdPickerStyle}
               />
-            </ButtonKvImage>
-            <View style={styles.vwQuailtyValue}>
-              <Text style={styles.txtVwQuailtyValue}>
-                {props.currentAction?.quality}
-              </Text>
             </View>
-            <ButtonKvImage
-              onPress={() => {
-                props.changeQuality(1);
-                // checkValue();
-              }}
-            >
-              <Image
-                source={require("../../assets/images/btnQualityPositive.png")}
-                alt="logo"
-                resizeMode="contain"
+            {/* <View style={{ flex: 1 }} /> */}
+            <View style={styles.vwScoreBothTeamsScores}>
+              <DoublePickerWithSideBorders
+                arrayElements={props.scoreOptions}
+                onChange={props.setScoreTeamAnalyzed}
+                value={props.scoreTeamAnalyzed}
+                onChange02={props.setScoreTeamOpponent}
+                value02={props.scoreTeamOpponent}
+                // itemHeight={props.stdPickerHeight}
+                // elementsFontSize={props.stdPickerFontSize}
+                // parentViewWidth={props.stdPickerParentViewWidth}
+                // elementPickerBorderRadius={props.stdPickerBorderRadius}
+                style={props.stdPickerStyle}
               />
-            </ButtonKvImage>
-          </View>
-          <View style={styles.vwOtherControls}>
-            {Platform.OS == "ios" && (
-              <ButtonKvImage
-                onPress={() => {
-                  console.log("rotate screen to landscape");
-                  props.changeScreenOrientation();
-                }}
-              >
-                <FontAwesomeIcon icon={faRotate} size={20} />
-              </ButtonKvImage>
-            )}
-            <TouchableOpacity
-              style={styles.touchOpPlay}
-              // onPress={() => props.playerGoToAction("previous")}
-              onPress={() =>
-                props.setCurrentTimeManager(props.player.currentTime - 2)
-              }
-            >
-              <Image
-                source={require("../../assets/images/videoBackArrow.png")}
-                alt="logo"
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity
-              style={styles.touchOpPlay}
-              onPress={() => props.playerPausePlay()}
-            >
-              <Image
-                source={
-                  props.player.playing
-                    ? require("../../assets/images/btnPause.png")
-                    : require("../../assets/images/btnPlay.png")
-                }
-                alt="logo"
-                resizeMode="contain"
+            {/* Belongs to Score SinglePickerWithSideBorders */}
+            <View style={styles.vwScoreSetTeamOpponent}>
+              <SinglePickerWithSideBorders
+                arrayElements={props.setOptions}
+                onChange={props.setSetsTeamOpponent}
+                value={props.setsTeamOpponent}
+                style={props.stdPickerStyle}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.touchOpPlay}
-              // onPress={() => props.playerGoToAction("next")}
-              onPress={() =>
-                props.setCurrentTimeManager(props.player.currentTime + 10)
-              }
-            >
-              <Image
-                source={require("../../assets/images/videoForwardArrow.png")}
-                alt="logo"
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.vwSendScriptControls}>
-            {/* {props.scriptReducerActionArray.length > 0 && ( */}
-            <ButtonKv
-              width={150}
-              onPress={() => props.handleBtnSendCurrentScriptToAPI()}
-            >
-              Enregistrer actions
-            </ButtonKv>
-            {/* )} */}
-            {/* {props.scriptId && ( */}
-            <ButtonKv
-              width={120}
-              onPress={() => {
-                props.setIsDeleteScriptModalVisible(true);
-                // setCurrentActionsArray();
-              }}
-            >
-              Supprimer actions
-            </ButtonKv>
-            {/* )} */}
+
+          <View style={styles.vwScorePoistionalFormation}>
+            <SinglePickerWithSideBorders
+              arrayElements={["P1", "P2", "P3", "P4", "P5", "P6"]}
+              onChange={props.setPositionalFormation}
+              value={props.positionalFormation}
+              style={{ ...props.stdPickerStyle, width: 50 }}
+            />
           </View>
         </View>
+        <View style={styles.vwVollyballCourt}>
+          <Image
+            source={require("../../assets/images/imgVollyballCourt.png")}
+            alt="imgVollyballCourt"
+            resizeMode="contain"
+          />
+        </View>
       </View>
-      <View style={styles.vwDisplayRecentAction}>
-        <Text style={styles.txtDerniereAction}>Dernière action</Text>
-        {viewLastAction}
+      <View style={styles.containerBottom}>
+        <View style={styles.vwBlackLineDivider} />
+        <View style={styles.vwActionDetails}>
+          <View style={styles.vwActionDetailsQuality}>
+            <SinglePickerWithSideBorders
+              arrayElements={[-2, -1, 0, 1, 2]}
+              onChange={props.setQuality}
+              value={props.quality}
+              style={props.stdPickerStyle}
+            />
+          </View>
+          <View style={styles.vwActionDetailsPosition}>
+            <SinglePickerWithSideBorders
+              arrayElements={[1, 2, 3, 4, 5, 6]}
+              onChange={props.setPosition}
+              value={props.position}
+              style={props.stdPickerStyle}
+            />
+          </View>
+          <View style={styles.vwActionDetailsPlayer}>
+            <SinglePickerWithSideBorders
+              arrayElements={props.truncateArrayElements(props.table02data, 4)}
+              onChange={props.setPlayer}
+              value={props.player}
+              style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
+              selectedIsBold={false}
+            />
+          </View>
+          <View style={styles.vwActionDetailsType}>
+            <SinglePickerWithSideBorders
+              arrayElements={props.table03data}
+              onChange={props.setType}
+              value={props.type}
+              style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
+              selectedIsBold={false}
+            />
+          </View>
+          <View style={styles.vwActionDetailsSubtype}>
+            <SinglePickerWithSideBorders
+              arrayElements={props.truncateArrayElements(props.table04data, 4)}
+              onChange={props.setSubtype}
+              value={props.subtype}
+              style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
+            />
+          </View>
+        </View>
+        <View style={styles.vwScriptingManagement}>
+          <View style={styles.vwScriptingManagementLeft}>
+            <ButtonKv
+              onPress={() => {
+                Alert.alert("start");
+                props.setPosition((prev) => prev + 1);
+              }}
+              // colorBackground={"#970F9A"}
+              // colorText={"white"}
+              // width={140}
+              // fontSize={20}
+              style={{
+                backgroundColor: "#970F9A",
+                color: "white",
+                width: 140,
+                fontSize: 20,
+              }}
+            >
+              Start
+            </ButtonKv>
+          </View>
+          <View style={styles.vwScriptingManagementRight}>
+            <View style={styles.vwScriptingManagementRightLeft}>
+              <ButtonKv
+                onPress={() => console.log("presssed S")}
+                style={{
+                  backgroundColor: "#310732",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
+              >
+                S
+              </ButtonKv>
+              <ButtonKv
+                onPress={() => console.log("presssed R")}
+                style={{
+                  backgroundColor: "#310732",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
+              >
+                R
+              </ButtonKv>
+            </View>
+            <View style={styles.vwScriptingManagementRightRight}>
+              <ButtonKv
+                onPress={() => console.log("presssed W")}
+                style={{
+                  backgroundColor: "#970F9A",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
+              >
+                W
+              </ButtonKv>
+              <ButtonKv
+                onPress={() => console.log("presssed L")}
+                style={{
+                  backgroundColor: "#970F9A",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
+              >
+                L
+              </ButtonKv>
+            </View>
+          </View>
+        </View>
       </View>
     </View>
   );
 }
 
+// Styles for main container
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(200,200,200,.9)",
+    // backgroundColor: "#F2EBF2",
+    // justifyContent: "center",
   },
-  vwGestureAndVideo: {
-    // backgroundColor: "purple",
-    width: "100%",
-    height: 250, // Ensure fixed height for VideoView
-  },
-  vwVideo: {
-    width: "100%",
-    height: "100%", // Matches parent height
-  },
-
-  // --- Timeline ---
-  gestureViewTimeline: {
+  containerTop: {
+    flex: 1,
+    // backgroundColor: "green",
     alignItems: "center",
   },
-
-  // ---- vwControls ------
-  vwControls: {
-    // backgroundColor: "rgba(150,150,150,.9)",
+  vwBtnBackArrow: {
+    // position: "absolute",
+    marginBottom: -20,
+    paddingTop: 10,
+    paddingLeft: 10,
+  },
+  touchOpBtnBackArrow: {
+    width: 50,
+    height: 50,
+    backgroundColor: "white",
+    borderRadius: 25, // Makes it a circle
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "lightgray",
+  },
+  imgBtnBackArrow: {
+    // width: "100%",
+    // height: "100%",
+    // borderRadius: 35, // Match circle's border radius
+    width: "100%",
+    height: "100%",
+    borderRadius: 17, // Match circle's border radius
+  },
+  vwTitle: {
+    borderBottomWidth: 1,
+    borderColor: "#970F9A",
+    width: Dimensions.get("window").width * 0.8,
+  },
+  txtTitleAdmin: {
+    fontSize: 20,
+    color: "#970F9A",
+    fontFamily: "ApfelGrotezk",
+    backgroundColor: "#F2EBF2",
+    textAlign: "center",
+  },
+  vwScore: {
+    // flex: 1,
+    width: Dimensions.get("window").width * 0.9,
+    flexDirection: "row",
+    // backgroundColor: "rgba(0, 0, 0, 0.3)",
+    justifyContent: "space-between",
+    margin: 10,
+    borderRadius: 15,
+  },
+  vwScoreSubGroup: {
+    flexDirection: "row",
+  },
+  vwScoreSetTeamAnalyzed: {
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  vwScoreBothTeamsScores: {
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  vwScoreSetTeamOpponent: {
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  vwScorePoistionalFormation: {
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  vwVollyballCourt: {
+    flex: 1,
     paddingTop: 20,
+    justifyContent: "center",
+  },
+
+  // -------- BOTTOM --------
+
+  containerBottom: {
+    // flex: 1,
+    // backgroundColor: "#F2EBF2",
+    // backgroundColor: "rgba(0, 0, 0, 0.3)",
+    minHeight: 200,
+  },
+  vwBlackLineDivider: {
+    width: Dimensions.get("window").width,
+    height: 10,
+    backgroundColor: "#310732",
+  },
+  vwActionDetails: {
+    paddingTop: 2,
+    paddingBottom: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: "white",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    minHeight: 100,
+    alignItems: "flex-start",
+    width: "100%",
+  },
+  vwActionDetailsQuality: {
+    flexDirection: "row",
+  },
+  vwActionDetailsPosition: {
+    flexDirection: "row",
+  },
+  vwActionDetailsPlayer: {
+    flexDirection: "row",
+  },
+  vwScriptingManagement: {
+    // flex: 1,
+    backgroundColor: "transparent",
+    // width: Dimensions.get("window").width,
+    // height: 50,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  vwScriptingManagementLeft: {
+    padding: 20,
+    // backgroundColor: "gray",
+    // margin: 20,
+  },
+  vwScriptingManagementRight: {
+    padding: 20,
+    margin: 20,
+    gap: 10,
+    flexDirection: "row",
+  },
+  vwScriptingManagementRightLeft: {
+    padding: 10,
+    // margin: 10,
     gap: 20,
   },
-  vwQuality: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 15,
-  },
-  txtVwQuailtyValue: {
-    fontSize: 30,
-    fontFamily: "ApfelGrotezk",
-  },
-  vwOtherControls: {
-    flexDirection: "row",
-    // backgroundColor: "purple",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  vwSendScriptControls: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  // ------ Display Latest Action
-  vwDisplayRecentAction: {
-    // backgroundColor: "green",
-    // flex: 1,
-    // padding: 10,
-    borderColor: "white",
-    borderWidth: 2,
-    margin: 5,
-    borderRadius: 12,
-  },
-  txtDerniereAction: {
-    fontSize: 20,
-    textAlign: "center",
-    // padding: 5,
-    color: "white",
-    fontFamily: "ApfelGrotezk",
-  },
-  vwLastActionSub: {
-    flexDirection: "row",
-    // gap: 5,
-    justifyContent: "space-around",
-  },
-  vwLastActionSubBox: {
-    // flexDirection: "row",
+  vwScriptingManagementRightRight: {
     padding: 10,
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 12,
-    gap: 10,
-  },
-  txtVwLastActionSubBoxTitle: {
-    fontSize: 18,
-    fontFamily: "ApfelGrotezk",
-  },
-  txtVwLastActionSubBoxValue: {
-    fontSize: 24,
-    color: "gray",
-    fontFamily: "ApfelGrotezk",
+    // margin: 10,
+    gap: 20,
   },
 });

@@ -62,7 +62,9 @@ export default function ScriptingMatchSelection({ navigation }) {
 
       // Map API response to videosList with `matchDate` included
       const videosObjArray = resJson.videos.map((elem) => {
-        console.log(`creating object for: ${elem.filename}`);
+        console.log(
+          `creating object for id: ${elem.id} filename: ${elem.filename}`
+        );
 
         return {
           id: `${elem.id}`,
@@ -85,54 +87,6 @@ export default function ScriptingMatchSelection({ navigation }) {
     }
   };
 
-  // const fetchVideoListApiCall = async () => {
-  //   console.log(`API URL: ${process.env.EXPO_PUBLIC_API_URL}/videos`);
-
-  //   const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/videos`);
-
-  //   if (response.status === 200) {
-  //     const resJson = await response.json();
-
-  //     const statuses = {};
-  //     for (const elem of resJson.videos) {
-  //       console.log(`checking for: ${elem.filename} `);
-  //       const fileUri = `${FileSystem.documentDirectory}${elem.filename}`;
-  //       const fileInfo = await FileSystem.getInfoAsync(fileUri);
-  //       statuses[elem.filename] = fileInfo.exists; // Save download status (true/false)
-  //       console.log(`this file exists: ${fileInfo.exists} `);
-  //     }
-  //     setDownloadStatuses(statuses);
-  //     console.log(`--- response object ----`);
-  //     console.log(resJson);
-  //     const videosObjArray = resJson.videos.map((elem, i) => {
-  //       console.log(
-  //         `creating object for: ${elem.filename}, the file exits: ${
-  //           downloadStatuses[elem.filename]
-  //         }`
-  //       );
-
-  //       return {
-  //         id: `${elem.id}`,
-  //         name: `${elem.matchName}`,
-  //         date: elem.date,
-  //         matchName: `${elem.matchName}`,
-  //         scripted: false,
-  //         // downloaded: downloadStatuses[elem.filename] ? true : false,
-  //         downloaded: statuses[elem.filename] ? true : false, // Use statuses here
-  //         apiDownloadUrl: `${process.env.EXPO_PUBLIC_API_URL}/videos/${elem.filename}`,
-  //         durationOfMatch: elem.durationString,
-  //         filename: elem.filename,
-  //         // setTimeStamps: elem.setTimeStampsArray,
-  //         setTimeStampsArray: elem.setTimeStampsArray,
-  //       };
-  //     });
-  //     setVideosList(videosObjArray);
-  //     checkDownloadedStatus(data.videos);
-  //   } else {
-  //     console.log(`There was a server error: ${response.status}`);
-  //   }
-  // };
-
   const pressBtnVideo = async (elem) => {
     console.log("pressed pressBtnVideo");
 
@@ -151,7 +105,8 @@ export default function ScriptingMatchSelection({ navigation }) {
       try {
         // await downloadVideo(elem.filename);
         console.log(`----> tryign to download for videoId: ${elem.id}`);
-        await downloadVideo(elem.id);
+        // await downloadVideo(elem.id);
+        await downloadVideo(elem);
       } catch (error) {
         setDownloadProgress(0);
         console.error("Download failed:", error);
@@ -169,11 +124,12 @@ export default function ScriptingMatchSelection({ navigation }) {
   };
 
   // const downloadVideo = async (filename) => {
-  const downloadVideo = async (videoId) => {
+  // const downloadVideo = async (videoId) => {
+  const downloadVideo = async (elemVideo) => {
     console.log("--- in downloadVideo");
-    const videoUrl = `${process.env.EXPO_PUBLIC_API_URL}/videos/${videoId}`;
+    const videoUrl = `${process.env.EXPO_PUBLIC_API_URL}/videos/${elemVideo.filename}`;
     console.log(`calling: ${videoUrl}`);
-    const fileUri = `${FileSystem.documentDirectory}${videoId}`;
+    const fileUri = `${FileSystem.documentDirectory}${elemVideo.filename}`;
 
     const downloadResumable = FileSystem.createDownloadResumable(
       videoUrl,
@@ -197,7 +153,7 @@ export default function ScriptingMatchSelection({ navigation }) {
       // Update downloadStatuses and UI
       setDownloadStatuses((prev) => ({
         ...prev,
-        [filename]: true,
+        [elemVideo.filename]: true,
       }));
     } catch (error) {
       console.log("Failed to download");
@@ -314,55 +270,6 @@ export default function ScriptingMatchSelection({ navigation }) {
       </TouchableOpacity>
     </View>
   );
-
-  // const TableRow = ({ item }) => (
-  //   <View style={styles.vwRow}>
-  //     <TouchableOpacity
-  //       style={styles.vwRowLeft}
-  //       onPress={() => console.log("download game")}
-  //     >
-  //       {/* {item.downloaded ? ( */}
-  //       {downloadStatuses[item.filename] ? (
-  //         <Image
-  //           source={require("../assets/images/iconPhone.png")}
-  //           alt="logo"
-  //           resizeMode="contain"
-  //         />
-  //       ) : (
-  //         <Image
-  //           source={require("../assets/images/btnDownload.png")}
-  //           alt="logo"
-  //           resizeMode="contain"
-  //         />
-  //       )}
-  //     </TouchableOpacity>
-  //     <TouchableOpacity
-  //       style={styles.vwRowRight}
-  //       onPress={() => pressBtnVideo(item)}
-  //     >
-  //       <View style={styles.vwRowRightOne}>
-  //         <Text style={styles.txtVwRowRightOne}>{item.matchName}</Text>
-  //         <Text style={styles.txtVwRowRightOneDuration}>
-  //           ({item.durationOfMatch})
-  //         </Text>
-  //       </View>
-  //       <View style={styles.vwRowRightTwo}>
-  //         {item.scripted ? (
-  //           <Image
-  //             source={require("../assets/images/imgNotScripted.png")}
-  //             alt="logo"
-  //             resizeMode="contain"
-  //           />
-  //         ) : null}
-  //       </View>
-  //       <View style={styles.vwRowRightThree}>
-  //         <Text style={styles.txtVwRowRightThree}>
-  //           {formatDate(item.match.matchDate)}
-  //         </Text>
-  //       </View>
-  //     </TouchableOpacity>
-  //   </View>
-  // );
 
   return (
     <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>

@@ -74,6 +74,22 @@ export default function Scripting({ navigation, route }) {
   const [isDeleteScriptModalVisible, setIsDeleteScriptModalVisible] =
     useState(false);
 
+  // New 2025-02-14
+  // Belongs to Set Team Analyzed SinglePickerWithSideBorders
+  const [setsTeamAnalyzed, setSetsTeamAnalyzed] = useState(0);
+  // Belongs to Score Team Analyzed SinglePickerWithSideBorders
+  const [scoreTeamAnalyzed, setScoreTeamAnalyzed] = useState(0);
+  // Belongs to Score Team Opponentn SinglePickerWithSideBorders
+  const [scoreTeamOpponent, setScoreTeamOpponent] = useState(0);
+  const [setsTeamOpponent, setSetsTeamOpponent] = useState(0);
+  // Belongs to positional formation SinglePickerWithSideBorders
+  const [positionalFormation, setPositionalFormation] = useState("P1");
+  const [quality, setQuality] = useState(0);
+  const [position, setPosition] = useState(1);
+  const [playerName, setPlayerName] = useState(table02data[0]);
+  const [type, setType] = useState(table03data[0]);
+  const [subtype, setSubtype] = useState(table04data[0]);
+
   useEffect(() => {
     // setStartTime(userReducer.video.setTimeStampsArray[currentSet]);
     // setEndTime(userReducer.video.setTimeStampsArray[currentSet + 1]);
@@ -91,7 +107,7 @@ export default function Scripting({ navigation, route }) {
     }
   });
   const checkOrientation = async () => {
-    console.log("in checkOrientation");
+    // console.log("in checkOrientation");
     const orientation = await ScreenOrientation.getOrientationAsync();
     // console.log(`orientation is ${orientation}`);
     if (
@@ -104,9 +120,9 @@ export default function Scripting({ navigation, route }) {
     }
   };
   const handleOrientationChange = async (o) => {
-    console.log(
-      `o.orientationInfo.orientation: ${o.orientationInfo.orientation}`
-    );
+    // console.log(
+    //   `o.orientationInfo.orientation: ${o.orientationInfo.orientation}`
+    // );
     setOrientation(o.orientationInfo.orientation);
     if (
       o.orientationInfo.orientation == 4 ||
@@ -413,6 +429,14 @@ export default function Scripting({ navigation, route }) {
     }
   };
 
+  const handleBackPress = async (navigation) => {
+    player.pause();
+    await ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.PORTRAIT_UP
+    );
+    navigation.goBack();
+  };
+
   // console.log(`before jsx orientation: ${orientation}`);
   // if (Platform.OS === "android") {
   return orientation == "landscape" ? (
@@ -421,16 +445,11 @@ export default function Scripting({ navigation, route }) {
       <ScriptingLandscapeVideo
         player={player}
         progress={progress}
-        // currentSet={currentSet}
         setCurrentTimeManager={setCurrentTimeManager}
         timelineWidth={400}
         handleSetSelection={handleSetSelection}
         combinedGesturesScripting={combinedGesturesScripting}
-        // combinedGesturesScriptingPortrait={combinedGesturesScriptingPortrait}
-        // startTime={startTime}
-        // endTime={endTime}
         navigation={navigation}
-        // setOrientationToLandscape={setOrientationToLandscape}
         scriptReducerActionArray={scriptReducerActionArray}
         playerGoToAction={playerGoToAction}
         playerPausePlay={playerPausePlay}
@@ -441,7 +460,8 @@ export default function Scripting({ navigation, route }) {
   ) : (
     // -------- PORTRAIT ------------
 
-    <TemplateView navigation={navigation} player={player}>
+    // <TemplateView navigation={navigation} player={player}>
+    <View style={{ flex: 1 }}>
       <View style={[styles.container, containerDynamic]}>
         <ScriptingPortraitVideo
           player={player}
@@ -457,11 +477,34 @@ export default function Scripting({ navigation, route }) {
           playerPausePlay={playerPausePlay}
           changeScreenOrientation={changeScreenOrientation}
           scriptId={scriptId}
-          // decrementQuality={decrementQuality}
-          // incrementQuality={incrementQuality}
-          // actionQuality={actionQuality}
           changeQuality={changeQuality}
           currentAction={currentAction}
+          // -- new based on ScriptingLive --
+          handleSetCirclePress={handleBackPress}
+          setsTeamAnalyzed={setsTeamAnalyzed}
+          scoreOptions={scoreOptions}
+          setScoreTeamAnalyzed={setScoreTeamAnalyzed}
+          scoreTeamAnalyzed={scoreTeamAnalyzed}
+          setScoreTeamOpponent={setScoreTeamOpponent}
+          scoreTeamOpponent={scoreTeamOpponent}
+          setsTeamOpponent={setsTeamOpponent}
+          stdPickerStyle={stdPickerStyleLandscape}
+          setPositionalFormation={setPositionalFormation}
+          positionalFormation={positionalFormation}
+          setQuality={setQuality}
+          quality={quality}
+          setPosition={setPosition}
+          position={position}
+          truncateArrayElements={truncateArrayElements}
+          table02data={table02data}
+          setPlayer={setPlayer}
+          playerName={playerName}
+          table03data={table03data}
+          setType={setType}
+          type={type}
+          setSubtype={setSubtype}
+          subtype={subtype}
+          table04data={table04data}
         />
       </View>
       <Modal
@@ -491,7 +534,8 @@ export default function Scripting({ navigation, route }) {
           </View>
         </View>
       </Modal>
-    </TemplateView>
+    </View>
+    // </TemplateView>
   );
 }
 

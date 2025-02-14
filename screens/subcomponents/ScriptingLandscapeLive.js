@@ -221,8 +221,8 @@ export default function ScriptingLandscapeLive(props) {
           <View style={styles.vwActionDetailsPlayer}>
             <SinglePickerWithSideBorders
               arrayElements={props.truncateArrayElements(props.table02data, 4)}
-              onChange={props.setPlayer}
-              value={props.player}
+              onChange={props.setPlayerName}
+              value={props.playerName}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
               selectedIsBold={false}
             />
