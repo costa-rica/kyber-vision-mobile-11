@@ -4,20 +4,12 @@ import CustomPicker from "./CustomPicker";
 
 export default function DoublePickerWithSideBorders({
   arrayElements,
-  // itemHeight,
   value,
   value02,
   onChange,
   onChange02,
   style,
-  // elementsArray,
-  // setSelectedElement,
-  // selectedElement,
-  // setSelectedElement02,
-  // selectedElement02,
-  // itemHeight,
-  // elementsFontSize,
-  // parentViewWidth,
+  selectedIsBold,
 }) {
   const styleVwVerticalLineLeft = {
     position: "absolute",
@@ -59,6 +51,7 @@ export default function DoublePickerWithSideBorders({
         onChange={onChange}
         value={value}
         style={{ ...style, backgroundColor: "transparent" }}
+        selectedIsBold={selectedIsBold}
       />
       <View>
         <Text style={{ color: style.color }}>-</Text>
@@ -68,6 +61,7 @@ export default function DoublePickerWithSideBorders({
         onChange={onChange02}
         value={value02}
         style={{ ...style, backgroundColor: "transparent" }}
+        selectedIsBold={selectedIsBold}
       />
     </View>
   );

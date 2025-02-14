@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  Alert,
 } from "react-native";
 import SinglePickerWithSideBorders from "./pickers/SinglePickerWithSideBorders";
 import DoublePickerWithSideBorders from "./pickers/DoublePickerWithSideBorders";
@@ -15,6 +16,21 @@ import ButtonKv from "./ButtonKv";
 export default function ScriptingPortraitLive(props) {
   return (
     <View style={styles.container}>
+      <View style={styles.vwBtnBackArrow}>
+        <TouchableOpacity
+          style={styles.touchOpBtnBackArrow}
+          onPress={() => {
+            props.navigation.goBack();
+          }}
+        >
+          <Image
+            style={styles.imgBtnBackArrow}
+            source={require("../../assets/images/btnBackArrow.png")}
+            alt="logo"
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.containerTop}>
         <Text>Live Scripting</Text>
         <View style={styles.vwTitle}>
@@ -30,8 +46,6 @@ export default function ScriptingPortraitLive(props) {
                 itemHeight={props.stdPickerHeight}
                 onChange={props.setSetsTeamAnalyzed}
                 value={props.setsTeamAnalyzed}
-                // elementsFontSize={props.stdPickerFontSize}
-                // parentViewWidth={props.stdPickerParentViewWidth}
                 style={props.stdPickerStyle}
               />
             </View>
@@ -58,10 +72,6 @@ export default function ScriptingPortraitLive(props) {
                 onChange={props.setSetsTeamOpponent}
                 value={props.setsTeamOpponent}
                 style={props.stdPickerStyle}
-                // itemHeight={props.stdPickerHeight}
-                // elementsFontSize={props.stdPickerFontSize}
-                // parentViewWidth={props.stdPickerParentViewWidth}
-                // elementPickerBorderRadius={props.stdPickerBorderRadius}
               />
             </View>
           </View>
@@ -72,16 +82,11 @@ export default function ScriptingPortraitLive(props) {
               onChange={props.setPositionalFormation}
               value={props.positionalFormation}
               style={props.stdPickerStyle}
-              // itemHeight={props.stdPickerHeight}
-              // elementsFontSize={20}
-              // parentViewWidth={40}
-              // elementPickerBorderRadius={15}
             />
           </View>
         </View>
         <View style={styles.vwVollyballCourt}>
           <Image
-            // source={require("../../assets/images/imgVollyballCourt.png")}
             source={require("../../assets/images/imgVollyballCourt.png")}
             alt="imgVollyballCourt"
             resizeMode="contain"
@@ -92,16 +97,11 @@ export default function ScriptingPortraitLive(props) {
         <View style={styles.vwBlackLineDivider} />
         <View style={styles.vwActionDetails}>
           <View style={styles.vwActionDetailsQuality}>
-            {/* Belongs to Quailty */}
             <SinglePickerWithSideBorders
               arrayElements={[-2, -1, 0, 1, 2]}
               onChange={props.setQuality}
               value={props.quality}
               style={props.stdPickerStyle}
-              // itemHeight={props.stdPickerHeight}
-              // elementsFontSize={props.stdPickerFontSize}
-              // parentViewWidth={props.stdPickerParentViewWidth}
-              // elementPickerBorderRadius={props.stdPickerBorderRadius}
             />
           </View>
           <View style={styles.vwActionDetailsPosition}>
@@ -110,51 +110,30 @@ export default function ScriptingPortraitLive(props) {
               onChange={props.setPosition}
               value={props.position}
               style={props.stdPickerStyle}
-              // value={5}
-              // itemHeight={props.stdPickerHeight}
-              // elementsFontSize={props.stdPickerFontSize}
-              // parentViewWidth={props.stdPickerParentViewWidth}
-              // elementPickerBorderRadius={props.stdPickerBorderRadius}
             />
           </View>
           <View style={styles.vwActionDetailsPlayer}>
             <SinglePickerWithSideBorders
-              //   arrayElements={[1, 2, 3]}
               arrayElements={props.truncateArrayElements(props.table02data, 4)}
               onChange={props.setPlayer}
               value={props.player}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
-              // itemHeight={props.stdPickerHeight}
-              // elementsFontSize={18}
-              // parentViewWidth={60}
-              // elementPickerBorderRadius={props.stdPickerBorderRadius}
-              // cutoff={4}
             />
-            {/* <View style={styles.vwSpacer} /> */}
-            {/* <View style={styles.vwBlackLineDivider} /> */}
           </View>
           <View style={styles.vwActionDetailsType}>
             <SinglePickerWithSideBorders
               arrayElements={props.table03data}
-              onChange={props.setType} // Pass callback function
+              onChange={props.setType}
               value={props.type}
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
-              // itemHeight={props.stdPickerHeight}
-              // elementsFontSize={20}
-              // parentViewWidth={50}
-              // elementPickerBorderRadius={props.stdPickerBorderRadius}
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
             <SinglePickerWithSideBorders
               arrayElements={props.truncateArrayElements(props.table04data, 4)}
-              onChange={props.setSubtype} // Pass callback function
+              onChange={props.setSubtype}
               value={props.subtype}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
-              // itemHeight={props.stdPickerHeight}
-              // elementsFontSize={15}
-              // parentViewWidth={60}
-              // elementPickerBorderRadius={props.stdPickerBorderRadius}
             />
           </View>
         </View>
@@ -163,13 +142,19 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwScriptingManagementLeft}>
             <ButtonKv
               onPress={() => {
-                console.log("start something ... and change position");
-                setPosition((prev) => prev + 1);
+                Alert.alert("start");
+                props.setPosition((prev) => prev + 1);
               }}
-              colorBackground={"#970F9A"}
-              colorText={"white"}
-              width={140}
-              fontSize={20}
+              // colorBackground={"#970F9A"}
+              // colorText={"white"}
+              // width={140}
+              // fontSize={20}
+              style={{
+                backgroundColor: "#970F9A",
+                color: "white",
+                width: 140,
+                fontSize: 20,
+              }}
             >
               Start
             </ButtonKv>
@@ -178,19 +163,23 @@ export default function ScriptingPortraitLive(props) {
             <View style={styles.vwScriptingManagementRightLeft}>
               <ButtonKv
                 onPress={() => console.log("presssed S")}
-                colorBackground={"#310732"}
-                colorText={"white"}
-                width={40}
-                fontSize={20}
+                style={{
+                  backgroundColor: "#310732",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
               >
                 S
               </ButtonKv>
               <ButtonKv
                 onPress={() => console.log("presssed R")}
-                colorBackground={"#310732"}
-                colorText={"white"}
-                width={40}
-                fontSize={20}
+                style={{
+                  backgroundColor: "#310732",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
               >
                 R
               </ButtonKv>
@@ -198,19 +187,23 @@ export default function ScriptingPortraitLive(props) {
             <View style={styles.vwScriptingManagementRightRight}>
               <ButtonKv
                 onPress={() => console.log("presssed W")}
-                colorBackground={"#970F9A"}
-                colorText={"white"}
-                width={40}
-                fontSize={20}
+                style={{
+                  backgroundColor: "#970F9A",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
               >
                 W
               </ButtonKv>
               <ButtonKv
                 onPress={() => console.log("presssed L")}
-                colorBackground={"#970F9A"}
-                colorText={"white"}
-                width={40}
-                fontSize={20}
+                style={{
+                  backgroundColor: "#970F9A",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
               >
                 L
               </ButtonKv>
@@ -233,6 +226,30 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: "green",
     alignItems: "center",
+  },
+  vwBtnBackArrow: {
+    // position: "absolute",
+    marginBottom: -20,
+    paddingTop: 10,
+    paddingLeft: 10,
+  },
+  touchOpBtnBackArrow: {
+    width: 50,
+    height: 50,
+    backgroundColor: "white",
+    borderRadius: 25, // Makes it a circle
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "lightgray",
+  },
+  imgBtnBackArrow: {
+    // width: "100%",
+    // height: "100%",
+    // borderRadius: 35, // Match circle's border radius
+    width: "100%",
+    height: "100%",
+    borderRadius: 17, // Match circle's border radius
   },
   vwTitle: {
     borderBottomWidth: 1,
@@ -303,6 +320,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     minHeight: 100,
     alignItems: "flex-start",
+    width: "100%",
   },
   vwActionDetailsQuality: {
     flexDirection: "row",
@@ -320,11 +338,12 @@ const styles = StyleSheet.create({
     // height: 50,
     flexDirection: "row",
     justifyContent: "space-around",
+    width: "100%",
   },
   vwScriptingManagementLeft: {
     padding: 20,
     // backgroundColor: "gray",
-    margin: 20,
+    // margin: 20,
   },
   vwScriptingManagementRight: {
     padding: 20,

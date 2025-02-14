@@ -8,6 +8,7 @@ export default function SinglePickerWithSideBorders({
   value,
   onChange,
   style,
+  selectedIsBold,
   // setSelectedElement,
   // elementsFontSize,
   // parentViewWidth,
@@ -48,6 +49,7 @@ export default function SinglePickerWithSideBorders({
           onChange={onChange}
           value={value}
           style={style}
+          selectedIsBold={selectedIsBold}
         />
       </View>
     </View>

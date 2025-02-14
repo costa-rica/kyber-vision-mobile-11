@@ -183,37 +183,38 @@ export default function ScriptingLive({ navigation }) {
       table04data={table04data}
     />
   ) : (
-    <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>
-      <ScriptingPortraitLive
-        stdPickerStyle={stdPickerStylePortrait}
-        setOptions={setOptions}
-        setSetsTeamAnalyzed={setSetsTeamAnalyzed}
-        setsTeamAnalyzed={setsTeamAnalyzed}
-        scoreOptions={scoreOptions}
-        setScoreTeamAnalyzed={setScoreTeamAnalyzed}
-        scoreTeamAnalyzed={scoreTeamAnalyzed}
-        setScoreTeamOpponent={setScoreTeamOpponent}
-        scoreTeamOpponent={scoreTeamOpponent}
-        setSetsTeamOpponent={setSetsTeamOpponent}
-        setsTeamOpponent={setsTeamOpponent}
-        setPositionalFormation={setPositionalFormation}
-        positionalFormation={positionalFormation}
-        setQuality={setQuality}
-        quality={quality}
-        setPosition={setPosition}
-        position={position}
-        truncateArrayElements={truncateArrayElements}
-        table02data={table02data}
-        setPlayer={setPlayer}
-        player={player}
-        table03data={table03data}
-        setType={setType}
-        type={type}
-        setSubtype={setSubtype}
-        subtype={subtype}
-        table04data={table04data}
-      />
-    </TemplateView>
+    // <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>
+    <ScriptingPortraitLive
+      navigation={navigation}
+      stdPickerStyle={stdPickerStylePortrait}
+      setOptions={setOptions}
+      setSetsTeamAnalyzed={setSetsTeamAnalyzed}
+      setsTeamAnalyzed={setsTeamAnalyzed}
+      scoreOptions={scoreOptions}
+      setScoreTeamAnalyzed={setScoreTeamAnalyzed}
+      scoreTeamAnalyzed={scoreTeamAnalyzed}
+      setScoreTeamOpponent={setScoreTeamOpponent}
+      scoreTeamOpponent={scoreTeamOpponent}
+      setSetsTeamOpponent={setSetsTeamOpponent}
+      setsTeamOpponent={setsTeamOpponent}
+      setPositionalFormation={setPositionalFormation}
+      positionalFormation={positionalFormation}
+      setQuality={setQuality}
+      quality={quality}
+      setPosition={setPosition}
+      position={position}
+      truncateArrayElements={truncateArrayElements}
+      table02data={table02data}
+      setPlayer={setPlayer}
+      player={player}
+      table03data={table03data}
+      setType={setType}
+      type={type}
+      setSubtype={setSubtype}
+      subtype={subtype}
+      table04data={table04data}
+    />
+    // </TemplateView>
   );
 }
 

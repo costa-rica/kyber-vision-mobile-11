@@ -5,10 +5,13 @@ import {
   View,
   TouchableOpacity,
   Image,
+  Dimensions,
+  Alert,
 } from "react-native";
 import SinglePickerWithSideBorders from "./pickers/SinglePickerWithSideBorders";
 import DoublePickerWithSideBorders from "./pickers/DoublePickerWithSideBorders";
 import { useState } from "react";
+import ButtonKv from "./ButtonKv";
 
 export default function ScriptingLandscapeLive(props) {
   const handleBackPress = async (navigation) => {
@@ -77,15 +80,6 @@ export default function ScriptingLandscapeLive(props) {
                 ...props.stdPickerStyle,
                 backgroundColor: "rgba(74,74,74,0.56)",
               }}
-              // elementsArray={props.scoreOptions}
-              // setSelectedElement={props.setScoreTeamAnalyzed}
-              // selectedElement={props.scoreTeamAnalyzed}
-              // setSelectedElement02={props.setScoreTeamOpponent}
-              // selectedElement02={props.scoreTeamOpponent}
-              // itemHeight={props.stdPickerHeightLandscape}
-              // elementsFontSize={props.stdPickerFontSizeLandscape}
-              // parentViewWidth={props.stdPickerParentViewWidth}
-              // elementPickerBorderRadius={props.stdPickerBorderRadius}
             />
           </View>
           <View style={styles.vwSetCircles}>
@@ -132,8 +126,81 @@ export default function ScriptingLandscapeLive(props) {
             style={styles.imgVolleyBallCourt}
           />
         </View>
+        <View style={styles.vwScriptingManagement}>
+          {/* <View style={styles.vwScriptingManagementLeft}>
+            <ButtonKv
+              onPress={() => {
+                Alert.alert("start");
+                props.setPosition((prev) => prev + 1);
+              }}
+              // colorBackground={"#970F9A"}
+              // colorText={"white"}
+              // width={140}
+              // fontSize={20}
+              style={{
+                backgroundColor: "#970F9A",
+                color: "white",
+                width: 140,
+                fontSize: 20,
+              }}
+            >
+              Start
+            </ButtonKv>
+          </View> */}
+          <View style={styles.vwScriptingManagementRight}>
+            <View style={styles.vwScriptingManagementRightLeft}>
+              <ButtonKv
+                onPress={() => Alert.alert("pressed S")}
+                style={{
+                  backgroundColor: "#310732",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
+              >
+                S
+              </ButtonKv>
+              <ButtonKv
+                onPress={() => Alert.alert("pressed R")}
+                style={{
+                  backgroundColor: "#310732",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
+              >
+                R
+              </ButtonKv>
+            </View>
+            <View style={styles.vwScriptingManagementRightRight}>
+              <ButtonKv
+                onPress={() => Alert.alert("pressed W")}
+                style={{
+                  backgroundColor: "#970F9A",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
+              >
+                W
+              </ButtonKv>
+              <ButtonKv
+                onPress={() => Alert.alert("pressed L")}
+                style={{
+                  backgroundColor: "#970F9A",
+                  color: "white",
+                  width: 40,
+                  fontSize: 20,
+                }}
+              >
+                L
+              </ButtonKv>
+            </View>
+          </View>
+        </View>
       </View>
       <View style={styles.containerBottom}>
+        <View style={styles.vwBlackLineDivider} />
         <View style={styles.vwActionDetails}>
           <View style={styles.vwActionDetailsQuality}>
             <SinglePickerWithSideBorders
@@ -157,6 +224,7 @@ export default function ScriptingLandscapeLive(props) {
               onChange={props.setPlayer}
               value={props.player}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
+              selectedIsBold={false}
             />
           </View>
           <View style={styles.vwActionDetailsType}>
@@ -165,6 +233,7 @@ export default function ScriptingLandscapeLive(props) {
               onChange={props.setType}
               value={props.type}
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
+              selectedIsBold={false}
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
@@ -175,8 +244,17 @@ export default function ScriptingLandscapeLive(props) {
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
             />
           </View>
+          <View style={styles.vwScriptingManagementLeft}>
+            <ButtonKv
+              onPress={() => {
+                Alert.alert("start");
+              }}
+              style={{ backgroundColor: "#970F9A", width: 100, fontSize: 25 }}
+            >
+              Start
+            </ButtonKv>
+          </View>
         </View>
-        <Text>Bottom</Text>
       </View>
     </View>
   );
@@ -199,8 +277,8 @@ const styles = StyleSheet.create({
   vwTopCenterBlurryCapsule: {
     flexDirection: "row",
     width: "80%",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#806181",
@@ -243,8 +321,8 @@ const styles = StyleSheet.create({
   },
   containerMiddle: {
     flex: 1,
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
   vwVolleyballCourt: {
     // backgroundColor: "green",
@@ -252,31 +330,53 @@ const styles = StyleSheet.create({
   },
   imgVolleyBallCourt: {
     alignSelf: "center", // <-- necessary for centering image
-    // height: 305, // Match the height of vwVollyballCourt
-    // // width: undefined, // Let the width adjust based on the image aspect ratio
-    // aspectRatio: 1, // Ensures the width is determined by the image's natural aspect ratio
-    // resizeMode: "contain", // Prevents distortion
-    // backgroundColor: "green",
     height: "95%",
-    width: undefined,
-    aspectRatio: 16 / 9, // Replace with the correct aspect ratio of your image
+    // width: undefined,
+    aspectRatio: 16 / 9, // <-- necessary for good sizing of image
     resizeMode: "contain",
   },
-  containerBottom: {
-    borderWidth: 1,
-    borderStyle: "dashed",
+  vwScriptingManagement: {
+    position: "absolute",
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    // backgroundColor: "green",
   },
 
+  vwScriptingManagementRight: {
+    flexDirection: "row",
+  },
+  vwScriptingManagementRightLeft: {
+    // padding: 10,
+    // margin: 10,
+    gap: 20,
+  },
+  vwScriptingManagementRightRight: {
+    paddingTop: 20,
+    // margin: 10,
+    gap: 20,
+  },
+  containerBottom: {
+    // borderWidth: 1,
+    // borderStyle: "dashed",
+  },
+  vwBlackLineDivider: {
+    width: Dimensions.get("window").width,
+    height: 10,
+    backgroundColor: "#310732",
+  },
   vwActionDetails: {
     paddingTop: 2,
     paddingBottom: 2,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: "5%",
+    // paddingRight: 10,
     backgroundColor: "white",
     justifyContent: "space-between",
     flexDirection: "row",
     // minHeight: 100,
-    alignItems: "flex-start",
+    // alignItems: "flex-start",
+    width: "40%",
+    gap: "2%",
   },
   vwActionDetailsQuality: {
     flexDirection: "row",

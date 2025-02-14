@@ -432,10 +432,17 @@ export default function ScriptingMatchSelection({ navigation }) {
           />
           <View style={styles.vwLiveRowSuper}>
             <ButtonKv
-              colorBackground={"#970F9A"}
-              colorText={"white"}
-              fontSize={48}
+              // colorBackground={"#970F9A"}
+              // colorText={"white"}
+              // fontSize={48}
               width={Dimensions.get("window").width * 0.95}
+              style={{
+                width: Dimensions.get("window").width * 0.95,
+                fontSize: 48,
+                color: "white",
+                backgroundColor: "#970F9A",
+                height: 70,
+              }}
               onPress={() => navigation.navigate("ScriptingLive")}
             >
               Live
