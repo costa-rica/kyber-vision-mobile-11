@@ -12,6 +12,8 @@ import SinglePickerWithSideBorders from "./pickers/SinglePickerWithSideBorders";
 import DoublePickerWithSideBorders from "./pickers/DoublePickerWithSideBorders";
 import { useState } from "react";
 import ButtonKv from "./ButtonKv";
+// Implement Video Player
+import { useVideoPlayer, VideoView } from "expo-video";
 
 export default function ScriptingPortraitVideo(props) {
   return (
@@ -115,8 +117,8 @@ export default function ScriptingPortraitVideo(props) {
           <View style={styles.vwActionDetailsPlayer}>
             <SinglePickerWithSideBorders
               arrayElements={props.truncateArrayElements(props.table02data, 4)}
-              onChange={props.setPlayer}
-              value={props.player}
+              onChange={props.setPlayerName}
+              value={props.playerName}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
               selectedIsBold={false}
             />

@@ -41,6 +41,18 @@ import { faX } from "@fortawesome/free-solid-svg-icons";
 import ButtonKvImage from "./subcomponents/ButtonKvImage";
 import ButtonKv from "./subcomponents/ButtonKv";
 
+const table01data = {
+  User41: "Ted",
+  User42: "Sarah",
+  User56: "Jeremy",
+  User62: "Melody",
+};
+const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
+const table03data = ["Def", "Set", "Att"];
+const table04data = ["DefSub", "SetSub", "AttSub"];
+const setOptions = [0, 1, 2, 3];
+const scoreOptions = Array.from({ length: 26 }, (_, i) => i);
+
 export default function Scripting({ navigation, route }) {
   const userReducer = useSelector((state) => state.user);
   const scriptReducer = useSelector((state) => state.script);
@@ -89,6 +101,29 @@ export default function Scripting({ navigation, route }) {
   const [playerName, setPlayerName] = useState(table02data[0]);
   const [type, setType] = useState(table03data[0]);
   const [subtype, setSubtype] = useState(table04data[0]);
+  const stdPickerStylePortrait = {
+    color: "white",
+    fontSize: 25,
+    backgroundColor: "#310732",
+    itemHeight: 60,
+    width: 40,
+    borderRadius: 15,
+  };
+  const stdPickerStyleLandscape = {
+    color: "white",
+    fontSize: 20,
+    backgroundColor: "#310732",
+    itemHeight: 40,
+    width: 40,
+    borderRadius: 15,
+  };
+  const truncateArrayElements = (arr, maxLength) => {
+    return arr.map((item) =>
+      item.length > maxLength ? item.substring(0, maxLength) : item
+    );
+  };
+
+  // END New 2025-02-14
 
   useEffect(() => {
     // setStartTime(userReducer.video.setTimeStampsArray[currentSet]);
@@ -481,13 +516,16 @@ export default function Scripting({ navigation, route }) {
           currentAction={currentAction}
           // -- new based on ScriptingLive --
           handleSetCirclePress={handleBackPress}
+          setOptions={setOptions}
           setsTeamAnalyzed={setsTeamAnalyzed}
+          setSetsTeamAnalyzed={setSetsTeamAnalyzed}
           scoreOptions={scoreOptions}
           setScoreTeamAnalyzed={setScoreTeamAnalyzed}
           scoreTeamAnalyzed={scoreTeamAnalyzed}
           setScoreTeamOpponent={setScoreTeamOpponent}
           scoreTeamOpponent={scoreTeamOpponent}
           setsTeamOpponent={setsTeamOpponent}
+          setSetsTeamOpponent={setSetsTeamOpponent}
           stdPickerStyle={stdPickerStyleLandscape}
           setPositionalFormation={setPositionalFormation}
           positionalFormation={positionalFormation}
@@ -497,7 +535,7 @@ export default function Scripting({ navigation, route }) {
           position={position}
           truncateArrayElements={truncateArrayElements}
           table02data={table02data}
-          setPlayer={setPlayer}
+          setPlayerName={setPlayerName}
           playerName={playerName}
           table03data={table03data}
           setType={setType}

@@ -27,22 +27,9 @@ const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
 const table03data = ["Def", "Set", "Att"];
 const table04data = ["DefSub", "SetSub", "AttSub"];
 const setOptions = [0, 1, 2, 3];
-// const setOptions = Array.from({ length: 3 }, (_, i) => i + 1);
-// const setOptions = Array.from({ length: 3 }, (_, i) => i);
-// const scoreOptions = Array.from({ length: 25 }, (_, i) => i + 1);
-// const scoreOptions = Array.from({ length: 25 }, (_, i) => i);
 const scoreOptions = Array.from({ length: 26 }, (_, i) => i);
 
 export default function ScriptingLive({ navigation }) {
-  // console.log(`scoreOPtions are: ${scoreOptions}`);
-  // Standardized Picker UI Parameters
-  // const stdPickerHeight = 60;
-  // const stdPickerFontSize = 25;
-  // const stdPickerParentViewWidth = 40;
-  // const stdPickerBorderRadius = 15;
-  // const stdPickerHeightLandscape = 40;
-  // const stdPickerFontSizeLandscape = 20;
-
   const stdPickerStylePortrait = {
     color: "white",
     fontSize: 25,
