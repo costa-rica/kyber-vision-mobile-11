@@ -81,7 +81,7 @@ export default function ScriptingPortraitLive(props) {
               arrayElements={["P1", "P2", "P3", "P4", "P5", "P6"]}
               onChange={props.setPositionalFormation}
               value={props.positionalFormation}
-              style={props.stdPickerStyle}
+              style={{ ...props.stdPickerStyle, width: 50 }}
             />
           </View>
         </View>
@@ -118,6 +118,7 @@ export default function ScriptingPortraitLive(props) {
               onChange={props.setPlayer}
               value={props.player}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
+              selectedIsBold={false}
             />
           </View>
           <View style={styles.vwActionDetailsType}>
@@ -126,6 +127,7 @@ export default function ScriptingPortraitLive(props) {
               onChange={props.setType}
               value={props.type}
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
+              selectedIsBold={false}
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
@@ -138,7 +140,6 @@ export default function ScriptingPortraitLive(props) {
           </View>
         </View>
         <View style={styles.vwScriptingManagement}>
-          {/* <Text>selected player: {player}</Text> */}
           <View style={styles.vwScriptingManagementLeft}>
             <ButtonKv
               onPress={() => {
