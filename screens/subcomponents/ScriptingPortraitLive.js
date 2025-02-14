@@ -26,52 +26,56 @@ export default function ScriptingPortraitLive(props) {
               {/* Belongs to Set Team Analyzed SinglePickerWithSideBorders */}
 
               <SinglePickerWithSideBorders
-                elementsArray={props.setOptions}
+                arrayElements={props.setOptions}
                 itemHeight={props.stdPickerHeight}
-                setSelectedElement={props.setSetsTeamAnalyzed}
-                selectedElement={props.setsTeamAnalyzed}
-                elementsFontSize={props.stdPickerFontSize}
-                parentViewWidth={props.stdPickerParentViewWidth}
+                onChange={props.setSetsTeamAnalyzed}
+                value={props.setsTeamAnalyzed}
+                // elementsFontSize={props.stdPickerFontSize}
+                // parentViewWidth={props.stdPickerParentViewWidth}
+                style={props.stdPickerStyle}
               />
             </View>
             {/* <View style={{ flex: 1 }} /> */}
             <View style={styles.vwScoreBothTeamsScores}>
               <DoublePickerWithSideBorders
-                elementsArray={props.scoreOptions}
-                setSelectedElement={props.setScoreTeamAnalyzed}
-                selectedElement={props.scoreTeamAnalyzed}
-                setSelectedElement02={props.setScoreTeamOpponent}
-                selectedElement02={props.scoreTeamOpponent}
-                itemHeight={props.stdPickerHeight}
-                elementsFontSize={props.stdPickerFontSize}
-                parentViewWidth={props.stdPickerParentViewWidth}
-                elementPickerBorderRadius={props.stdPickerBorderRadius}
+                arrayElements={props.scoreOptions}
+                onChange={props.setScoreTeamAnalyzed}
+                value={props.scoreTeamAnalyzed}
+                onChange02={props.setScoreTeamOpponent}
+                value02={props.scoreTeamOpponent}
+                // itemHeight={props.stdPickerHeight}
+                // elementsFontSize={props.stdPickerFontSize}
+                // parentViewWidth={props.stdPickerParentViewWidth}
+                // elementPickerBorderRadius={props.stdPickerBorderRadius}
+                style={props.stdPickerStyle}
               />
             </View>
 
             {/* Belongs to Score SinglePickerWithSideBorders */}
             <View style={styles.vwScoreSetTeamOpponent}>
               <SinglePickerWithSideBorders
-                elementsArray={props.setOptions}
-                setSelectedElement={props.setSetsTeamOpponent}
-                selectedElement={props.setsTeamOpponent}
-                itemHeight={props.stdPickerHeight}
-                elementsFontSize={props.stdPickerFontSize}
-                parentViewWidth={props.stdPickerParentViewWidth}
-                elementPickerBorderRadius={props.stdPickerBorderRadius}
+                arrayElements={props.setOptions}
+                onChange={props.setSetsTeamOpponent}
+                value={props.setsTeamOpponent}
+                style={props.stdPickerStyle}
+                // itemHeight={props.stdPickerHeight}
+                // elementsFontSize={props.stdPickerFontSize}
+                // parentViewWidth={props.stdPickerParentViewWidth}
+                // elementPickerBorderRadius={props.stdPickerBorderRadius}
               />
             </View>
           </View>
 
           <View style={styles.vwScorePoistionalFormation}>
             <SinglePickerWithSideBorders
-              elementsArray={["P1", "P2", "P3", "P4", "P5", "P6"]}
-              setSelectedElement={props.setPositionalFormation}
-              selectedElement={props.positionalFormation}
-              itemHeight={props.stdPickerHeight}
-              elementsFontSize={20}
-              parentViewWidth={40}
-              elementPickerBorderRadius={15}
+              arrayElements={["P1", "P2", "P3", "P4", "P5", "P6"]}
+              onChange={props.setPositionalFormation}
+              value={props.positionalFormation}
+              style={props.stdPickerStyle}
+              // itemHeight={props.stdPickerHeight}
+              // elementsFontSize={20}
+              // parentViewWidth={40}
+              // elementPickerBorderRadius={15}
             />
           </View>
         </View>
@@ -90,62 +94,67 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwActionDetailsQuality}>
             {/* Belongs to Quailty */}
             <SinglePickerWithSideBorders
-              elementsArray={[-2, -1, 0, 1, 2]}
-              setSelectedElement={props.setQuality}
-              selectedElement={props.quality}
-              itemHeight={props.stdPickerHeight}
-              elementsFontSize={props.stdPickerFontSize}
-              parentViewWidth={props.stdPickerParentViewWidth}
-              elementPickerBorderRadius={props.stdPickerBorderRadius}
+              arrayElements={[-2, -1, 0, 1, 2]}
+              onChange={props.setQuality}
+              value={props.quality}
+              style={props.stdPickerStyle}
+              // itemHeight={props.stdPickerHeight}
+              // elementsFontSize={props.stdPickerFontSize}
+              // parentViewWidth={props.stdPickerParentViewWidth}
+              // elementPickerBorderRadius={props.stdPickerBorderRadius}
             />
           </View>
           <View style={styles.vwActionDetailsPosition}>
             <SinglePickerWithSideBorders
-              elementsArray={[1, 2, 3, 4, 5, 6]}
-              setSelectedElement={props.setPosition}
-              selectedElement={props.position}
-              // selectedElement={5}
-              itemHeight={props.stdPickerHeight}
-              elementsFontSize={props.stdPickerFontSize}
-              parentViewWidth={props.stdPickerParentViewWidth}
-              elementPickerBorderRadius={props.stdPickerBorderRadius}
+              arrayElements={[1, 2, 3, 4, 5, 6]}
+              onChange={props.setPosition}
+              value={props.position}
+              style={props.stdPickerStyle}
+              // value={5}
+              // itemHeight={props.stdPickerHeight}
+              // elementsFontSize={props.stdPickerFontSize}
+              // parentViewWidth={props.stdPickerParentViewWidth}
+              // elementPickerBorderRadius={props.stdPickerBorderRadius}
             />
           </View>
           <View style={styles.vwActionDetailsPlayer}>
             <SinglePickerWithSideBorders
-              //   elementsArray={[1, 2, 3]}
-              elementsArray={props.truncateArrayElements(props.table02data, 4)}
-              setSelectedElement={props.setPlayer}
-              selectedElement={props.player}
-              itemHeight={props.stdPickerHeight}
-              elementsFontSize={18}
-              parentViewWidth={60}
-              elementPickerBorderRadius={props.stdPickerBorderRadius}
-              cutoff={4}
+              //   arrayElements={[1, 2, 3]}
+              arrayElements={props.truncateArrayElements(props.table02data, 4)}
+              onChange={props.setPlayer}
+              value={props.player}
+              style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
+              // itemHeight={props.stdPickerHeight}
+              // elementsFontSize={18}
+              // parentViewWidth={60}
+              // elementPickerBorderRadius={props.stdPickerBorderRadius}
+              // cutoff={4}
             />
             {/* <View style={styles.vwSpacer} /> */}
             {/* <View style={styles.vwBlackLineDivider} /> */}
           </View>
           <View style={styles.vwActionDetailsType}>
             <SinglePickerWithSideBorders
-              elementsArray={props.table03data}
-              setSelectedElement={props.setType} // Pass callback function
-              selectedElement={props.type}
-              itemHeight={props.stdPickerHeight}
-              elementsFontSize={20}
-              parentViewWidth={50}
-              elementPickerBorderRadius={props.stdPickerBorderRadius}
+              arrayElements={props.table03data}
+              onChange={props.setType} // Pass callback function
+              value={props.type}
+              style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
+              // itemHeight={props.stdPickerHeight}
+              // elementsFontSize={20}
+              // parentViewWidth={50}
+              // elementPickerBorderRadius={props.stdPickerBorderRadius}
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
             <SinglePickerWithSideBorders
-              elementsArray={props.truncateArrayElements(props.table04data, 4)}
-              setSelectedElement={props.setSubtype} // Pass callback function
-              selectedElement={props.subtype}
-              itemHeight={props.stdPickerHeight}
-              elementsFontSize={15}
-              parentViewWidth={60}
-              elementPickerBorderRadius={props.stdPickerBorderRadius}
+              arrayElements={props.truncateArrayElements(props.table04data, 4)}
+              onChange={props.setSubtype} // Pass callback function
+              value={props.subtype}
+              style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
+              // itemHeight={props.stdPickerHeight}
+              // elementsFontSize={15}
+              // parentViewWidth={60}
+              // elementPickerBorderRadius={props.stdPickerBorderRadius}
             />
           </View>
         </View>

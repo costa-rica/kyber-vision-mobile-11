@@ -26,16 +26,39 @@ const table01data = {
 const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
 const table03data = ["Def", "Set", "Att"];
 const table04data = ["DefSub", "SetSub", "AttSub"];
-const setOptions = Array.from({ length: 3 }, (_, i) => i + 1);
-const scoreOptions = Array.from({ length: 25 }, (_, i) => i + 1);
+const setOptions = [0, 1, 2, 3];
+// const setOptions = Array.from({ length: 3 }, (_, i) => i + 1);
+// const setOptions = Array.from({ length: 3 }, (_, i) => i);
+// const scoreOptions = Array.from({ length: 25 }, (_, i) => i + 1);
+// const scoreOptions = Array.from({ length: 25 }, (_, i) => i);
+const scoreOptions = Array.from({ length: 26 }, (_, i) => i);
+
 export default function ScriptingLive({ navigation }) {
+  // console.log(`scoreOPtions are: ${scoreOptions}`);
   // Standardized Picker UI Parameters
-  const stdPickerHeight = 60;
-  const stdPickerFontSize = 25;
-  const stdPickerParentViewWidth = 40;
-  const stdPickerBorderRadius = 15;
-  const stdPickerHeightLandscape = 40;
-  const stdPickerFontSizeLandscape = 20;
+  // const stdPickerHeight = 60;
+  // const stdPickerFontSize = 25;
+  // const stdPickerParentViewWidth = 40;
+  // const stdPickerBorderRadius = 15;
+  // const stdPickerHeightLandscape = 40;
+  // const stdPickerFontSizeLandscape = 20;
+
+  const stdPickerStylePortrait = {
+    color: "white",
+    fontSize: 25,
+    backgroundColor: "#310732",
+    itemHeight: 60,
+    width: 40,
+    borderRadius: 15,
+  };
+  const stdPickerStyleLandscape = {
+    color: "white",
+    fontSize: 20,
+    backgroundColor: "#310732",
+    itemHeight: 40,
+    width: 40,
+    borderRadius: 15,
+  };
 
   // Belongs to Set Team Analyzed SinglePickerWithSideBorders
   const [setsTeamAnalyzed, setSetsTeamAnalyzed] = useState(0);
@@ -56,7 +79,7 @@ export default function ScriptingLive({ navigation }) {
   const [orientation, setOrientation] = useState("portrait");
 
   useEffect(() => {
-    console.log("- Position useEffect");
+    // console.log("- Position useEffect");
     ScreenOrientation.unlockAsync();
     checkOrientation();
     const subscriptionScreenOrientation =
@@ -69,9 +92,9 @@ export default function ScriptingLive({ navigation }) {
   });
 
   const checkOrientation = async () => {
-    console.log("in checkOrientation");
+    // console.log("in checkOrientation");
     const orientation = await ScreenOrientation.getOrientationAsync();
-    console.log(`orientation is ${orientation}`);
+    // console.log(`orientation is ${orientation}`);
     if (
       o.orientationInfo.orientation == 4 ||
       o.orientationInfo.orientation == 3
@@ -82,9 +105,9 @@ export default function ScriptingLive({ navigation }) {
     }
   };
   const handleOrientationChange = async (o) => {
-    console.log(
-      `o.orientationInfo.orientation: ${o.orientationInfo.orientation}`
-    );
+    // console.log(
+    //   `o.orientationInfo.orientation: ${o.orientationInfo.orientation}`
+    // );
     setOrientation(o.orientationInfo.orientation);
     if (
       o.orientationInfo.orientation == 4 ||
@@ -133,11 +156,6 @@ export default function ScriptingLive({ navigation }) {
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
     <ScriptingLandscapeLive
-      setPositionalFormation={setPositionalFormation}
-      positionalFormation={positionalFormation}
-      // stdPickerHeight={stdPickerHeight}
-      stdPickerHeightLandscape={stdPickerHeightLandscape}
-      stdPickerFontSizeLandscape={stdPickerFontSizeLandscape}
       handleSetCirclePress={handleSetCirclePress}
       setsTeamAnalyzed={setsTeamAnalyzed}
       scoreOptions={scoreOptions}
@@ -145,16 +163,29 @@ export default function ScriptingLive({ navigation }) {
       scoreTeamAnalyzed={scoreTeamAnalyzed}
       setScoreTeamOpponent={setScoreTeamOpponent}
       scoreTeamOpponent={scoreTeamOpponent}
-      stdPickerParentViewWidth={stdPickerParentViewWidth}
       setsTeamOpponent={setsTeamOpponent}
+      stdPickerStyle={stdPickerStyleLandscape}
+      setPositionalFormation={setPositionalFormation}
+      positionalFormation={positionalFormation}
+      setQuality={setQuality}
+      quality={quality}
+      setPosition={setPosition}
+      position={position}
+      truncateArrayElements={truncateArrayElements}
+      table02data={table02data}
+      setPlayer={setPlayer}
+      player={player}
+      table03data={table03data}
+      setType={setType}
+      type={type}
+      setSubtype={setSubtype}
+      subtype={subtype}
+      table04data={table04data}
     />
   ) : (
     <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>
       <ScriptingPortraitLive
-        stdPickerBorderRadius={stdPickerBorderRadius}
-        stdPickerFontSize={stdPickerFontSize}
-        stdPickerParentViewWidth={stdPickerParentViewWidth}
-        stdPickerHeight={stdPickerHeight}
+        stdPickerStyle={stdPickerStylePortrait}
         setOptions={setOptions}
         setSetsTeamAnalyzed={setSetsTeamAnalyzed}
         setsTeamAnalyzed={setsTeamAnalyzed}
