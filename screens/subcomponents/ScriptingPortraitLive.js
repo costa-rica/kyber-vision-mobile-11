@@ -12,15 +12,37 @@ import SinglePickerWithSideBorders from "./pickers/SinglePickerWithSideBorders";
 import DoublePickerWithSideBorders from "./pickers/DoublePickerWithSideBorders";
 import { useState } from "react";
 import ButtonKv from "./ButtonKv";
+// SwipePad
+import {
+  GestureHandlerRootView,
+  GestureDetector,
+  Gesture,
+} from "react-native-gesture-handler";
 
 export default function ScriptingPortraitLive(props) {
-  const handleVwVolleyballCourtLayout = (event) => {
-    console.log(`- handleVwVolleyballCourtLayout event-`);
+  // const [gestureBoundaries, setGestureBoundaries] = useState({
+  //   low_y: 0,
+  //   high_y: 0,
+  // });
+  // const handleContainerTopLayout = (event) => {
+  //   console.log(`- 1 handleContainerTopLayout event-`);
+  //   console.log(event.nativeEvent.layout);
+  //   const { height, y } = event.nativeEvent.layout;
+  //   setGestureBoundaries({ ...gestureBoundaries, low_y: y });
+  // };
+  // const handleVwTitleLayout = (event) => {
+  //   console.log(`- 2 handleVwTitleLayout event-`);
+  //   console.log(event.nativeEvent.layout);
+  //   const { height, y } = event.nativeEvent.layout;
+  //   console.log(`gestureBoundaries.low_y: ${gestureBoundaries.low_y}`);
+  //   // const new_y = gestureBoundaries.low_y + y;
+  //   // setGestureBoundaries({ ...gestureBoundaries, low_y: new_y });
+  // };
+  const handleGestureHandlerRootViewLayout = (event) => {
+    console.log(`- 3 handleGestureHandlerRootViewLayout event-`);
     console.log(event.nativeEvent.layout);
-  };
-  const handleContainerTopLayout = (event) => {
-    console.log(`- handleContainerTopLayout event-`);
-    console.log(event.nativeEvent.layout);
+    const { height, x, y } = event.nativeEvent.layout;
+    props.setGestureBoundaries({ low_x: x, low_y: y, high_y: y + height });
   };
 
   return (
@@ -40,12 +62,19 @@ export default function ScriptingPortraitLive(props) {
           />
         </TouchableOpacity>
       </View>
+      <Text style={{ position: "absolute", left: 100, top: 10 }}>
+        low_y:{props.gestureBoundaries.low_y} high_y:{" "}
+        {props.gestureBoundaries.high_y}
+      </Text>
       <View
         style={styles.containerTop}
-        onLayout={(event) => handleContainerTopLayout(event)}
+        // onLayout={(event) => handleContainerTopLayout(event)}
       >
         <Text>Live Scripting</Text>
-        <View style={styles.vwTitle}>
+        <View
+          style={styles.vwTitle}
+          // onLayout={(event) => handleVwTitleLayout(event)}
+        >
           <Text style={styles.txtTitleAdmin}>AUC vs Arles</Text>
         </View>
         <View style={styles.vwScore}>
@@ -97,16 +126,22 @@ export default function ScriptingPortraitLive(props) {
             />
           </View>
         </View>
-        <View
-          style={styles.vwVolleyballCourt}
-          onLayout={(event) => handleVwVolleyballCourtLayout(event)}
+        <GestureHandlerRootView
+          onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
         >
-          <Image
-            source={require("../../assets/images/imgVollyballCourt.png")}
-            alt="imgVollyballCourt"
-            resizeMode="contain"
-          />
-        </View>
+          <GestureDetector gesture={props.combinedGestures}>
+            <View
+              style={styles.vwVolleyballCourt}
+              // onLayout={(event) => handleVwVolleyballCourtLayout(event)}
+            >
+              <Image
+                source={require("../../assets/images/imgVollyballCourt.png")}
+                alt="imgVollyballCourt"
+                resizeMode="contain"
+              />
+            </View>
+          </GestureDetector>
+        </GestureHandlerRootView>
       </View>
       <View style={styles.containerBottom}>
         <View style={styles.vwBlackLineDivider} />

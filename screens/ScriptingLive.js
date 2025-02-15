@@ -152,10 +152,15 @@ export default function ScriptingLive({ navigation }) {
   const demoOption = "4-8";
   const [numTrianglesMiddle, setNumTrianglesMiddle] = useState(4); // 2, 4, or 5
   const [numTrianglesOuter, setNumTrianglesOuter] = useState(8); // 8, 10 or 12
-  const [circleRadiusOuter, setCircleRadiusOuter] = useState(60);
-  const [circleRadiusMiddle, setCircleRadiusMiddle] = useState(30);
-  const [circleRadiusInner, setCircleRadiusInner] = useState(15);
+  const [circleRadiusOuter, setCircleRadiusOuter] = useState(80);
+  const [circleRadiusMiddle, setCircleRadiusMiddle] = useState(40);
+  const [circleRadiusInner, setCircleRadiusInner] = useState(20);
   const [padPositionCenter, setPadPositionCenter] = useState({ x: 0, y: 0 });
+  const [gestureBoundaries, setGestureBoundaries] = useState({
+    low_x: 0,
+    low_y: 0,
+    high_y: 0,
+  });
   const [padVisible, setPadVisible] = useState(false);
   const [tapDetails, setTapDetails] = useState({
     timestamp: "no date",
@@ -257,8 +262,12 @@ export default function ScriptingLive({ navigation }) {
     if (tapIsActive) {
       const timestamp = new Date().toISOString();
       const { x, y, absoluteX, absoluteY } = event;
-      console.log(`x: ${x}, y:${y}`);
-      if (y > 200 && y < 300) {
+      // console.log(`x: ${x}, y:${y}`);
+      console.log(`absoluteX: ${absoluteX}, absoluteY: ${absoluteY}`);
+      if (
+        absoluteY > gestureBoundaries.low_y &&
+        absoluteY < gestureBoundaries.high_y
+      ) {
         setPadPositionCenter({
           x: calculatePadPositionCenter(x, y).x,
           y: calculatePadPositionCenter(x, y).y,
@@ -626,8 +635,8 @@ export default function ScriptingLive({ navigation }) {
   };
 
   const calculatePadPositionCenter = (x, y) => {
-    const centeredX = x - circleRadiusOuter;
-    const centeredY = y - circleRadiusOuter;
+    const centeredX = x - gestureBoundaries.low_x + 5; //< - 5 is just me callobrating, but I don't knw why
+    const centeredY = y + gestureBoundaries.low_y - 45; //< - 45 is just me callobrating, but I don't knw why
     return { x: centeredX, y: centeredY };
   };
   const calculateDistanceFromCenter = (swipePosX, swipePosY) => {
@@ -675,53 +684,56 @@ export default function ScriptingLive({ navigation }) {
       table04data={table04data}
     />
   ) : (
-    <GestureHandlerRootView style={styles.container}>
-      <GestureDetector gesture={combinedGestures}>
-        <View style={{ flex: 1 }}>
-          <ScriptingPortraitLive
-            navigation={navigation}
-            stdPickerStyle={stdPickerStylePortrait}
-            setOptions={setOptions}
-            setSetsTeamAnalyzed={setSetsTeamAnalyzed}
-            setsTeamAnalyzed={setsTeamAnalyzed}
-            scoreOptions={scoreOptions}
-            setScoreTeamAnalyzed={setScoreTeamAnalyzed}
-            scoreTeamAnalyzed={scoreTeamAnalyzed}
-            setScoreTeamOpponent={setScoreTeamOpponent}
-            scoreTeamOpponent={scoreTeamOpponent}
-            setSetsTeamOpponent={setSetsTeamOpponent}
-            setsTeamOpponent={setsTeamOpponent}
-            setPositionalFormation={setPositionalFormation}
-            positionalFormation={positionalFormation}
-            setQuality={setQuality}
-            quality={quality}
-            setPosition={setPosition}
-            position={position}
-            truncateArrayElements={truncateArrayElements}
-            table02data={table02data}
-            setPlayerName={setPlayerName}
-            playerName={playerName}
-            table03data={table03data}
-            setType={setType}
-            type={type}
-            setSubtype={setSubtype}
-            subtype={subtype}
-            table04data={table04data}
-          />
-          {padVisible && (
-            <SwipePad
-              circleRadiusInner={circleRadiusInner}
-              circleRadiusMiddle={circleRadiusMiddle}
-              styleVwMainPosition={styleVwMainPosition}
-              swipeColorDict={swipeColorDict}
-              circleRadiusOuter={circleRadiusOuter}
-              numTrianglesMiddle={numTrianglesMiddle}
-              numTrianglesOuter={numTrianglesOuter}
-            />
-          )}
-        </View>
-      </GestureDetector>
-    </GestureHandlerRootView>
+    // <GestureHandlerRootView style={styles.container}>
+    //   <GestureDetector gesture={combinedGestures}>
+    <View style={{ flex: 1 }}>
+      <ScriptingPortraitLive
+        navigation={navigation}
+        stdPickerStyle={stdPickerStylePortrait}
+        setOptions={setOptions}
+        setSetsTeamAnalyzed={setSetsTeamAnalyzed}
+        setsTeamAnalyzed={setsTeamAnalyzed}
+        scoreOptions={scoreOptions}
+        setScoreTeamAnalyzed={setScoreTeamAnalyzed}
+        scoreTeamAnalyzed={scoreTeamAnalyzed}
+        setScoreTeamOpponent={setScoreTeamOpponent}
+        scoreTeamOpponent={scoreTeamOpponent}
+        setSetsTeamOpponent={setSetsTeamOpponent}
+        setsTeamOpponent={setsTeamOpponent}
+        setPositionalFormation={setPositionalFormation}
+        positionalFormation={positionalFormation}
+        setQuality={setQuality}
+        quality={quality}
+        setPosition={setPosition}
+        position={position}
+        truncateArrayElements={truncateArrayElements}
+        table02data={table02data}
+        setPlayerName={setPlayerName}
+        playerName={playerName}
+        table03data={table03data}
+        setType={setType}
+        type={type}
+        setSubtype={setSubtype}
+        subtype={subtype}
+        table04data={table04data}
+        combinedGestures={combinedGestures}
+        setGestureBoundaries={setGestureBoundaries}
+        gestureBoundaries={gestureBoundaries}
+      />
+      {padVisible && (
+        <SwipePad
+          circleRadiusInner={circleRadiusInner}
+          circleRadiusMiddle={circleRadiusMiddle}
+          styleVwMainPosition={styleVwMainPosition}
+          swipeColorDict={swipeColorDict}
+          circleRadiusOuter={circleRadiusOuter}
+          numTrianglesMiddle={numTrianglesMiddle}
+          numTrianglesOuter={numTrianglesOuter}
+        />
+      )}
+    </View>
+    //   </GestureDetector>
+    // </GestureHandlerRootView>
   );
 }
 
