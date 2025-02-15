@@ -24,7 +24,7 @@ const table01data = {
   User62: "Melody",
 };
 const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
-const table03data = ["Def", "Set", "Att"];
+const tableTypeDummyData = ["Att", "Def", "Rec", "Blo"];
 const table04data = ["DefSub", "SetSub", "AttSub"];
 const setOptions = [0, 1, 2, 3];
 const scoreOptions = Array.from({ length: 26 }, (_, i) => i);
@@ -67,7 +67,7 @@ export default function ScriptingLive({ navigation }) {
   const [quality, setQuality] = useState(0);
   const [position, setPosition] = useState(1);
   const [playerName, setPlayerName] = useState(table02data[0]);
-  const [type, setType] = useState(table03data[0]);
+  const [type, setType] = useState(tableTypeDummyData[0]);
   const [subtype, setSubtype] = useState(table04data[0]);
 
   // orientation
@@ -196,31 +196,31 @@ export default function ScriptingLive({ navigation }) {
     left: padPositionCenter.x, // Center modal horizontally
     top: padPositionCenter.y, // Center modal vertically
   };
-  const handleChoice = (option) => {
-    setPadVisible(true);
-    setDemoOption(option);
-    if (option == "5-10") {
-      setNumTrianglesMiddle(5);
-      setNumTrianglesOuter(10);
-      // need to adjust degrees rotation
-    } else if (option == "4-12") {
-      setNumTrianglesMiddle(4);
-      setNumTrianglesOuter(12);
-      // need to adjust degrees rotation in two places
-    } else if (option == "4-8") {
-      setNumTrianglesMiddle(4);
-      setNumTrianglesOuter(8);
-      // need to adjust degrees rotation in two places
-    } else if (option == "2") {
-      setNumTrianglesMiddle(2);
-      setNumTrianglesOuter(0);
-      // need to adjust degrees rotation in two places
-    }
-  };
+  // const handleChoice = (option) => {
+  //   setPadVisible(true);
+  //   setDemoOption(option);
+  //   if (option == "5-10") {
+  //     setNumTrianglesMiddle(5);
+  //     setNumTrianglesOuter(10);
+  //     // need to adjust degrees rotation
+  //   } else if (option == "4-12") {
+  //     setNumTrianglesMiddle(4);
+  //     setNumTrianglesOuter(12);
+  //     // need to adjust degrees rotation in two places
+  //   } else if (option == "4-8") {
+  //     setNumTrianglesMiddle(4);
+  //     setNumTrianglesOuter(8);
+  //     // need to adjust degrees rotation in two places
+  //   } else if (option == "2") {
+  //     setNumTrianglesMiddle(2);
+  //     setNumTrianglesOuter(0);
+  //     // need to adjust degrees rotation in two places
+  //   }
+  // };
 
-  const onChangeSizeCircleOuter = (newSize) => {
-    setCircleRadiusOuter(newSize);
-  };
+  // const onChangeSizeCircleOuter = (newSize) => {
+  //   setCircleRadiusOuter(newSize);
+  // };
 
   // Function to temporarily change color
   const handleSwipeColorChange = (direction, outerDirection = false) => {
@@ -359,6 +359,7 @@ export default function ScriptingLive({ navigation }) {
       // Bottom Right
       handleSwipeColorChange(1);
       setCurrentActionType(1);
+      setType(tableTypeDummyData[1]);
       if (!inMiddleCircle) {
         if (relativeToPadCenterY < boundary45) {
           handleSwipeColorChange(1, 5);
@@ -372,6 +373,7 @@ export default function ScriptingLive({ navigation }) {
       // Bottom Left
       handleSwipeColorChange(2);
       setCurrentActionType(2);
+      setType(tableTypeDummyData[2]);
       if (!inMiddleCircle) {
         if (relativeToPadCenterY > Math.abs(boundary45)) {
           handleSwipeColorChange(2, 7);
@@ -382,9 +384,11 @@ export default function ScriptingLive({ navigation }) {
         }
       }
     } else if (relativeToPadCenterX < 0 && relativeToPadCenterY < 0) {
-      // Top Right
+      // Top Left
       handleSwipeColorChange(3);
       setCurrentActionType(3);
+      setType(tableTypeDummyData[3]);
+      // console.log("set Att");
       if (!inMiddleCircle) {
         if (relativeToPadCenterY > boundary45) {
           handleSwipeColorChange(3, 9);
@@ -398,6 +402,7 @@ export default function ScriptingLive({ navigation }) {
       // Top Right
       handleSwipeColorChange(4);
       setCurrentActionType(4);
+      setType(tableTypeDummyData[0]);
       if (!inMiddleCircle) {
         if (Math.abs(relativeToPadCenterY) > boundary45) {
           handleSwipeColorChange(4, 11);
@@ -635,8 +640,14 @@ export default function ScriptingLive({ navigation }) {
   };
 
   const calculatePadPositionCenter = (x, y) => {
-    const centeredX = x - gestureBoundaries.low_x + 5; //< - 5 is just me callobrating, but I don't knw why
-    const centeredY = y + gestureBoundaries.low_y - 45; //< - 45 is just me callobrating, but I don't knw why
+    let centeredX = x - gestureBoundaries.low_x + 5; //< - 5 is just me callobrating, but I don't knw why
+    let centeredY = y + gestureBoundaries.low_y - 45; //< - 45 is just me callobrating, but I don't knw why
+
+    if (orientation == "landscape") {
+      centeredX = x - gestureBoundaries.low_x - circleRadiusOuter; //< - 5 is just me callobrating, but I don't knw why
+      centeredY = y + gestureBoundaries.low_y - 45; //< - 45 is just me callobrating, but I don't knw why
+    }
+
     return { x: centeredX, y: centeredY };
   };
   const calculateDistanceFromCenter = (swipePosX, swipePosY) => {
@@ -656,33 +667,49 @@ export default function ScriptingLive({ navigation }) {
 
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
-    <ScriptingLandscapeLive
-      handleSetCirclePress={handleSetCirclePress}
-      setsTeamAnalyzed={setsTeamAnalyzed}
-      scoreOptions={scoreOptions}
-      setScoreTeamAnalyzed={setScoreTeamAnalyzed}
-      scoreTeamAnalyzed={scoreTeamAnalyzed}
-      setScoreTeamOpponent={setScoreTeamOpponent}
-      scoreTeamOpponent={scoreTeamOpponent}
-      setsTeamOpponent={setsTeamOpponent}
-      stdPickerStyle={stdPickerStyleLandscape}
-      setPositionalFormation={setPositionalFormation}
-      positionalFormation={positionalFormation}
-      setQuality={setQuality}
-      quality={quality}
-      setPosition={setPosition}
-      position={position}
-      truncateArrayElements={truncateArrayElements}
-      table02data={table02data}
-      setPlayerName={setPlayerName}
-      playerName={playerName}
-      table03data={table03data}
-      setType={setType}
-      type={type}
-      setSubtype={setSubtype}
-      subtype={subtype}
-      table04data={table04data}
-    />
+    <View style={{ flex: 1 }}>
+      <ScriptingLandscapeLive
+        handleSetCirclePress={handleSetCirclePress}
+        setsTeamAnalyzed={setsTeamAnalyzed}
+        scoreOptions={scoreOptions}
+        setScoreTeamAnalyzed={setScoreTeamAnalyzed}
+        scoreTeamAnalyzed={scoreTeamAnalyzed}
+        setScoreTeamOpponent={setScoreTeamOpponent}
+        scoreTeamOpponent={scoreTeamOpponent}
+        setsTeamOpponent={setsTeamOpponent}
+        stdPickerStyle={stdPickerStyleLandscape}
+        setPositionalFormation={setPositionalFormation}
+        positionalFormation={positionalFormation}
+        setQuality={setQuality}
+        quality={quality}
+        setPosition={setPosition}
+        position={position}
+        truncateArrayElements={truncateArrayElements}
+        table02data={table02data}
+        setPlayerName={setPlayerName}
+        playerName={playerName}
+        tableTypeDummyData={tableTypeDummyData}
+        setType={setType}
+        type={type}
+        setSubtype={setSubtype}
+        subtype={subtype}
+        table04data={table04data}
+        combinedGestures={combinedGestures}
+        setGestureBoundaries={setGestureBoundaries}
+        gestureBoundaries={gestureBoundaries}
+      />
+      {padVisible && (
+        <SwipePad
+          circleRadiusInner={circleRadiusInner}
+          circleRadiusMiddle={circleRadiusMiddle}
+          styleVwMainPosition={styleVwMainPosition}
+          swipeColorDict={swipeColorDict}
+          circleRadiusOuter={circleRadiusOuter}
+          numTrianglesMiddle={numTrianglesMiddle}
+          numTrianglesOuter={numTrianglesOuter}
+        />
+      )}
+    </View>
   ) : (
     // <GestureHandlerRootView style={styles.container}>
     //   <GestureDetector gesture={combinedGestures}>
@@ -710,7 +737,7 @@ export default function ScriptingLive({ navigation }) {
         table02data={table02data}
         setPlayerName={setPlayerName}
         playerName={playerName}
-        table03data={table03data}
+        tableTypeDummyData={tableTypeDummyData}
         setType={setType}
         type={type}
         setSubtype={setSubtype}

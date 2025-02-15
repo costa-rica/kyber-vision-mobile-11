@@ -13,6 +13,13 @@ import DoublePickerWithSideBorders from "./pickers/DoublePickerWithSideBorders";
 import { useState } from "react";
 import ButtonKv from "./ButtonKv";
 
+// SwipePad
+import {
+  GestureHandlerRootView,
+  GestureDetector,
+  Gesture,
+} from "react-native-gesture-handler";
+
 export default function ScriptingLandscapeLive(props) {
   const handleBackPress = async (navigation) => {
     await ScreenOrientation.lockAsync(
@@ -20,6 +27,15 @@ export default function ScriptingLandscapeLive(props) {
     );
     navigation.goBack();
   };
+
+  const handleGestureHandlerRootViewLayout = (event) => {
+    console.log(`- 3 handleGestureHandlerRootViewLayout event-`);
+    console.log(event.nativeEvent.layout);
+    const { height, x, y } = event.nativeEvent.layout;
+    // props.setGestureBoundaries({ low_x: x, low_y: y, high_y: y + height });
+    props.setGestureBoundaries({ low_x: x, low_y: y, high_y: y + height });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -116,16 +132,22 @@ export default function ScriptingLandscapeLive(props) {
         </View>
       </View>
       <View style={styles.containerMiddle}>
-        <View style={styles.vwVolleyballCourt}>
-          <Image
-            source={require("../../assets/images/imgVollyballCourt.png")}
-            alt="imgVollyballCourt"
-            // width="100" // Ensures it takes the full width of the container
-            // height="100" // Ensures it takes the full height of vwVollyballCourt
-            resizeMode="contain" // Prevents stretching
-            style={styles.imgVolleyBallCourt}
-          />
-        </View>
+        <GestureHandlerRootView
+          onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
+        >
+          <GestureDetector gesture={props.combinedGestures}>
+            <View style={styles.vwVolleyballCourt}>
+              <Image
+                source={require("../../assets/images/imgVollyballCourt.png")}
+                alt="imgVollyballCourt"
+                // width="100" // Ensures it takes the full width of the container
+                // height="100" // Ensures it takes the full height of vwVollyballCourt
+                resizeMode="contain" // Prevents stretching
+                style={styles.imgVolleyBallCourt}
+              />
+            </View>
+          </GestureDetector>
+        </GestureHandlerRootView>
         <View style={styles.vwScriptingManagement}>
           {/* <View style={styles.vwScriptingManagementLeft}>
             <ButtonKv
@@ -200,7 +222,12 @@ export default function ScriptingLandscapeLive(props) {
         </View>
       </View>
       <View style={styles.containerBottom}>
-        <View style={styles.vwBlackLineDivider} />
+        <View
+          style={[
+            styles.vwBlackLineDivider,
+            { width: Dimensions.get("window").width },
+          ]}
+        />
         <View style={styles.vwActionDetails}>
           <View style={styles.vwActionDetailsQuality}>
             <SinglePickerWithSideBorders
@@ -229,7 +256,7 @@ export default function ScriptingLandscapeLive(props) {
           </View>
           <View style={styles.vwActionDetailsType}>
             <SinglePickerWithSideBorders
-              arrayElements={props.table03data}
+              arrayElements={props.tableTypeDummyData}
               onChange={props.setType}
               value={props.type}
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
@@ -361,7 +388,7 @@ const styles = StyleSheet.create({
     // borderStyle: "dashed",
   },
   vwBlackLineDivider: {
-    width: Dimensions.get("window").width,
+    // width: Dimensions.get("window").width,
     height: 10,
     backgroundColor: "#310732",
   },

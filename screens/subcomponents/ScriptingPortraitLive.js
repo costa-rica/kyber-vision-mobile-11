@@ -20,24 +20,6 @@ import {
 } from "react-native-gesture-handler";
 
 export default function ScriptingPortraitLive(props) {
-  // const [gestureBoundaries, setGestureBoundaries] = useState({
-  //   low_y: 0,
-  //   high_y: 0,
-  // });
-  // const handleContainerTopLayout = (event) => {
-  //   console.log(`- 1 handleContainerTopLayout event-`);
-  //   console.log(event.nativeEvent.layout);
-  //   const { height, y } = event.nativeEvent.layout;
-  //   setGestureBoundaries({ ...gestureBoundaries, low_y: y });
-  // };
-  // const handleVwTitleLayout = (event) => {
-  //   console.log(`- 2 handleVwTitleLayout event-`);
-  //   console.log(event.nativeEvent.layout);
-  //   const { height, y } = event.nativeEvent.layout;
-  //   console.log(`gestureBoundaries.low_y: ${gestureBoundaries.low_y}`);
-  //   // const new_y = gestureBoundaries.low_y + y;
-  //   // setGestureBoundaries({ ...gestureBoundaries, low_y: new_y });
-  // };
   const handleGestureHandlerRootViewLayout = (event) => {
     console.log(`- 3 handleGestureHandlerRootViewLayout event-`);
     console.log(event.nativeEvent.layout);
@@ -62,10 +44,10 @@ export default function ScriptingPortraitLive(props) {
           />
         </TouchableOpacity>
       </View>
-      <Text style={{ position: "absolute", left: 100, top: 10 }}>
+      {/* <Text style={{ position: "absolute", left: 100, top: 10 }}>
         low_y:{props.gestureBoundaries.low_y} high_y:{" "}
         {props.gestureBoundaries.high_y}
-      </Text>
+      </Text> */}
       <View
         style={styles.containerTop}
         // onLayout={(event) => handleContainerTopLayout(event)}
@@ -173,7 +155,7 @@ export default function ScriptingPortraitLive(props) {
           </View>
           <View style={styles.vwActionDetailsType}>
             <SinglePickerWithSideBorders
-              arrayElements={props.table03data}
+              arrayElements={props.tableTypeDummyData}
               onChange={props.setType}
               value={props.type}
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
