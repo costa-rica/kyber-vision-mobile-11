@@ -14,6 +14,15 @@ import { useState } from "react";
 import ButtonKv from "./ButtonKv";
 
 export default function ScriptingPortraitLive(props) {
+  const handleVwVolleyballCourtLayout = (event) => {
+    console.log(`- handleVwVolleyballCourtLayout event-`);
+    console.log(event.nativeEvent.layout);
+  };
+  const handleContainerTopLayout = (event) => {
+    console.log(`- handleContainerTopLayout event-`);
+    console.log(event.nativeEvent.layout);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.vwBtnBackArrow}>
@@ -31,7 +40,10 @@ export default function ScriptingPortraitLive(props) {
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.containerTop}>
+      <View
+        style={styles.containerTop}
+        onLayout={(event) => handleContainerTopLayout(event)}
+      >
         <Text>Live Scripting</Text>
         <View style={styles.vwTitle}>
           <Text style={styles.txtTitleAdmin}>AUC vs Arles</Text>
@@ -85,7 +97,10 @@ export default function ScriptingPortraitLive(props) {
             />
           </View>
         </View>
-        <View style={styles.vwVollyballCourt}>
+        <View
+          style={styles.vwVolleyballCourt}
+          onLayout={(event) => handleVwVolleyballCourtLayout(event)}
+        >
           <Image
             source={require("../../assets/images/imgVollyballCourt.png")}
             alt="imgVollyballCourt"
@@ -163,7 +178,7 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwScriptingManagementRight}>
             <View style={styles.vwScriptingManagementRightLeft}>
               <ButtonKv
-                onPress={() => console.log("presssed S")}
+                onPress={() => Alert.alert("pressed S")}
                 style={{
                   backgroundColor: "#310732",
                   color: "white",
@@ -174,7 +189,7 @@ export default function ScriptingPortraitLive(props) {
                 S
               </ButtonKv>
               <ButtonKv
-                onPress={() => console.log("presssed R")}
+                onPress={() => Alert.alert("pressed R")}
                 style={{
                   backgroundColor: "#310732",
                   color: "white",
@@ -187,7 +202,7 @@ export default function ScriptingPortraitLive(props) {
             </View>
             <View style={styles.vwScriptingManagementRightRight}>
               <ButtonKv
-                onPress={() => console.log("presssed W")}
+                onPress={() => Alert.alert("pressed W")}
                 style={{
                   backgroundColor: "#970F9A",
                   color: "white",
@@ -198,7 +213,7 @@ export default function ScriptingPortraitLive(props) {
                 W
               </ButtonKv>
               <ButtonKv
-                onPress={() => console.log("presssed L")}
+                onPress={() => Alert.alert("pressed L")}
                 style={{
                   backgroundColor: "#970F9A",
                   color: "white",
@@ -292,7 +307,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
-  vwVollyballCourt: {
+  vwVolleyballCourt: {
     flex: 1,
     paddingTop: 20,
     justifyContent: "center",
