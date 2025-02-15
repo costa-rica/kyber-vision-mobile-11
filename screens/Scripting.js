@@ -25,6 +25,7 @@ import Timeline from "./subcomponents/Timeline";
 import { useEventListener } from "expo";
 import ScriptingPortraitVideo from "./subcomponents/ScriptingPortraitVideo";
 import ScriptingLandscapeVideo from "./subcomponents/ScriptingLandscapeVideo";
+import ScriptingPortraitVideoOBE from "./subcomponents/ScriptingPortraitVideoOBEbackup";
 import {
   newScript,
   // appendAction,
@@ -129,17 +130,17 @@ export default function Scripting({ navigation, route }) {
     // setStartTime(userReducer.video.setTimeStampsArray[currentSet]);
     // setEndTime(userReducer.video.setTimeStampsArray[currentSet + 1]);
 
-    if (Platform.OS === "android") {
-      ScreenOrientation.unlockAsync();
-      checkOrientation();
-      const subscriptionScreenOrientation =
-        ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+    // if (Platform.OS === "android") {
+    ScreenOrientation.unlockAsync();
+    checkOrientation();
+    const subscriptionScreenOrientation =
+      ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
 
-      return () => {
-        subscriptionScreenOrientation.remove();
-        ScreenOrientation.lockAsync();
-      };
-    }
+    return () => {
+      subscriptionScreenOrientation.remove();
+      ScreenOrientation.lockAsync();
+    };
+    // }
   });
   const checkOrientation = async () => {
     // console.log("in checkOrientation");
@@ -499,6 +500,7 @@ export default function Scripting({ navigation, route }) {
     <View style={{ flex: 1 }}>
       <View style={[styles.container, containerDynamic]}>
         <ScriptingPortraitVideo
+          navigation={navigation}
           player={player}
           progress={progress}
           setCurrentTimeManager={setCurrentTimeManager}

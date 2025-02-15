@@ -119,7 +119,7 @@ export default function ScriptingMatchSelection({ navigation }) {
     console.log("go to Scripting screen ....");
     navigation.navigate("Scripting", {
       matchName: elem.matchName,
-      videoUri: `${FileSystem.documentDirectory}${elem.id}`,
+      videoUri: `${FileSystem.documentDirectory}${elem.filename}`,
     });
   };
 
@@ -127,7 +127,7 @@ export default function ScriptingMatchSelection({ navigation }) {
   // const downloadVideo = async (videoId) => {
   const downloadVideo = async (elemVideo) => {
     console.log("--- in downloadVideo");
-    const videoUrl = `${process.env.EXPO_PUBLIC_API_URL}/videos/${elemVideo.filename}`;
+    const videoUrl = `${process.env.EXPO_PUBLIC_API_URL}/videos/${elemVideo.id}`;
     console.log(`calling: ${videoUrl}`);
     const fileUri = `${FileSystem.documentDirectory}${elemVideo.filename}`;
 

@@ -10,12 +10,22 @@ import {
 } from "react-native";
 import SinglePickerWithSideBorders from "./pickers/SinglePickerWithSideBorders";
 import DoublePickerWithSideBorders from "./pickers/DoublePickerWithSideBorders";
-import { useState } from "react";
 import ButtonKv from "./ButtonKv";
 // Implement Video Player
 import { useVideoPlayer, VideoView } from "expo-video";
+import {
+  GestureHandlerRootView,
+  GestureDetector,
+  Gesture,
+} from "react-native-gesture-handler";
+import Timeline from "./Timeline";
+import { useState, useEffect } from "react";
 
 export default function ScriptingPortraitVideo(props) {
+  useEffect(() => {
+    console.log("in ScriptingPortraitVideo useEffect");
+  }, [props.scriptReducerActionArray, props.scriptId]);
+
   return (
     <View style={styles.container}>
       <View style={styles.vwBtnBackArrow}>
@@ -87,13 +97,21 @@ export default function ScriptingPortraitVideo(props) {
             />
           </View>
         </View>
-        <View style={styles.vwVollyballCourt}>
+        <View style={styles.vwGestureAndVideo}>
+          <VideoView
+            style={styles.vwVideo}
+            player={props.player}
+            // nativeControls={false}
+          />
+        </View>
+        {/* <View style={styles.vwVollyballCourt}>
           <Image
             source={require("../../assets/images/imgVollyballCourt.png")}
             alt="imgVollyballCourt"
             resizeMode="contain"
           />
-        </View>
+
+        </View> */}
       </View>
       <View style={styles.containerBottom}>
         <View style={styles.vwBlackLineDivider} />
@@ -298,6 +316,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     justifyContent: "center",
+  },
+  vwGestureAndVideo: {
+    // backgroundColor: "purple",
+    width: "100%",
+    height: 250, // Ensure fixed height for VideoView
+  },
+  vwVideo: {
+    width: "100%",
+    height: "100%", // Matches parent height
   },
 
   // -------- BOTTOM --------

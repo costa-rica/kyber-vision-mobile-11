@@ -24,7 +24,7 @@ export default function CustomPicker({
       `CustomPicker: The 'value' prop is required and must be one of the elements in 'arrayElements'. Received: ${value}.`
     );
   }
-  console.log(arrayElements);
+  // console.log(arrayElements);
   const scrollViewRef = useRef(null);
 
   // Define default styles
