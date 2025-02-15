@@ -1,19 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Switch,
-  ScrollView,
-  Alert,
-} from "react-native";
-import TemplateView from "./subcomponents/TemplateView";
-import ButtonKv from "./subcomponents/ButtonKv";
-import SinglePickerWithSideBorders from "./subcomponents/pickers/SinglePickerWithSideBorders";
-import DoublePickerWithSideBorders from "./subcomponents/pickers/DoublePickerWithSideBorders";
+import { View, Platform, StyleSheet, Dimensions, Text } from "react-native";
+
 import * as ScreenOrientation from "expo-screen-orientation";
 import ScriptingLandscapeLive from "./subcomponents/ScriptingLandscapeLive";
 import ScriptingPortraitLive from "./subcomponents/ScriptingPortraitLive";
@@ -30,11 +17,7 @@ const setOptions = [0, 1, 2, 3];
 const scoreOptions = Array.from({ length: 26 }, (_, i) => i);
 
 // SwipePad
-import {
-  GestureHandlerRootView,
-  GestureDetector,
-  Gesture,
-} from "react-native-gesture-handler";
+import { Gesture } from "react-native-gesture-handler";
 import SwipePad from "./subcomponents/SwipePad";
 
 export default function ScriptingLive({ navigation }) {
@@ -158,8 +141,15 @@ export default function ScriptingLive({ navigation }) {
   const [padPositionCenter, setPadPositionCenter] = useState({ x: 0, y: 0 });
   const [gestureBoundaries, setGestureBoundaries] = useState({
     low_x: 0,
+    high_x: Dimensions.get("window").width,
     low_y: 0,
-    high_y: 0,
+    high_y: Dimensions.get("window").height,
+  });
+  const [gestureViewCoords, setGestureViewCoords] = useState({
+    low_x: 0,
+    high_x: Dimensions.get("window").width,
+    low_y: 0,
+    high_y: Dimensions.get("window").height,
   });
   const [padVisible, setPadVisible] = useState(false);
   const [tapDetails, setTapDetails] = useState({
@@ -262,52 +252,73 @@ export default function ScriptingLive({ navigation }) {
     if (tapIsActive) {
       const timestamp = new Date().toISOString();
       const { x, y, absoluteX, absoluteY } = event;
-      // console.log(`x: ${x}, y:${y}`);
+      console.log(`x: ${x}, y:${y}`);
       console.log(`absoluteX: ${absoluteX}, absoluteY: ${absoluteY}`);
+      // console.log(
+      //   `gestureBoundaries.low_x: ${gestureBoundaries.low_x}, gestureBoundaries.high_x: ${gestureBoundaries.high_x}`
+      // );
       if (
         absoluteY > gestureBoundaries.low_y &&
-        absoluteY < gestureBoundaries.high_y
+        absoluteY < gestureBoundaries.high_y &&
+        absoluteX > gestureBoundaries.low_x &&
+        absoluteX < gestureBoundaries.high_x
       ) {
         setPadPositionCenter({
-          x: calculatePadPositionCenter(x, y).x,
-          y: calculatePadPositionCenter(x, y).y,
+          x: calculatePadPositionCenter(absoluteX, absoluteY).x,
+          y: calculatePadPositionCenter(absoluteX, absoluteY).y,
         });
         setPadVisible(true);
         setTapDetails({
           timestamp,
-          padPosCenterX: calculatePadPositionCenter(x, y).x,
-          padPosCenterY: calculatePadPositionCenter(x, y).y,
+          padPosCenterX: calculatePadPositionCenter(absoluteX, absoluteY).x,
+          padPosCenterY: calculatePadPositionCenter(absoluteX, absoluteY).y,
         });
+        // setPadPositionCenter({
+        //   x: calculatePadPositionCenter(x, y).x,
+        //   y: calculatePadPositionCenter(x, y).y,
+        // });
+        // setPadVisible(true);
+        // setTapDetails({
+        //   timestamp,
+        //   padPosCenterX: calculatePadPositionCenter(x, y).x,
+        //   padPosCenterY: calculatePadPositionCenter(x, y).y,
+        // });
         setTapIsActive(false);
         handleSwipeColorChange("center");
       }
     }
   });
-  const gestureTapOnEnd = Gesture.Tap()
-    .maxDuration(2000)
-    .onEnd((event) => {
-      // console.log("- tap on end");
-      const { x, y, absoluteX, absoluteY } = event;
+  // const gestureTapOnEnd = Gesture.Tap()
+  //   .maxDuration(2000)
+  //   .onEnd((event) => {
+  const gestureTapOnEnd = Gesture.Tap().onEnd((event) => {
+    console.log("- tap on end");
+    const { x, y, absoluteX, absoluteY } = event;
 
-      const swipePosX = calculatePadPositionCenter(x, y).x;
-      const swipePosY = calculatePadPositionCenter(x, y).y;
+    const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
+    const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
 
-      const distanceFromCenter = Math.sqrt(
-        Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
-          Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
-      );
-
-      if (distanceFromCenter < circleRadiusInner) {
-        setPadVisible(false);
-        setTapIsActive(true);
-      }
-    });
+    const distanceFromCenter = Math.sqrt(
+      Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
+        Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
+    );
+    console.log(
+      `distanceFromCenter: ${distanceFromCenter}; circleRadiusInner: ${circleRadiusInner}`
+    );
+    if (distanceFromCenter < circleRadiusInner) {
+      console.log("- close wheel");
+      setPadVisible(false);
+      setTapIsActive(true);
+    }
+  });
 
   const gestureSwipeOnChange = Gesture.Pan().onChange((event) => {
     const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
-    const swipePosX = calculatePadPositionCenter(x, y).x;
-    const swipePosY = calculatePadPositionCenter(x, y).y;
+    // const swipePosX = calculatePadPositionCenter(x, y).x;
+    // const swipePosY = calculatePadPositionCenter(x, y).y;
+    const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
+    const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
 
     const distanceFromCenter = calculateDistanceFromCenter(
       swipePosX,
@@ -634,18 +645,17 @@ export default function ScriptingLive({ navigation }) {
     gestureSwipeOnChange
   );
 
-  const styleVwSwipePad = {
-    flex: 1,
-    justifyContent: "center",
-  };
-
   const calculatePadPositionCenter = (x, y) => {
-    let centeredX = x - gestureBoundaries.low_x + 5; //< - 5 is just me callobrating, but I don't knw why
-    let centeredY = y + gestureBoundaries.low_y - 45; //< - 45 is just me callobrating, but I don't knw why
+    // console.log(`gestureViewCoords.low_y: ${gestureViewCoords.low_y}`);
+    let centeredX = x - circleRadiusOuter; //< - 5 is just me callobrating, but I don't knw why
+    let centeredY = y - circleRadiusOuter;
 
-    if (orientation == "landscape") {
-      centeredX = x - gestureBoundaries.low_x - circleRadiusOuter; //< - 5 is just me callobrating, but I don't knw why
-      centeredY = y + gestureBoundaries.low_y - 45; //< - 45 is just me callobrating, but I don't knw why
+    if (Platform.OS === "ios") {
+      if (orientation === "portrait") {
+        centeredY = y - circleRadiusOuter * 2 + circleRadiusInner;
+      } else if (orientation === "landscape") {
+        centeredX = x - circleRadiusOuter * 2 + circleRadiusInner;
+      }
     }
 
     return { x: centeredX, y: centeredY };
@@ -663,6 +673,11 @@ export default function ScriptingLive({ navigation }) {
     } else {
       setActionList([direction]);
     }
+  };
+
+  const handleVwScriptingPortraitLiveParent = (event) => {
+    console.log(`- 1 handleVwScriptingPortraitLiveParent event-`);
+    console.log(event.nativeEvent.layout);
   };
 
   return orientation == "landscape" ? (
@@ -697,6 +712,7 @@ export default function ScriptingLive({ navigation }) {
         combinedGestures={combinedGestures}
         setGestureBoundaries={setGestureBoundaries}
         gestureBoundaries={gestureBoundaries}
+        setGestureViewCoords={setGestureViewCoords}
       />
       {padVisible && (
         <SwipePad
@@ -713,7 +729,11 @@ export default function ScriptingLive({ navigation }) {
   ) : (
     // <GestureHandlerRootView style={styles.container}>
     //   <GestureDetector gesture={combinedGestures}>
-    <View style={{ flex: 1 }}>
+    <View
+      style={{ flex: 1, marginTop: 0 }}
+      onLayout={(event) => handleVwScriptingPortraitLiveParent(event)}
+    >
+      <Text>gestureViewCoords.low_y: {gestureViewCoords.low_y}</Text>
       <ScriptingPortraitLive
         navigation={navigation}
         stdPickerStyle={stdPickerStylePortrait}
@@ -746,6 +766,7 @@ export default function ScriptingLive({ navigation }) {
         combinedGestures={combinedGestures}
         setGestureBoundaries={setGestureBoundaries}
         gestureBoundaries={gestureBoundaries}
+        setGestureViewCoords={setGestureViewCoords}
       />
       {padVisible && (
         <SwipePad

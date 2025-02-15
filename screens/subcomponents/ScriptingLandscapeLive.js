@@ -31,9 +31,22 @@ export default function ScriptingLandscapeLive(props) {
   const handleGestureHandlerRootViewLayout = (event) => {
     console.log(`- 3 handleGestureHandlerRootViewLayout event-`);
     console.log(event.nativeEvent.layout);
-    const { height, x, y } = event.nativeEvent.layout;
+    const { width, height, x, y } = event.nativeEvent.layout;
     // props.setGestureBoundaries({ low_x: x, low_y: y, high_y: y + height });
-    props.setGestureBoundaries({ low_x: x, low_y: y, high_y: y + height });
+    props.setGestureBoundaries({
+      low_x: x,
+      high_x: x + width * 0.8,
+      low_y: y,
+      high_y: y + height,
+    });
+    console.log(`setGestureBoundaries have been set`);
+    props.setGestureViewCoords({
+      low_x: x,
+      high_x: x + width,
+      low_y: y,
+      high_y: y + height,
+    });
+    console.log(`setGestureViewCoords have been set`);
   };
 
   return (

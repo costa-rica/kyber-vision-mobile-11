@@ -21,10 +21,22 @@ import {
 
 export default function ScriptingPortraitLive(props) {
   const handleGestureHandlerRootViewLayout = (event) => {
-    console.log(`- 3 handleGestureHandlerRootViewLayout event-`);
+    console.log(`- 3 handleGestureHandlerRootViewLayout event ${Platform.OS}-`);
     console.log(event.nativeEvent.layout);
-    const { height, x, y } = event.nativeEvent.layout;
-    props.setGestureBoundaries({ low_x: x, low_y: y, high_y: y + height });
+    const { width, height, x, y } = event.nativeEvent.layout;
+    props.setGestureBoundaries({
+      low_x: x,
+      high_x: x + width,
+      low_y: y,
+      high_y: y + height,
+    });
+    props.setGestureViewCoords({
+      low_x: x,
+      high_x: x + width,
+      low_y: y,
+      high_y: y + height,
+    });
+    console.log(`setGestureViewCoords have been set`);
   };
 
   return (

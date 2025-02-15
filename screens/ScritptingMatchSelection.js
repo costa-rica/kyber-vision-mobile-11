@@ -48,8 +48,8 @@ export default function ScriptingMatchSelection({ navigation }) {
       }
 
       const resJson = await response.json();
-      console.log(`--- response object ----`);
-      console.log(resJson);
+      // console.log(`--- response object ----`);
+      // console.log(resJson);
 
       const statuses = {};
       for (const elem of resJson.videos) {
@@ -96,9 +96,9 @@ export default function ScriptingMatchSelection({ navigation }) {
         // videoSetTimesArray: elem.setTimeStamps,
       })
     );
-    console.log(`hwat is downloadStatuses[elem.filename]`);
-    console.log(elem.filename);
-    console.log(downloadStatuses[elem.filename]);
+    // console.log(`hwat is downloadStatuses[elem.filename]`);
+    // console.log(elem.filename);
+    // console.log(downloadStatuses[elem.filename]);
     if (!downloadStatuses[elem.filename]) {
       console.log("1 -> triggering download video");
       setIsDownloadModalVisible(true); // Show modal
