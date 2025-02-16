@@ -21,14 +21,15 @@ import {
 
 export default function ScriptingPortraitLive(props) {
   const handleGestureHandlerRootViewLayout = (event) => {
-    console.log(`- 3 handleGestureHandlerRootViewLayout event ${Platform.OS}-`);
+    console.log(`- 2 handleGestureHandlerRootViewLayout event ${Platform.OS}-`);
     console.log(event.nativeEvent.layout);
     const { width, height, x, y } = event.nativeEvent.layout;
     props.setGestureBoundaries({
-      low_x: x,
-      high_x: x + width,
+      ...props.gestureBoundaries,
+      // low_x: x,
+      // high_x: x + width,
       low_y: y,
-      high_y: y + height,
+      // high_y: y + height,
     });
     props.setGestureViewCoords({
       low_x: x,
@@ -37,6 +38,23 @@ export default function ScriptingPortraitLive(props) {
       high_y: y + height,
     });
     console.log(`setGestureViewCoords have been set`);
+  };
+  const handleVwVolleyballCourtLayout = (event) => {
+    console.log(`- 3 handleVwVolleyballCourtLayout event ${Platform.OS}-`);
+    console.log(event.nativeEvent.layout);
+    const { width, height, x, y } = event.nativeEvent.layout;
+  };
+  const handleContainerBottomLayout = (event) => {
+    console.log(`- 4 handleContainerBottomLayout event ${Platform.OS}-`);
+    console.log(event.nativeEvent.layout);
+    const { width, height, x, y } = event.nativeEvent.layout;
+    props.setGestureBoundaries({
+      ...props.gestureBoundaries,
+      // low_x: x,
+      // high_x: x + width,
+      // low_y: y,
+      high_y: y,
+    });
   };
 
   return (
@@ -126,7 +144,7 @@ export default function ScriptingPortraitLive(props) {
           <GestureDetector gesture={props.combinedGestures}>
             <View
               style={styles.vwVolleyballCourt}
-              // onLayout={(event) => handleVwVolleyballCourtLayout(event)}
+              onLayout={(event) => handleVwVolleyballCourtLayout(event)}
             >
               <Image
                 source={require("../../assets/images/imgVollyballCourt.png")}
@@ -137,7 +155,12 @@ export default function ScriptingPortraitLive(props) {
           </GestureDetector>
         </GestureHandlerRootView>
       </View>
-      <View style={styles.containerBottom}>
+      <View
+        style={styles.containerBottom}
+        onLayout={(event) => {
+          handleContainerBottomLayout(event);
+        }}
+      >
         <View style={styles.vwBlackLineDivider} />
         <View style={styles.vwActionDetails}>
           <View style={styles.vwActionDetailsQuality}>
@@ -274,7 +297,7 @@ const styles = StyleSheet.create({
   },
   vwBtnBackArrow: {
     // position: "absolute",
-    marginBottom: -20,
+    // marginBottom: -20,
     paddingTop: 10,
     paddingLeft: 10,
   },

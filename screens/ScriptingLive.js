@@ -254,43 +254,30 @@ export default function ScriptingLive({ navigation }) {
       const { x, y, absoluteX, absoluteY } = event;
       console.log(`x: ${x}, y:${y}`);
       console.log(`absoluteX: ${absoluteX}, absoluteY: ${absoluteY}`);
-      // console.log(
-      //   `gestureBoundaries.low_x: ${gestureBoundaries.low_x}, gestureBoundaries.high_x: ${gestureBoundaries.high_x}`
-      // );
-      if (
-        absoluteY > gestureBoundaries.low_y &&
-        absoluteY < gestureBoundaries.high_y &&
-        absoluteX > gestureBoundaries.low_x &&
-        absoluteX < gestureBoundaries.high_x
-      ) {
-        setPadPositionCenter({
-          x: calculatePadPositionCenter(absoluteX, absoluteY).x,
-          y: calculatePadPositionCenter(absoluteX, absoluteY).y,
-        });
-        setPadVisible(true);
-        setTapDetails({
-          timestamp,
-          padPosCenterX: calculatePadPositionCenter(absoluteX, absoluteY).x,
-          padPosCenterY: calculatePadPositionCenter(absoluteX, absoluteY).y,
-        });
-        // setPadPositionCenter({
-        //   x: calculatePadPositionCenter(x, y).x,
-        //   y: calculatePadPositionCenter(x, y).y,
-        // });
-        // setPadVisible(true);
-        // setTapDetails({
-        //   timestamp,
-        //   padPosCenterX: calculatePadPositionCenter(x, y).x,
-        //   padPosCenterY: calculatePadPositionCenter(x, y).y,
-        // });
-        setTapIsActive(false);
-        handleSwipeColorChange("center");
-      }
+      console.log(`gestureBoundaries.low_y: ${gestureBoundaries.low_y}`);
+      // if (
+      //   absoluteY > gestureBoundaries.low_y &&
+      //   absoluteY < gestureBoundaries.high_y &&
+      //   absoluteX > gestureBoundaries.low_x &&
+      //   absoluteX < gestureBoundaries.high_x
+      // ) {
+      setPadPositionCenter({
+        x: calculatePadPositionCenter(absoluteX, absoluteY).x,
+        y: calculatePadPositionCenter(absoluteX, absoluteY).y,
+      });
+      setPadVisible(true);
+      setTapDetails({
+        timestamp,
+        padPosCenterX: calculatePadPositionCenter(absoluteX, absoluteY).x,
+        padPosCenterY: calculatePadPositionCenter(absoluteX, absoluteY).y,
+      });
+
+      setTapIsActive(false);
+      handleSwipeColorChange("center");
+      // }
     }
   });
-  // const gestureTapOnEnd = Gesture.Tap()
-  //   .maxDuration(2000)
-  //   .onEnd((event) => {
+
   const gestureTapOnEnd = Gesture.Tap().onEnd((event) => {
     console.log("- tap on end");
     const { x, y, absoluteX, absoluteY } = event;
@@ -680,6 +667,17 @@ export default function ScriptingLive({ navigation }) {
     console.log(event.nativeEvent.layout);
   };
 
+  const vwTapBoundaries = {
+    position: "absolute",
+    top: gestureBoundaries.low_y,
+    height: gestureBoundaries.high_y - gestureBoundaries.low_y,
+    left: 0,
+    right: 0,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: "black",
+  };
+
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
     <View style={{ flex: 1 }}>
@@ -727,13 +725,16 @@ export default function ScriptingLive({ navigation }) {
       )}
     </View>
   ) : (
-    // <GestureHandlerRootView style={styles.container}>
-    //   <GestureDetector gesture={combinedGestures}>
     <View
       style={{ flex: 1, marginTop: 0 }}
       onLayout={(event) => handleVwScriptingPortraitLiveParent(event)}
     >
-      <Text>gestureViewCoords.low_y: {gestureViewCoords.low_y}</Text>
+      <View style={{ position: "absolute", left: 60, width: 300 }}>
+        <Text>
+          Pretty good version except ☝️, on press with slight movement inside
+          inner circle does not close swipe pad
+        </Text>
+      </View>
       <ScriptingPortraitLive
         navigation={navigation}
         stdPickerStyle={stdPickerStylePortrait}
@@ -779,6 +780,8 @@ export default function ScriptingLive({ navigation }) {
           numTrianglesOuter={numTrianglesOuter}
         />
       )}
+
+      {/* <View style={vwTapBoundaries} /> */}
     </View>
     //   </GestureDetector>
     // </GestureHandlerRootView>
