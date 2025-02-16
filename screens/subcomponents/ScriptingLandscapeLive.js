@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import SinglePickerWithSideBorders from "./pickers/SinglePickerWithSideBorders";
 import DoublePickerWithSideBorders from "./pickers/DoublePickerWithSideBorders";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ButtonKv from "./ButtonKv";
 
 // SwipePad
@@ -27,24 +27,44 @@ export default function ScriptingLandscapeLive(props) {
     );
     navigation.goBack();
   };
-
-  const handleGestureHandlerRootViewLayout = (event) => {
-    console.log(`- 3 handleGestureHandlerRootViewLayout event-`);
+  const [vwVolleyballCourtCoords, setVwVolleyballCourtCoords] = useState(null);
+  const handleContainerMiddleLayout = (event) => {
+    console.log(`- 1 handleContainerMiddleLayout event ${Platform.OS}-`);
     console.log(event.nativeEvent.layout);
+
     const { width, height, x, y } = event.nativeEvent.layout;
-    // props.setGestureBoundaries({ low_x: x, low_y: y, high_y: y + height });
-    props.setGestureBoundaries({
-      low_x: x,
-      high_x: x + width * 0.8,
-      low_y: y,
-      high_y: y + height,
-    });
-    console.log(`setGestureBoundaries have been set`);
-    props.setGestureViewCoords({
-      low_x: x,
-      high_x: x + width,
-      low_y: y,
-      high_y: y + height,
+
+    setVwVolleyballCourtCoords({ x, y, width, height }); // Store this separately first
+
+    props.setGestureViewCoords((prev) => ({
+      ...prev,
+      x: x,
+      width: width,
+      y: y,
+      height: height,
+    }));
+  };
+
+  useEffect(() => {
+    console.log("Updating gesture view coordinates after parent view layout");
+  }, [vwVolleyballCourtCoords]);
+  const handleImageLayout = (event) => {
+    console.log(`- 2 handleImageLayout event-`);
+    console.log(event.nativeEvent.layout);
+
+    const { x, y, width, height } = event.nativeEvent.layout;
+    console.log(`x: ${x}, y: ${y}, width: ${width}, height: ${height}`);
+    props.setGestureViewCoords((prev) => {
+      const new_y = prev.y + y;
+      console.log(`prev.y: ${prev.y}, new_y: ${new_y}`);
+
+      return {
+        ...prev,
+        // y: new_y,
+        x: x,
+        width: width,
+        height: height,
+      };
     });
     console.log(`setGestureViewCoords have been set`);
   };
@@ -144,9 +164,12 @@ export default function ScriptingLandscapeLive(props) {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.containerMiddle}>
+      <View
+        style={styles.containerMiddle}
+        onLayout={(event) => handleContainerMiddleLayout(event)}
+      >
         <GestureHandlerRootView
-          onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
+        // onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
         >
           <GestureDetector gesture={props.combinedGestures}>
             <View style={styles.vwVolleyballCourt}>
@@ -157,6 +180,7 @@ export default function ScriptingLandscapeLive(props) {
                 // height="100" // Ensures it takes the full height of vwVollyballCourt
                 resizeMode="contain" // Prevents stretching
                 style={styles.imgVolleyBallCourt}
+                onLayout={(event) => handleImageLayout(event)}
               />
             </View>
           </GestureDetector>

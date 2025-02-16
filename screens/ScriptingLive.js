@@ -232,33 +232,33 @@ export default function ScriptingLive({ navigation }) {
       // console.log(`x: ${x}, y:${y}`);
       console.log(`absoluteX: ${absoluteX}, absoluteY: ${absoluteY}`);
       // console.log(`gestureBoundaries.low_y: ${gestureBoundaries.low_y}`);
-      // if (
-      //   absoluteY > gestureBoundaries.low_y &&
-      //   absoluteY < gestureBoundaries.high_y &&
-      //   absoluteX > gestureBoundaries.low_x &&
-      //   absoluteX < gestureBoundaries.high_x
-      // ) {
-      setPadPositionCenter({
-        x: calculatePadPositionCenter(absoluteX, absoluteY).x,
-        y: calculatePadPositionCenter(absoluteX, absoluteY).y,
-      });
-      setPadVisible(true);
-      setTapDetails({
-        timestamp,
-        padPosCenterX: calculatePadPositionCenter(absoluteX, absoluteY).x,
-        padPosCenterY: calculatePadPositionCenter(absoluteX, absoluteY).y,
-      });
+      if (
+        absoluteY > gestureViewCoords.y &&
+        absoluteY < gestureViewCoords.y + gestureViewCoords.height &&
+        absoluteX > gestureViewCoords.x &&
+        absoluteX < gestureViewCoords.x + gestureViewCoords.width
+      ) {
+        setPadPositionCenter({
+          x: calculatePadPositionCenter(absoluteX, absoluteY).x,
+          y: calculatePadPositionCenter(absoluteX, absoluteY).y,
+        });
+        setPadVisible(true);
+        setTapDetails({
+          timestamp,
+          padPosCenterX: calculatePadPositionCenter(absoluteX, absoluteY).x,
+          padPosCenterY: calculatePadPositionCenter(absoluteX, absoluteY).y,
+        });
 
-      setTapIsActive(false);
-      handleSwipeColorChange("center");
-      // }
+        setTapIsActive(false);
+        handleSwipeColorChange("center");
+      }
     }
   });
 
   const gestureTapOnEnd = Gesture.Tap()
     .maxDuration(10000) // <-- basically if user keeps hold for more than 10 seconds the wheel will just stay there.
     .onEnd((event) => {
-      console.log("- tap on end");
+      // console.log("- tap on end");
       const { x, y, absoluteX, absoluteY } = event;
 
       const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
@@ -274,7 +274,7 @@ export default function ScriptingLive({ navigation }) {
         setPadVisible(false);
         setTapIsActive(true);
       }
-      console.log("👍 end gestureTapOnEnd");
+      // console.log("👍 end gestureTapOnEnd");
     });
 
   const gestureSwipeOnChange = Gesture.Pan().onChange((event) => {
@@ -282,6 +282,10 @@ export default function ScriptingLive({ navigation }) {
 
     const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
+    // prevent logic from firing left of landscape image
+    if (absoluteX < gestureViewCoords.x) {
+      return;
+    }
     // const swipePosX = calculatePadPositionCenter(x, y).x;
     // const swipePosY = calculatePadPositionCenter(x, y).y;
     const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
@@ -336,21 +340,18 @@ export default function ScriptingLive({ navigation }) {
         Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
     );
 
+    // Trying to prevent actions logic from triggering outside iOS Landscape X
+    if (absoluteX < gestureViewCoords.x) {
+      setPadVisible(false);
+      setTapIsActive(true);
+      return;
+    }
     if (distanceFromCenter > circleRadiusInner) {
+      console.log("--- triggered action");
       addAction(currentActionType);
     }
-    // console.log("swipe registered");
-    // setPadVisible(false);
-    // setTapIsActive(true);
-    // console.log("👍 end gestureSwipeOnEnd");
   });
-  // const gestureLongPress = Gesture.LongPress()
-  //   .minDuration(500) // Adjust based on when you want to trigger the gesture
-  //   .onEnd(() => {
-  //     console.log("LongPress ended");
-  //     setPadVisible(false);
-  //     setTapIsActive(true);
-  //   });
+
   // Combine swipe and tap gestures
   const combinedGestures = Gesture.Simultaneous(
     gestureTapBegin,
@@ -366,9 +367,6 @@ export default function ScriptingLive({ navigation }) {
     inMiddleCircle
   ) => {
     const boundary45 = relativeToPadCenterX * Math.tan((Math.PI / 180) * 45);
-    // console.log(
-    //   `relativeX: ${relativeToPadCenterX}, relativeY: ${relativeToPadCenterY}, b45:${boundary45}`
-    // );
     if (relativeToPadCenterX > 0 && relativeToPadCenterY > 0) {
       // Bottom Right
       handleSwipeColorChange(1);
@@ -644,7 +642,7 @@ export default function ScriptingLive({ navigation }) {
     );
   };
   const addAction = (direction) => {
-    console.log("👍 start add action");
+    // console.log("👍 start add action");
     console.log(direction);
     if (direction === null) return;
     if (actionList?.length > 0) {
@@ -654,24 +652,9 @@ export default function ScriptingLive({ navigation }) {
     }
     setPadVisible(false);
     setTapIsActive(true);
-    console.log("👍 end add action");
+    // console.log("👍 end add action");
   };
 
-  // const handleVwScriptingPortraitLiveParent = (event) => {
-  //   console.log(`- 1 handleVwScriptingPortraitLiveParent event-`);
-  //   console.log(event.nativeEvent.layout);
-  // };
-
-  // const vwTapBoundaries = {
-  //   position: "absolute",
-  //   top: gestureViewCoords.low_y,
-  //   height: gestureViewCoords.high_y - gestureViewCoords.low_y,
-  //   left: 0,
-  //   right: 0,
-  //   borderWidth: 1,
-  //   borderStyle: "dashed",
-  //   borderColor: "black",
-  // };
   const vwGestureCoords = {
     position: "absolute",
     top: gestureViewCoords.y,
@@ -682,10 +665,16 @@ export default function ScriptingLive({ navigation }) {
     borderStyle: "dashed",
     borderColor: "black",
   };
-  // useEffect(() => {}, [gestureBoundaries]);
+
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
     <View style={{ flex: 1 }}>
+      <View style={{ position: "absolute", right: 0, bottom: 10, width: 300 }}>
+        <Text>
+          gestureViewCoords X: {Math.round(gestureViewCoords.x)}, width:{" "}
+          {Math.round(gestureViewCoords.width)}
+        </Text>
+      </View>
       <ScriptingLandscapeLive
         handleSetCirclePress={handleSetCirclePress}
         setsTeamAnalyzed={setsTeamAnalyzed}
@@ -728,18 +717,19 @@ export default function ScriptingLive({ navigation }) {
           numTrianglesOuter={numTrianglesOuter}
         />
       )}
+      {/* <View style={vwGestureCoords} /> */}
     </View>
   ) : (
     <View
       style={{ flex: 1, marginTop: 0 }}
       // onLayout={(event) => handleVwScriptingPortraitLiveParent(event)}
     >
-      <View style={{ position: "absolute", left: 60, width: 300 }}>
+      {/* <View style={{ position: "absolute", left: 60, width: 300 }}>
         <Text>
           gestureViewCoords: {Math.round(gestureViewCoords.y)},{" "}
           {Math.round(gestureViewCoords.height)}
         </Text>
-      </View>
+      </View> */}
       <ScriptingPortraitLive
         navigation={navigation}
         stdPickerStyle={stdPickerStylePortrait}
