@@ -20,13 +20,6 @@ import { useSelector } from "react-redux";
 import TemplateView from "./subcomponents/TemplateView";
 
 export default function SplashScreen({ navigation }) {
-  // const dispatch = useDispatch();
-  // const userReducer = useSelector((state) => state.user);
-  // const [screenDimensions, setScreenDimensions] = useState({
-  //   portraitHeight: Dimensions.get("window").height,
-  //   portraitWidth: Dimensions.get("window").width,
-  // });
-
   return (
     <TemplateView
       navigation={navigation}
@@ -72,6 +65,9 @@ export default function SplashScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
+      <Text style={{ position: "absolute", bottom: 0, right: 0 }}>
+        Version 0.9.0
+      </Text>
     </TemplateView>
   );
 }

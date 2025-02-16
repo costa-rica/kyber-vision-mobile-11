@@ -1,18 +1,14 @@
 ![Kyber Vision Mobile Logo](./assets/images/kyberVisionLogo01.png)
 
-#### v 0.8.0
+#### v 0.9.0
 
 ## Description
 
 Vollyball training application
 
-### Issue / left off in this version
-
-- ScriptingLive Swipe Pad pretty good on both Android and iOS(emulator) but small swipes inside innercircle don't close
-  the swipePad
-
 ## Changes from pervious version
 
+- Swipe Pad on ScriptingLive Portrait is nickel 👍
 - works with API08
 
 ### not all yet implemented

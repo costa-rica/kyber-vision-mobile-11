@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import SinglePickerWithSideBorders from "./pickers/SinglePickerWithSideBorders";
 import DoublePickerWithSideBorders from "./pickers/DoublePickerWithSideBorders";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ButtonKv from "./ButtonKv";
 // SwipePad
 import {
@@ -20,60 +20,89 @@ import {
 } from "react-native-gesture-handler";
 
 export default function ScriptingPortraitLive(props) {
+  const [vwVolleyballCourtCoords, setVwVolleyballCourtCoords] = useState(null);
+  const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
+    console.log(
+      `- 1 handleVwVolleyballCourtAndGestSuperLayout event ${Platform.OS}-`
+    );
+    console.log(event.nativeEvent.layout);
+
+    const { width, height, x, y } = event.nativeEvent.layout;
+
+    setVwVolleyballCourtCoords({ x, y, width, height }); // Store this separately first
+
+    props.setGestureViewCoords((prev) => ({
+      ...prev,
+      x: x,
+      width: width,
+      y: y,
+      height: height,
+    }));
+  };
+
+  useEffect(() => {
+    console.log("Updating gesture view coordinates after parent view layout");
+  }, [vwVolleyballCourtCoords]);
+
   const handleGestureHandlerRootViewLayout = (event) => {
     console.log(`- 2 handleGestureHandlerRootViewLayout event ${Platform.OS}-`);
     console.log(event.nativeEvent.layout);
-    const { width, height, x, y } = event.nativeEvent.layout;
-    props.setGestureBoundaries({
-      ...props.gestureBoundaries,
-      // low_x: x,
-      // high_x: x + width,
-      low_y: y,
-      // high_y: y + height,
+
+    const { height, y } = event.nativeEvent.layout;
+
+    props.setGestureViewCoords((prev) => {
+      const new_y = prev.y + y;
+      console.log(`prev.y: ${prev.y}, new_y: ${new_y}`);
+
+      return {
+        ...prev,
+        y: new_y,
+        height: height,
+      };
     });
-    props.setGestureViewCoords({
-      low_x: x,
-      high_x: x + width,
-      low_y: y,
-      high_y: y + height,
-    });
+
     console.log(`setGestureViewCoords have been set`);
   };
-  const handleVwVolleyballCourtLayout = (event) => {
-    console.log(`- 3 handleVwVolleyballCourtLayout event ${Platform.OS}-`);
-    console.log(event.nativeEvent.layout);
-    const { width, height, x, y } = event.nativeEvent.layout;
-  };
-  const handleContainerBottomLayout = (event) => {
-    console.log(`- 4 handleContainerBottomLayout event ${Platform.OS}-`);
-    console.log(event.nativeEvent.layout);
-    const { width, height, x, y } = event.nativeEvent.layout;
-    props.setGestureBoundaries({
-      ...props.gestureBoundaries,
-      // low_x: x,
-      // high_x: x + width,
-      // low_y: y,
-      high_y: y,
-    });
-  };
 
+  // const handleGestureHandlerRootViewLayout = (event) => {
+  //   console.log(`- 2 handleGestureHandlerRootViewLayout event ${Platform.OS}-`);
+  //   console.log(event.nativeEvent.layout);
+  //   const { width, height, x, y } = event.nativeEvent.layout;
+  //   const new_y = props.gestureViewCoords.low_y + y;
+  //   console.log(`y: ${props.gestureViewCoords.low_y}, new_y: ${new_y}`);
+  //   props.setGestureViewCoords({
+  //     ...props.gestureViewCoords,
+  //     low_y: new_y,
+  //     high_y: new_y + height,
+  //   });
+
+  //   console.log(`setGestureViewCoords have been set`);
+  // };
+  // const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
+  //   console.log(
+  //     `- 1 handleVwVolleyballCourtAndGestSuperLayout event ${Platform.OS}-`
+  //   );
+  //   console.log(event.nativeEvent.layout);
+  //   const { width, height, x, y } = event.nativeEvent.layout;
+  //   props.setGestureViewCoords({
+  //     low_x: x,
+  //     high_x: x + width,
+  //     low_y: y,
+  //     high_y: y + height,
+  //   });
+  // };
+  // useEffect(() => {
+  //   if (vwVolleyballCourtCoords) {
+  //     console.log("Updating gesture view coordinates after parent view layout");
+  //     props.setGestureViewCoords((prev) => ({
+  //       ...prev,
+  //       low_y: vwVolleyballCourtCoords.y + (prev.low_y || 0),
+  //       high_y: vwVolleyballCourtCoords.y + (prev.high_y || 0),
+  //     }));
+  //   }
+  // }, [vwVolleyballCourtCoords]);
   return (
     <View style={styles.container}>
-      <View style={styles.vwBtnBackArrow}>
-        <TouchableOpacity
-          style={styles.touchOpBtnBackArrow}
-          onPress={() => {
-            props.navigation.goBack();
-          }}
-        >
-          <Image
-            style={styles.imgBtnBackArrow}
-            source={require("../../assets/images/btnBackArrow.png")}
-            alt="logo"
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      </View>
       {/* <Text style={{ position: "absolute", left: 100, top: 10 }}>
         low_y:{props.gestureBoundaries.low_y} high_y:{" "}
         {props.gestureBoundaries.high_y}
@@ -82,6 +111,21 @@ export default function ScriptingPortraitLive(props) {
         style={styles.containerTop}
         // onLayout={(event) => handleContainerTopLayout(event)}
       >
+        <View style={styles.vwBtnBackArrow}>
+          <TouchableOpacity
+            style={styles.touchOpBtnBackArrow}
+            onPress={() => {
+              props.navigation.goBack();
+            }}
+          >
+            <Image
+              style={styles.imgBtnBackArrow}
+              source={require("../../assets/images/btnBackArrow.png")}
+              alt="logo"
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
         <Text>Live Scripting</Text>
         <View
           style={styles.vwTitle}
@@ -138,28 +182,30 @@ export default function ScriptingPortraitLive(props) {
             />
           </View>
         </View>
-        <GestureHandlerRootView
-          onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
+        <View
+          style={styles.vwVolleyballCourtAndGestSuper}
+          onLayout={(event) => handleVwVolleyballCourtAndGestSuperLayout(event)}
         >
-          <GestureDetector gesture={props.combinedGestures}>
-            <View
-              style={styles.vwVolleyballCourt}
-              onLayout={(event) => handleVwVolleyballCourtLayout(event)}
-            >
+          <GestureHandlerRootView
+            onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
+            style={{}} //This is key to make sure the flex properties will trickle down to <Image>
+          >
+            <GestureDetector gesture={props.combinedGestures}>
               <Image
                 source={require("../../assets/images/imgVollyballCourt.png")}
                 alt="imgVollyballCourt"
                 resizeMode="contain"
+                style={styles.imgVolleyballCourt}
               />
-            </View>
-          </GestureDetector>
-        </GestureHandlerRootView>
+            </GestureDetector>
+          </GestureHandlerRootView>
+        </View>
       </View>
       <View
         style={styles.containerBottom}
-        onLayout={(event) => {
-          handleContainerBottomLayout(event);
-        }}
+        // onLayout={(event) => {
+        //   handleContainerBottomLayout(event);
+        // }}
       >
         <View style={styles.vwBlackLineDivider} />
         <View style={styles.vwActionDetails}>
@@ -300,6 +346,7 @@ const styles = StyleSheet.create({
     // marginBottom: -20,
     paddingTop: 10,
     paddingLeft: 10,
+    width: "100%",
   },
   touchOpBtnBackArrow: {
     width: 50,
@@ -359,10 +406,20 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
-  vwVolleyballCourt: {
+  vwVolleyballCourtAndGestSuper: {
     flex: 1,
+    // flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    // backgroundColor: "purple",
+  },
+  vwVolleyballCourt: {
     paddingTop: 20,
     justifyContent: "center",
+    // backgroundColor: "green",
+  },
+  imgVolleyballCourt: {
+    // backgroundColor: "red",
   },
 
   // -------- BOTTOM --------

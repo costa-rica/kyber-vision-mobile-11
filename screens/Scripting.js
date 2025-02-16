@@ -15,26 +15,18 @@ import {
 import { useVideoPlayer, VideoView } from "expo-video";
 import * as ScreenOrientation from "expo-screen-orientation";
 import TemplateView from "./subcomponents/TemplateView";
-import {
-  GestureHandlerRootView,
-  GestureDetector,
-  Gesture,
-} from "react-native-gesture-handler";
+import { Gesture } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import Timeline from "./subcomponents/Timeline";
 import { useEventListener } from "expo";
 import ScriptingPortraitVideo from "./subcomponents/ScriptingPortraitVideo";
 import ScriptingLandscapeVideo from "./subcomponents/ScriptingLandscapeVideo";
-import ScriptingPortraitVideoOBE from "./subcomponents/ScriptingPortraitVideoOBEbackup";
 import {
   newScript,
-  // appendAction,
-  // logoutOfSessionScripts,
   deleteScript,
   replaceScriptActionArray,
   updatePropertyInObjectOfActionsArray,
 } from "../reducers/script";
-// import { userLoginSession } from "../reducers/user";
 import { useDispatch } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";

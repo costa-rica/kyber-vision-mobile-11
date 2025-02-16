@@ -114,7 +114,7 @@ export default function ScriptingLive({ navigation }) {
   };
 
   // Handles set selection for a team
-  // team: "analyzed" | "opponent"
+  // Expects team: "analyzed" | "opponent"
   const handleSetCirclePress = (team, setIndex) => {
     if (team === "analyzed") {
       if (setsTeamAnalyzed === setIndex) {
@@ -139,17 +139,17 @@ export default function ScriptingLive({ navigation }) {
   const [circleRadiusMiddle, setCircleRadiusMiddle] = useState(40);
   const [circleRadiusInner, setCircleRadiusInner] = useState(20);
   const [padPositionCenter, setPadPositionCenter] = useState({ x: 0, y: 0 });
-  const [gestureBoundaries, setGestureBoundaries] = useState({
-    low_x: 0,
-    high_x: Dimensions.get("window").width,
-    low_y: 0,
-    high_y: Dimensions.get("window").height,
-  });
+  // const [gestureBoundaries, setGestureBoundaries] = useState({
+  //   low_x: 0,
+  //   high_x: Dimensions.get("window").width,
+  //   low_y: 0,
+  //   high_y: Dimensions.get("window").height,
+  // });
   const [gestureViewCoords, setGestureViewCoords] = useState({
-    low_x: 0,
-    high_x: Dimensions.get("window").width,
-    low_y: 0,
-    high_y: Dimensions.get("window").height,
+    x: 0,
+    width: Dimensions.get("window").width,
+    y: 0,
+    height: Dimensions.get("window").height,
   });
   const [padVisible, setPadVisible] = useState(false);
   const [tapDetails, setTapDetails] = useState({
@@ -181,36 +181,13 @@ export default function ScriptingLive({ navigation }) {
   };
   const [swipeColorDict, setSwipeColorDict] = useState(defaultColors);
   // ----- Swipe Pad: Dynamic Styles -----------
+  // const getVwVolleBallCourtBoundaries=()
+
   const styleVwMainPosition = {
     position: "absolute",
     left: padPositionCenter.x, // Center modal horizontally
     top: padPositionCenter.y, // Center modal vertically
   };
-  // const handleChoice = (option) => {
-  //   setPadVisible(true);
-  //   setDemoOption(option);
-  //   if (option == "5-10") {
-  //     setNumTrianglesMiddle(5);
-  //     setNumTrianglesOuter(10);
-  //     // need to adjust degrees rotation
-  //   } else if (option == "4-12") {
-  //     setNumTrianglesMiddle(4);
-  //     setNumTrianglesOuter(12);
-  //     // need to adjust degrees rotation in two places
-  //   } else if (option == "4-8") {
-  //     setNumTrianglesMiddle(4);
-  //     setNumTrianglesOuter(8);
-  //     // need to adjust degrees rotation in two places
-  //   } else if (option == "2") {
-  //     setNumTrianglesMiddle(2);
-  //     setNumTrianglesOuter(0);
-  //     // need to adjust degrees rotation in two places
-  //   }
-  // };
-
-  // const onChangeSizeCircleOuter = (newSize) => {
-  //   setCircleRadiusOuter(newSize);
-  // };
 
   // Function to temporarily change color
   const handleSwipeColorChange = (direction, outerDirection = false) => {
@@ -252,9 +229,9 @@ export default function ScriptingLive({ navigation }) {
     if (tapIsActive) {
       const timestamp = new Date().toISOString();
       const { x, y, absoluteX, absoluteY } = event;
-      console.log(`x: ${x}, y:${y}`);
+      // console.log(`x: ${x}, y:${y}`);
       console.log(`absoluteX: ${absoluteX}, absoluteY: ${absoluteY}`);
-      console.log(`gestureBoundaries.low_y: ${gestureBoundaries.low_y}`);
+      // console.log(`gestureBoundaries.low_y: ${gestureBoundaries.low_y}`);
       // if (
       //   absoluteY > gestureBoundaries.low_y &&
       //   absoluteY < gestureBoundaries.high_y &&
@@ -278,28 +255,31 @@ export default function ScriptingLive({ navigation }) {
     }
   });
 
-  const gestureTapOnEnd = Gesture.Tap().onEnd((event) => {
-    console.log("- tap on end");
-    const { x, y, absoluteX, absoluteY } = event;
+  const gestureTapOnEnd = Gesture.Tap()
+    .maxDuration(10000) // <-- basically if user keeps hold for more than 10 seconds the wheel will just stay there.
+    .onEnd((event) => {
+      console.log("- tap on end");
+      const { x, y, absoluteX, absoluteY } = event;
 
-    const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
-    const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
+      const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
+      const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
 
-    const distanceFromCenter = Math.sqrt(
-      Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
-        Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
-    );
-    console.log(
-      `distanceFromCenter: ${distanceFromCenter}; circleRadiusInner: ${circleRadiusInner}`
-    );
-    if (distanceFromCenter < circleRadiusInner) {
-      console.log("- close wheel");
-      setPadVisible(false);
-      setTapIsActive(true);
-    }
-  });
+      const distanceFromCenter = Math.sqrt(
+        Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
+          Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
+      );
+
+      if (distanceFromCenter < circleRadiusInner) {
+        console.log("- close wheel");
+        setPadVisible(false);
+        setTapIsActive(true);
+      }
+      console.log("👍 end gestureTapOnEnd");
+    });
 
   const gestureSwipeOnChange = Gesture.Pan().onChange((event) => {
+    // console.log("👍 start gestureSwipeOnChange");
+
     const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
     // const swipePosX = calculatePadPositionCenter(x, y).x;
@@ -342,7 +322,43 @@ export default function ScriptingLive({ navigation }) {
           inMiddleCircle
         );
     }
+    // console.log("👍 end gestureSwipeOnChange");
   });
+  // Combine swipe and tap gestures
+  const gestureSwipeOnEnd = Gesture.Pan().onEnd((event) => {
+    const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
+
+    const swipePosX = calculatePadPositionCenter(x, y).x;
+    const swipePosY = calculatePadPositionCenter(x, y).y;
+
+    const distanceFromCenter = Math.sqrt(
+      Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
+        Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
+    );
+
+    if (distanceFromCenter > circleRadiusInner) {
+      addAction(currentActionType);
+    }
+    // console.log("swipe registered");
+    // setPadVisible(false);
+    // setTapIsActive(true);
+    // console.log("👍 end gestureSwipeOnEnd");
+  });
+  // const gestureLongPress = Gesture.LongPress()
+  //   .minDuration(500) // Adjust based on when you want to trigger the gesture
+  //   .onEnd(() => {
+  //     console.log("LongPress ended");
+  //     setPadVisible(false);
+  //     setTapIsActive(true);
+  //   });
+  // Combine swipe and tap gestures
+  const combinedGestures = Gesture.Simultaneous(
+    gestureTapBegin,
+    gestureTapOnEnd,
+    gestureSwipeOnEnd,
+    gestureSwipeOnChange
+    // gestureLongPress
+  );
 
   const logicFourEightCircle = (
     relativeToPadCenterX,
@@ -605,32 +621,6 @@ export default function ScriptingLive({ navigation }) {
       setSwipeColorDict(defaultColors);
     }
   };
-  // Combine swipe and tap gestures
-  const gestureSwipeOnEnd = Gesture.Pan().onEnd((event) => {
-    const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
-
-    const swipePosX = calculatePadPositionCenter(x, y).x;
-    const swipePosY = calculatePadPositionCenter(x, y).y;
-
-    const distanceFromCenter = Math.sqrt(
-      Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
-        Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
-    );
-
-    if (distanceFromCenter > circleRadiusInner) {
-      addAction(currentActionType);
-    }
-    setPadVisible(false);
-    setTapIsActive(true);
-  });
-
-  // Combine swipe and tap gestures
-  const combinedGestures = Gesture.Simultaneous(
-    gestureTapBegin,
-    gestureTapOnEnd,
-    gestureSwipeOnEnd,
-    gestureSwipeOnChange
-  );
 
   const calculatePadPositionCenter = (x, y) => {
     // console.log(`gestureViewCoords.low_y: ${gestureViewCoords.low_y}`);
@@ -654,30 +644,45 @@ export default function ScriptingLive({ navigation }) {
     );
   };
   const addAction = (direction) => {
+    console.log("👍 start add action");
+    console.log(direction);
     if (direction === null) return;
     if (actionList?.length > 0) {
       setActionList([...actionList, direction]);
     } else {
       setActionList([direction]);
     }
+    setPadVisible(false);
+    setTapIsActive(true);
+    console.log("👍 end add action");
   };
 
-  const handleVwScriptingPortraitLiveParent = (event) => {
-    console.log(`- 1 handleVwScriptingPortraitLiveParent event-`);
-    console.log(event.nativeEvent.layout);
-  };
+  // const handleVwScriptingPortraitLiveParent = (event) => {
+  //   console.log(`- 1 handleVwScriptingPortraitLiveParent event-`);
+  //   console.log(event.nativeEvent.layout);
+  // };
 
-  const vwTapBoundaries = {
+  // const vwTapBoundaries = {
+  //   position: "absolute",
+  //   top: gestureViewCoords.low_y,
+  //   height: gestureViewCoords.high_y - gestureViewCoords.low_y,
+  //   left: 0,
+  //   right: 0,
+  //   borderWidth: 1,
+  //   borderStyle: "dashed",
+  //   borderColor: "black",
+  // };
+  const vwGestureCoords = {
     position: "absolute",
-    top: gestureBoundaries.low_y,
-    height: gestureBoundaries.high_y - gestureBoundaries.low_y,
-    left: 0,
-    right: 0,
+    top: gestureViewCoords.y,
+    height: gestureViewCoords.height,
+    left: gestureViewCoords.x,
+    width: gestureViewCoords.width,
     borderWidth: 1,
     borderStyle: "dashed",
     borderColor: "black",
   };
-
+  // useEffect(() => {}, [gestureBoundaries]);
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
     <View style={{ flex: 1 }}>
@@ -708,8 +713,8 @@ export default function ScriptingLive({ navigation }) {
         subtype={subtype}
         table04data={table04data}
         combinedGestures={combinedGestures}
-        setGestureBoundaries={setGestureBoundaries}
-        gestureBoundaries={gestureBoundaries}
+        // setGestureBoundaries={setGestureBoundaries}
+        // gestureBoundaries={gestureBoundaries}
         setGestureViewCoords={setGestureViewCoords}
       />
       {padVisible && (
@@ -727,12 +732,12 @@ export default function ScriptingLive({ navigation }) {
   ) : (
     <View
       style={{ flex: 1, marginTop: 0 }}
-      onLayout={(event) => handleVwScriptingPortraitLiveParent(event)}
+      // onLayout={(event) => handleVwScriptingPortraitLiveParent(event)}
     >
       <View style={{ position: "absolute", left: 60, width: 300 }}>
         <Text>
-          Pretty good version except ☝️, on press with slight movement inside
-          inner circle does not close swipe pad
+          gestureViewCoords: {Math.round(gestureViewCoords.y)},{" "}
+          {Math.round(gestureViewCoords.height)}
         </Text>
       </View>
       <ScriptingPortraitLive
@@ -765,9 +770,10 @@ export default function ScriptingLive({ navigation }) {
         subtype={subtype}
         table04data={table04data}
         combinedGestures={combinedGestures}
-        setGestureBoundaries={setGestureBoundaries}
-        gestureBoundaries={gestureBoundaries}
+        // setGestureBoundaries={setGestureBoundaries}
+        // gestureBoundaries={gestureBoundaries}
         setGestureViewCoords={setGestureViewCoords}
+        gestureViewCoords={gestureViewCoords}
       />
       {padVisible && (
         <SwipePad
@@ -780,8 +786,9 @@ export default function ScriptingLive({ navigation }) {
           numTrianglesOuter={numTrianglesOuter}
         />
       )}
+      {/* <View style={vwPositionBoundaries}></View> */}
 
-      {/* <View style={vwTapBoundaries} /> */}
+      {/* <View style={vwGestureCoords} /> */}
     </View>
     //   </GestureDetector>
     // </GestureHandlerRootView>
