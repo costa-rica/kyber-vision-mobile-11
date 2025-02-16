@@ -6,6 +6,11 @@
 
 Vollyball training application
 
+### Issue / left off in this version
+
+- ScriptingLive Swipe Pad pretty good on both Android and iOS(emulator) but small swipes inside innercircle don't close
+  the swipePad
+
 ## Changes from pervious version
 
 - works with API08
