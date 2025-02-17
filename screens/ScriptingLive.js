@@ -11,7 +11,7 @@ const table01data = {
   User62: "Melody",
 };
 const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
-const tableTypeDummyData = ["Att", "Def", "Rec", "Blo"];
+const tableTypeDummyData = ["Bloc", "Def", "Set", "Att"];
 const table04data = ["DefSub", "SetSub", "AttSub"];
 const setOptions = [0, 1, 2, 3];
 const scoreOptions = Array.from({ length: 26 }, (_, i) => i);
@@ -132,9 +132,9 @@ export default function ScriptingLive({ navigation }) {
   };
 
   // ------- Swipe Pad --------------
-  const demoOption = "4-8";
+  const demoOption = "4-12";
   const [numTrianglesMiddle, setNumTrianglesMiddle] = useState(4); // 2, 4, or 5
-  const [numTrianglesOuter, setNumTrianglesOuter] = useState(8); // 8, 10 or 12
+  const [numTrianglesOuter, setNumTrianglesOuter] = useState(12); // 8, 10 or 12
   const [circleRadiusOuter, setCircleRadiusOuter] = useState(80);
   const [circleRadiusMiddle, setCircleRadiusMiddle] = useState(40);
   const [circleRadiusInner, setCircleRadiusInner] = useState(20);
@@ -161,25 +161,40 @@ export default function ScriptingLive({ navigation }) {
   const [currentActionType, setCurrentActionType] = useState(null);
   const [actionList, setActionList] = useState([]);
   const defaultColors = {
-    1: "rgba(125, 150, 100, 0.8)", // right
-    2: "rgba(150, 100, 125, 0.8)", // bottom
-    3: "rgba(150, 100, 125, 0.8)", // bottombottomleft
-    4: "rgba(125, 100, 150, 0.5)",
-    5: "rgba(150, 100, 125, 0.5)", // bottombottomleft
-    6: "rgba(125, 100, 150, 0.5)",
-    7: "rgba(150, 100, 125, 0.5)", // bottombottomleft
-    8: "rgba(125, 100, 150, 0.5)",
-    9: "rgba(150, 100, 125, 0.5)", // bottombottomleft
-    10: "rgba(125, 100, 150, 0.5)",
-    11: "rgba(150, 100, 125, 0.5)", // bottombottomleft
-    12: "rgba(125, 100, 150, 0.5)",
-    13: "rgba(150, 100, 125, 0.5)", // bottombottomleft
-    14: "rgba(125, 100, 150, 0.5)",
-    15: "rgba(150, 100, 125, 0.5)", // bottombottomleft
-    16: "rgba(125, 100, 150, 0.5)",
+    1: "rgba(255, 143, 143, 1)", // right
+    2: "rgba(255, 143, 143, 1)", // bottom
+    3: "rgba(255, 143, 143, 1)", // bottombottomleft
+    4: "rgba(255, 143, 143, 1)",
+    5: "rgba(247, 255, 162, 0.5)", // bottombottomleft
+    6: "rgba(247, 255, 162, 0.5)",
+    7: "rgba(247, 255, 162, 0.5)", // bottombottomleft
+    8: "rgba(247, 255, 162, 0.5)",
+    9: "rgba(247, 255, 162, 0.5)", // bottombottomleft
+    10: "rgba(247, 255, 162, 0.5)",
+    11: "rgba(247, 255, 162, 0.5)", // bottombottomleft
+    12: "rgba(247, 255, 162, 0.5)",
+    13: "rgba(247, 255, 162, 0.5)", // bottombottomleft
+    14: "rgba(247, 255, 162, 0.5)",
+    15: "rgba(247, 255, 162, 0.5)", // bottombottomleft
+    16: "rgba(247, 255, 162, 0.5)",
     center: "gray",
   };
   const [swipeColorDict, setSwipeColorDict] = useState(defaultColors);
+  const stdSwipePadDefaultTextColor = "black";
+  const stdSwipePadDefaultTextFontSize = 10;
+  const defaultTextStyles = Object.fromEntries(
+    Array.from({ length: 16 }, (_, i) => [
+      i + 1, // Key: 1 to 16
+      {
+        color: stdSwipePadDefaultTextColor,
+        fontSize: stdSwipePadDefaultTextFontSize,
+        selected: false,
+      },
+    ])
+  );
+
+  const [swipeTextStyleDict, setSwipeTextStyleDict] =
+    useState(defaultTextStyles);
   // ----- Swipe Pad: Dynamic Styles -----------
   // const getVwVolleBallCourtBoundaries=()
 
@@ -192,23 +207,25 @@ export default function ScriptingLive({ navigation }) {
   // Function to temporarily change color
   const handleSwipeColorChange = (direction, outerDirection = false) => {
     setSwipeColorDict(defaultColors);
+    setSwipeTextStyleDict(defaultTextStyles);
     const brightColors = {
-      1: "rgba(255, 255, 175, 1)", // right
-      2: "rgba(255, 175, 255, 1)", //bottom
-      3: "rgba(255, 200, 225, 1)", //bottombottomleft
-      4: "rgba(255, 175, 255, 1)",
-      5: "rgba(255, 200, 225, 1)", //bottombottomleft
-      6: "rgba(255, 175, 255, 1)",
-      7: "rgba(255, 200, 225, 1)", //bottombottomleft
-      8: "rgba(255, 175, 255, 1)",
-      9: "rgba(255, 200, 225, 1)", //bottombottomleft
-      10: "rgba(255, 175, 255, 1)",
-      11: "rgba(255, 200, 225, 1)", //bottombottomleft
-      12: "rgba(255, 175, 255, 1)",
-      13: "rgba(255, 200, 225, 1)", //bottombottomleft
-      14: "rgba(255, 175, 255, 1)",
-      15: "rgba(255, 200, 225, 1)", //bottombottomleft
-      16: "rgba(255, 175, 255, 1)",
+      1: "rgba(255, 255, 143, 1)", // right
+      // 2: "brown", // right
+      2: "rgba(255, 255, 143, 1)", // bottom
+      3: "rgba(255, 255, 143, 1)", // left
+      4: "rgba(255, 255, 143, 1)", // top
+      5: "rgba(255, 143, 143, 1)",
+      6: "rgba(255, 143, 143, 1)",
+      7: "rgba(255, 143, 143, 1)",
+      8: "rgba(255, 143, 143, 1)",
+      9: "rgba(255, 143, 143, 1)",
+      10: "rgba(255, 143, 143, 1)",
+      11: "rgba(255, 143, 143, 1)",
+      12: "rgba(255, 143, 143, 1)",
+      13: "rgba(255, 143, 143, 1)",
+      14: "rgba(255, 143, 143, 1)",
+      15: "rgba(255, 143, 143, 1)",
+      16: "rgba(255, 143, 143, 1)",
       center: "white",
     };
 
@@ -217,11 +234,35 @@ export default function ScriptingLive({ navigation }) {
         ...prevColors,
         [direction]: brightColors[direction],
       }));
+      setSwipeTextStyleDict((prevTextStyles) => ({
+        ...prevTextStyles,
+        [direction]: {
+          color: "black",
+          fontSize: 15,
+          fontWeight: "bold",
+          selected: true,
+        },
+      }));
     } else {
       setSwipeColorDict((prevColors) => ({
         ...prevColors,
         [direction]: brightColors[direction],
         [outerDirection]: brightColors[outerDirection],
+      }));
+      setSwipeTextStyleDict((prevTextStyles) => ({
+        ...prevTextStyles,
+        [direction]: {
+          color: "black",
+          fontSize: 15,
+          fontWeight: "bold",
+          selected: true,
+        },
+        [outerDirection]: {
+          color: "black",
+          fontSize: 15,
+          fontWeight: "bold",
+          selected: true,
+        },
       }));
     }
   };
@@ -269,12 +310,12 @@ export default function ScriptingLive({ navigation }) {
           Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
       );
 
+      // //// TESTING: commented below to show SwipePad
       if (distanceFromCenter < circleRadiusInner) {
         console.log("- close wheel");
         setPadVisible(false);
         setTapIsActive(true);
       }
-      // console.log("👍 end gestureTapOnEnd");
     });
 
   const gestureSwipeOnChange = Gesture.Pan().onChange((event) => {
@@ -771,9 +812,11 @@ export default function ScriptingLive({ navigation }) {
           circleRadiusMiddle={circleRadiusMiddle}
           styleVwMainPosition={styleVwMainPosition}
           swipeColorDict={swipeColorDict}
+          swipeTextStyleDict={swipeTextStyleDict}
           circleRadiusOuter={circleRadiusOuter}
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
+          tableTypeDummyData={tableTypeDummyData}
         />
       )}
       {/* <View style={vwPositionBoundaries}></View> */}

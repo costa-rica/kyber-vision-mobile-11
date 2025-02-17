@@ -79,6 +79,9 @@ export default function SwipePad(props) {
   const [rotateOuter, setRotateOuter] = useState(false);
   const [rotateMiddle, setRotateMiddle] = useState(false);
   useEffect(() => {
+    console.log(
+      `--> props.numTrianglesMiddle: ${props.numTrianglesMiddle}, props.numTrianglesOuter: ${props.numTrianglesOuter}`
+    );
     if (props.numTrianglesMiddle === 5) {
       setRotateOuter(true);
       setRotateMiddle(false);
@@ -98,7 +101,7 @@ export default function SwipePad(props) {
   // console.log(`rotateOuter: ${rotateOuter}`);
   // // console.log(`props.numTrianglesOuter: ${props.numTrianglesOuter}`);
   // console.log(`props.numTrianglesMiddle: ${props.numTrianglesMiddle}`);
-  const styleVwOuter = {
+  const styleVwOuterSizeAndRotation = {
     width: props.circleRadiusOuter * 2,
     height: props.circleRadiusOuter * 2,
     borderRadius: props.circleRadiusOuter,
@@ -129,57 +132,123 @@ export default function SwipePad(props) {
     width: props.circleRadiusInner * 2,
     // zIndex: 3,
   };
+  // const sizeViewForTextMiddleCircle = 40
+  const dictTextPoitions = {
+    1: {
+      right: props.circleRadiusOuter - props.circleRadiusMiddle * 1.2,
+      bottom: props.circleRadiusOuter - props.circleRadiusMiddle / 2,
+    },
+    2: {
+      right: props.circleRadiusOuter - props.circleRadiusMiddle / 2,
+      bottom: props.circleRadiusOuter - props.circleRadiusMiddle * 1.2,
+    },
+    3: {
+      right: props.circleRadiusOuter * 1.1,
+      bottom: props.circleRadiusOuter - props.circleRadiusMiddle / 2,
+    },
+    4: {
+      right: props.circleRadiusOuter - props.circleRadiusMiddle / 2,
+      bottom: props.circleRadiusOuter * 1.1,
+    },
+  };
 
   return (
-    <View style={[props.styleVwMainPosition, styleVwOuter]}>
-      <Svg
-        height={props.circleRadiusOuter * 2}
-        width={props.circleRadiusOuter * 2}
-      >
-        {trianglesOuter.map((points, index) => (
-          <Polygon
-            key={index}
-            points={points}
-            fill={props.swipeColorDict[1 + props.numTrianglesMiddle + index]} // 50% transparent blue
-            //fill="transparent" // 50% transparent blue
-            stroke="black" // Stroke color
-            strokeWidth="1" // Thickness of the stroke
-          />
-        ))}
-      </Svg>
-      {/* ---- Middle Circle ---- */}
-      <View style={styleVwMiddleCircle}>
+    // <View style={[props.styleVwMainPosition, styleVwOuter]}>
+    <View style={props.styleVwMainPosition}>
+      <View style={styleVwOuterSizeAndRotation}>
         <Svg
-          height={props.circleRadiusMiddle * 2}
-          width={props.circleRadiusMiddle * 2}
+          height={props.circleRadiusOuter * 2}
+          width={props.circleRadiusOuter * 2}
         >
-          {trianglesMiddle.map((points, index) => (
+          {trianglesOuter.map((points, index) => (
             <Polygon
               key={index}
               points={points}
-              fill={props.swipeColorDict[index + 1]}
-              //fill="green" // 50% transparent blue
+              fill={props.swipeColorDict[1 + props.numTrianglesMiddle + index]} // 50% transparent blue
+              // fill="transparent" // 50% transparent blue
               stroke="black" // Stroke color
-              strokeWidth="3" // Thickness of the stroke
+              strokeWidth="1" // Thickness of the stroke
             />
           ))}
         </Svg>
-        {/* ---- Inner circle ---- */}
-        <Svg
-          height={props.circleRadiusInner * 2}
-          width={props.circleRadiusInner * 2}
-          style={styleCircleInner}
-        >
-          <Circle
-            cx={props.circleRadiusInner} // Centering horizontally (x coords w/ respect to parent <Svg/>)
-            cy={props.circleRadiusInner} // Centering vertically (y coords w/ respect to parent <Svg/>)
-            r={props.circleRadiusInner}
-            // stroke="black"
-            // strokeWidth="1"
-            fill={props.swipeColorDict["center"]}
-          />
-        </Svg>
+        {/* ---- Middle Circle ---- */}
+        <View style={styleVwMiddleCircle}>
+          <Svg
+            height={props.circleRadiusMiddle * 2}
+            width={props.circleRadiusMiddle * 2}
+          >
+            {trianglesMiddle.map((points, index) => (
+              <View
+                key={index}
+                style={{
+                  // backgroundColor: "yellow",
+                  width: props.circleRadiusMiddle + 5,
+                  height: props.circleRadiusMiddle + 5,
+                  // borderColor: "gray",
+                  // borderStyle: "dashed",
+                  // borderWidth: 1,
+                }}
+              >
+                <Polygon
+                  key={index}
+                  points={points}
+                  fill={props.swipeColorDict[index + 1]}
+                  // fill="transparent" // 50% transparent blue
+                  stroke="black" // Stroke color
+                  strokeWidth="3" // Thickness of the stroke
+                />
+              </View>
+            ))}
+          </Svg>
+          {/* ---- Inner circle ---- */}
+          <Svg
+            height={props.circleRadiusInner * 2}
+            width={props.circleRadiusInner * 2}
+            style={styleCircleInner}
+          >
+            <Circle
+              cx={props.circleRadiusInner} // Centering horizontally (x coords w/ respect to parent <Svg/>)
+              cy={props.circleRadiusInner} // Centering vertically (y coords w/ respect to parent <Svg/>)
+              r={props.circleRadiusInner}
+              // stroke="black"
+              // strokeWidth="1"
+              fill={props.swipeColorDict["center"]}
+            />
+          </Svg>
+        </View>
       </View>
+      {/* TEXT MIDDLE Circle */}
+      {Array.from({ length: 4 }, (_, index) => (
+        <View
+          key={index}
+          style={{
+            position: "absolute",
+            // transform: [{ rotate: "45deg" }],
+            // right: index * props.circleRadiusMiddle,
+            // bottom: 0,
+            right: dictTextPoitions[index + 1].right,
+            bottom: dictTextPoitions[index + 1].bottom,
+            justifyContent: "center",
+            alignItems: "center",
+            width: props.circleRadiusMiddle,
+            height: props.circleRadiusMiddle,
+            // backgroundColor: "green",
+            // zIndex: 99,
+          }}
+        >
+          <Text
+            key={index}
+            style={{
+              color: props.swipeTextStyleDict[index + 1].color,
+              fontSize: props.swipeTextStyleDict[index + 1].fontSize,
+              fontWeight: props.swipeTextStyleDict[index + 1].fontWeight,
+              // transform: [{ rotate: "45deg" }],
+            }}
+          >
+            {props.tableTypeDummyData[index]}
+          </Text>
+        </View>
+      ))}
     </View>
   );
 }
