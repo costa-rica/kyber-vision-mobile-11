@@ -148,21 +148,21 @@ export default function ScriptingLive({ navigation }) {
   const demoOption = "4-12";
   const [numTrianglesMiddle, setNumTrianglesMiddle] = useState(4); // 2, 4, or 5
   const [numTrianglesOuter, setNumTrianglesOuter] = useState(12); // 8, 10 or 12
-  // const [circleRadiusOuter, setCircleRadiusOuter] = useState(80);
-  const [circleRadiusMiddle, setCircleRadiusMiddle] = useState(60);
-  const [circleRadiusInner, setCircleRadiusInner] = useState(20);
+  // const [userReducer.circleRadiusMiddle, setCircleRadiusOuter] = useState(80);
+  // const [userReducer.circleRadiusMiddle, setCircleRadiusMiddle] = useState(60);
+  // const [userReducer.circleRadiusInner, setCircleRadiusInner] = useState(20);
   // console.log(
-  //   `--> userReducer.circleRadiusOuter: ${userReducer.circleRadiusOuter}`
+  //   `--> userReducer.userReducer.circleRadiusMiddle: ${userReducer.userReducer.circleRadiusMiddle}`
   // );
-  // console.log(typeof userReducer.circleRadiusOuter);
-  const [circleRadiusOuter, setCircleRadiusOuter] = useState(
-    userReducer.circleRadiusOuter
-  );
-  // const [circleRadiusMiddle, setCircleRadiusMiddle] = useState(
-  //   userReducer.circleRadiusMiddle
+  // console.log(typeof userReducer.userReducer.circleRadiusMiddle);
+  // const [userReducer.circleRadiusMiddle, setCircleRadiusOuter] = useState(
+  //   userReducer.userReducer.circleRadiusMiddle
   // );
-  // const [circleRadiusInner, setCircleRadiusInner] = useState(
-  //   userReducer.circleRadiusInner
+  // const [userReducer.circleRadiusMiddle, setCircleRadiusMiddle] = useState(
+  //   userReducer.userReducer.circleRadiusMiddle
+  // );
+  // const [userReducer.circleRadiusInner, setCircleRadiusInner] = useState(
+  //   userReducer.userReducer.circleRadiusInner
   // );
   const [padPositionCenter, setPadPositionCenter] = useState({ x: 0, y: 0 });
   // const [gestureBoundaries, setGestureBoundaries] = useState({
@@ -337,7 +337,7 @@ export default function ScriptingLive({ navigation }) {
       );
 
       // //// TESTING: commented below to show SwipePad
-      if (distanceFromCenter < circleRadiusInner) {
+      if (distanceFromCenter < userReducer.circleRadiusInner) {
         console.log("- close wheel");
         setPadVisible(false);
         setTapIsActive(true);
@@ -366,8 +366,8 @@ export default function ScriptingLive({ navigation }) {
     const relativeToPadCenterX = swipePosX - tapDetails.padPosCenterX;
     const relativeToPadCenterY = swipePosY - tapDetails.padPosCenterY;
 
-    const inInnerCircle = distanceFromCenter < circleRadiusInner;
-    const inMiddleCircle = distanceFromCenter < circleRadiusMiddle;
+    const inInnerCircle = distanceFromCenter < userReducer.circleRadiusInner;
+    const inMiddleCircle = distanceFromCenter < userReducer.circleRadiusMiddle;
 
     if (inInnerCircle) {
       handleSwipeColorChange("center");
@@ -413,7 +413,7 @@ export default function ScriptingLive({ navigation }) {
       setTapIsActive(true);
       return;
     }
-    if (distanceFromCenter > circleRadiusInner) {
+    if (distanceFromCenter > userReducer.circleRadiusInner) {
       // console.log("--- triggered action");
       addAction(currentActionType);
     }
@@ -689,14 +689,20 @@ export default function ScriptingLive({ navigation }) {
 
   const calculatePadPositionCenter = (x, y) => {
     // console.log(`gestureViewCoords.low_y: ${gestureViewCoords.low_y}`);
-    let centeredX = x - circleRadiusOuter; //< - 5 is just me callobrating, but I don't knw why
-    let centeredY = y - circleRadiusOuter;
+    let centeredX = x - userReducer.circleRadiusOuter; //< - 5 is just me callobrating, but I don't knw why
+    let centeredY = y - userReducer.circleRadiusOuter;
 
     if (Platform.OS === "ios") {
       if (orientation === "portrait") {
-        centeredY = y - circleRadiusOuter * 2 + circleRadiusInner;
+        centeredY =
+          y -
+          userReducer.circleRadiusOuter * 2 +
+          userReducer.circleRadiusMiddle;
       } else if (orientation === "landscape") {
-        centeredX = x - circleRadiusOuter * 2 + circleRadiusInner;
+        centeredX =
+          x -
+          userReducer.circleRadiusOuter * 2 +
+          userReducer.circleRadiusMiddle;
       }
     }
 
@@ -775,11 +781,11 @@ export default function ScriptingLive({ navigation }) {
       />
       {padVisible && (
         <SwipePad
-          circleRadiusInner={circleRadiusInner}
-          circleRadiusMiddle={circleRadiusMiddle}
+          // userReducer.circleRadiusInner={userReducer.userReducer.circleRadiusInner}
+          // userReducer.circleRadiusMiddle={userReducer.userReducer.circleRadiusMiddle}
+          // userReducer.circleRadiusMiddle={userReducer.userReducer.circleRadiusMiddle}
           styleVwMainPosition={styleVwMainPosition}
           swipeColorDict={swipeColorDict}
-          circleRadiusOuter={userReducer.circleRadiusOuter}
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
         />
@@ -816,9 +822,9 @@ export default function ScriptingLive({ navigation }) {
               numTrianglesMiddle: numTrianglesMiddle,
               numTrianglesOuter: numTrianglesOuter,
               demoOption: demoOption,
-              circleRadiusInner: circleRadiusInner,
-              circleRadiusMiddle: circleRadiusMiddle,
-              circleRadiusOuter: circleRadiusOuter,
+              // userReducer.circleRadiusInner: userReducer.userReducer.circleRadiusInner,
+              // userReducer.circleRadiusMiddle: userReducer.circleRadiusMiddle,
+              // userReducer.circleRadiusMiddle: userReducer.circleRadiusMiddle,
               swipeColorDict: swipeColorDict,
               defaultColors: defaultColors,
               swipeTextStyleDict: swipeTextStyleDict,
@@ -874,12 +880,12 @@ export default function ScriptingLive({ navigation }) {
       />
       {padVisible && (
         <SwipePad
-          circleRadiusInner={userReducer.circleRadiusInner}
-          circleRadiusMiddle={userReducer.circleRadiusMiddle}
+          // userReducer.circleRadiusInner={userReducer.userReducer.circleRadiusInner}
+          // userReducer.circleRadiusMiddle={userReducer.userReducer.circleRadiusMiddle}
+          // userReducer.circleRadiusMiddle={userReducer.userReducer.circleRadiusMiddle}
           styleVwMainPosition={styleVwMainPosition}
           swipeColorDict={swipeColorDict}
           swipeTextStyleDict={swipeTextStyleDict}
-          circleRadiusOuter={userReducer.circleRadiusOuter}
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
           tableTypeDummyData={tableTypeDummyData}

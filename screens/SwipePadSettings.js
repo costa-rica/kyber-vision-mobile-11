@@ -117,12 +117,12 @@ export default function SwipePadSettings({ route, navigation }) {
         // onLayout={(event) => handleStyleVwSwipePadOnLayout(event)}
       >
         <SwipePad
-          circleRadiusInner={circleRadiusInner}
-          circleRadiusMiddle={circleRadiusMiddle}
+          // circleRadiusInner={circleRadiusInner}
+          // circleRadiusMiddle={circleRadiusMiddle}
+          // circleRadiusOuter={circleRadiusOuter}
           styleVwMainPosition={{}}
           swipeColorDict={swipeColorDict}
           swipeTextStyleDict={swipeTextStyleDict}
-          circleRadiusOuter={circleRadiusOuter}
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
           tableTypeDummyData={tableTypeDummyData}
