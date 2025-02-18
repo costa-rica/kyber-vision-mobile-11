@@ -300,7 +300,10 @@ export default function ScriptingPortraitLive(props) {
             </View>
             <View style={styles.vwScriptingManagementRightRight}>
               <ButtonKv
-                onPress={() => Alert.alert("pressed W")}
+                onPress={() => {
+                  // Alert.alert("pressed W");
+                  props.setScoreTeamAnalyzed((prev) => prev + 1);
+                }}
                 style={{
                   backgroundColor: "#970F9A",
                   color: "white",
@@ -311,7 +314,7 @@ export default function ScriptingPortraitLive(props) {
                 W
               </ButtonKv>
               <ButtonKv
-                onPress={() => Alert.alert("pressed L")}
+                onPress={() => props.setScoreTeamOpponent((prev) => prev + 1)}
                 style={{
                   backgroundColor: "#970F9A",
                   color: "white",
