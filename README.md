@@ -22,8 +22,10 @@ Vollyball training application
 EXPO_PUBLIC_API_URL=https://api.kv08.dashanddata.com
 EXPO_PUBLIC_API_URL_WORKSTATION=http://192.168.1.193:3000
 EXPO_PUBLIC_API_URL_SERVER=https://api.kv08.dashanddata.com
+EXPO_PUBLIC_ENVIRONMENT=workstation
 ```
 
+- EXPO_PUBLIC_ENVIRONMENT = workstation only for development otherwise change to anything else not null.
 - only: EXPO_PUBLIC_API_URL, EXPO_PUBLIC_EMAIL, and EXPO_PUBLIC_PASSWORD are actually used.
 
 ## Colors
