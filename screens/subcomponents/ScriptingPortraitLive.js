@@ -77,33 +77,33 @@ export default function ScriptingPortraitLive(props) {
     console.log(`setGestureViewCoords have been set`);
   };
 
-  const handleChangeType = (newType) => {
-    const currentActionTimestamp = scriptReducer.actionsArray[
-      scriptReducer.actionsArray.length - 1
-    ]?.timeStamp;
-    dispatch(updateTypePropertyInObjectOfActionsArray({
-      timeStamp: currentActionTimestamp,
-      type: newType,
-    }))
-  }
-  const handleChangeSubtype = (newSubtype) => {
-    const currentActionTimestamp = scriptReducer.actionsArray[
-      scriptReducer.actionsArray.length - 1
-    ]?.timeStamp;
-    dispatch(updateSubtypePropertyInObjectOfActionsArray({
-      timeStamp: currentActionTimestamp,
-      subtype: newSubtype,
-    }))
-  }
-  const handleChangeQuality = (newQuality) => {
-    const currentActionTimestamp = scriptReducer.actionsArray[
-      scriptReducer.actionsArray.length - 1
-    ]?.timeStamp;
-    dispatch(updateQualityPropertyInObjectOfActionsArray({
-      timeStamp: currentActionTimestamp,
-      quality: newQuality,
-    }))
-  }
+  // const handleChangeType = (newType) => {
+  //   const currentActionTimestamp = scriptReducer.actionsArray[
+  //     scriptReducer.actionsArray.length - 1
+  //   ]?.timeStamp;
+  //   dispatch(updateTypePropertyInObjectOfActionsArray({
+  //     timeStamp: currentActionTimestamp,
+  //     type: newType,
+  //   }))
+  // }
+  // const handleChangeSubtype = (newSubtype) => {
+  //   const currentActionTimestamp = scriptReducer.actionsArray[
+  //     scriptReducer.actionsArray.length - 1
+  //   ]?.timeStamp;
+  //   dispatch(updateSubtypePropertyInObjectOfActionsArray({
+  //     timeStamp: currentActionTimestamp,
+  //     subtype: newSubtype,
+  //   }))
+  // }
+  // const handleChangeQuality = (newQuality) => {
+  //   const currentActionTimestamp = scriptReducer.actionsArray[
+  //     scriptReducer.actionsArray.length - 1
+  //   ]?.timeStamp;
+  //   dispatch(updateQualityPropertyInObjectOfActionsArray({
+  //     timeStamp: currentActionTimestamp,
+  //     quality: newQuality,
+  //   }))
+  // }
 
   return (
     <View style={styles.container}>
@@ -216,7 +216,7 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwActionDetailsQuality}>
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.qualityArray}
-              onChange={handleChangeQuality}
+              onChange={props.handleChangeQuality}
               value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.quality || "0"}
               style={props.stdPickerStyle}
             />
@@ -241,7 +241,7 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwActionDetailsType}>
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.typesArray}
-              onChange={handleChangeType}
+              onChange={props.handleChangeType}
               // value={props.type}
               value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.type || "Bloc"}
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
@@ -251,8 +251,9 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwActionDetailsSubtype}>
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.subtypesArray}
-              onChange={handleChangeSubtype}
+              onChange={props.handleChangeSubtype}
               value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.subtype || ""}
+              // value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype : ""}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
             />
           </View>

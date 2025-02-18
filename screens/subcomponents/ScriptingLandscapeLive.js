@@ -19,8 +19,15 @@ import {
   GestureDetector,
   Gesture,
 } from "react-native-gesture-handler";
+import {
+  deleteScript,
+} from "../../reducers/script"
+import { useDispatch, useSelector } from "react-redux";
+
 
 export default function ScriptingLandscapeLive(props) {
+  const scriptReducer = useSelector((state) => state.script);
+  const dispatch = useDispatch();
   const handleBackPress = async (navigation) => {
     await ScreenOrientation.lockAsync(
       ScreenOrientation.OrientationLock.PORTRAIT_UP
@@ -233,7 +240,7 @@ export default function ScriptingLandscapeLive(props) {
             </View>
             <View style={styles.vwScriptingManagementRightRight}>
               <ButtonKv
-                onPress={() => Alert.alert("pressed W")}
+                onPress={() => props.setScoreTeamAnalyzed((prev) => prev + 1)}
                 style={{
                   backgroundColor: "#970F9A",
                   color: "white",
@@ -244,7 +251,7 @@ export default function ScriptingLandscapeLive(props) {
                 W
               </ButtonKv>
               <ButtonKv
-                onPress={() => Alert.alert("pressed L")}
+                onPress={() => props.setScoreTeamOpponent((prev) => prev + 1)}
                 style={{
                   backgroundColor: "#970F9A",
                   color: "white",
@@ -268,9 +275,9 @@ export default function ScriptingLandscapeLive(props) {
         <View style={styles.vwActionDetails}>
           <View style={styles.vwActionDetailsQuality}>
             <SinglePickerWithSideBorders
-              arrayElements={[-2, -1, 0, 1, 2]}
-              onChange={props.setQuality}
-              value={props.quality}
+              arrayElements={scriptReducer.qualityArray}
+              onChange={props.handleChangeQuality}
+              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.quality || "0"}
               style={props.stdPickerStyle}
             />
           </View>
@@ -293,25 +300,35 @@ export default function ScriptingLandscapeLive(props) {
           </View>
           <View style={styles.vwActionDetailsType}>
             <SinglePickerWithSideBorders
-              arrayElements={props.tableTypeDummyData}
-              onChange={props.setType}
-              value={props.type}
+              // arrayElements={props.tableTypeDummyData}
+              // onChange={props.setType}
+              // value={props.type}
+              // style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
+              // selectedIsBold={false}
+              arrayElements={scriptReducer.typesArray}
+              onChange={props.handleChangeType}
+              // value={props.type}
+              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.type || "Bloc"}
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
             <SinglePickerWithSideBorders
-              arrayElements={props.truncateArrayElements(props.table04data, 4)}
-              onChange={props.setSubtype}
-              value={props.subtype}
+              arrayElements={scriptReducer.subtypesArray}
+              onChange={props.handleChangeSubtype}
+              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.subtype || ""}
+// arrayElements={props.truncateArrayElements(props.table04data, 4)}
+              // onChange={props.setSubtype}
+              // value={props.subtype}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
             />
           </View>
           <View style={styles.vwScriptingManagementLeft}>
             <ButtonKv
               onPress={() => {
-                Alert.alert("start");
+                // Alert.alert("start");
+                dispatch(deleteScript());
               }}
               style={{ backgroundColor: "#970F9A", width: 100, fontSize: 25 }}
             >
