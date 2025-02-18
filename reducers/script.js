@@ -14,6 +14,7 @@ const initialState = {
   // --- These are meant to be hardcoded and available throughout the app --- NO MODIFY in code
   typesArray:["Bloc", "Def", "Set", "Att"],
   subtypesArray:["","","","Free\nball","","", "NP","", "Tip", "Power", "Roll", ""],
+  qualityArray:["=","-","0","+","#"]
 
 };
 // actionsArray element properties
@@ -97,6 +98,30 @@ export const scriptSlice = createSlice({
         );
       }
     },
+    updateSubtypePropertyInObjectOfActionsArray: (state, action) => {
+      const { timeStamp, subtype } = action.payload;
+
+      // Find the index of the object to update
+      const index = state.actionsArray.findIndex(
+        (obj) => obj.timeStamp === timeStamp
+      );
+      if (index !== -1) {
+        // Create a new object with the updated quality
+        const updatedObject = { ...state.actionsArray[index], subtype };
+
+        // Create a new array with the updated object
+        const updatedArray = [
+          ...state.actionsArray.slice(0, index), // gets all objects from 0 to index
+          updatedObject,
+          ...state.actionsArray.slice(index + 1), // gets all object from index+1 to end
+        ];
+
+        // Sort the array by timeStamp
+        state.actionsArray = updatedArray.sort(
+          (a, b) => a.timeStamp - b.timeStamp
+        );
+      }
+    },
   },
 });
 
@@ -107,5 +132,6 @@ export const {
   updateScriptingPlayerCount,
   updateQualityPropertyInObjectOfActionsArray,
   updateTypePropertyInObjectOfActionsArray,
+  updateSubtypePropertyInObjectOfActionsArray,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

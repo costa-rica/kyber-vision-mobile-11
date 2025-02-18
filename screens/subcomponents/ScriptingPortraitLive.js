@@ -25,6 +25,7 @@ import {
   replaceScriptActionArray,
   updateQualityPropertyInObjectOfActionsArray,
   updateTypePropertyInObjectOfActionsArray,
+  updateSubtypePropertyInObjectOfActionsArray,
 } from "../../reducers/script"
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -83,6 +84,24 @@ export default function ScriptingPortraitLive(props) {
     dispatch(updateTypePropertyInObjectOfActionsArray({
       timeStamp: currentActionTimestamp,
       type: newType,
+    }))
+  }
+  const handleChangeSubtype = (newSubtype) => {
+    const currentActionTimestamp = scriptReducer.actionsArray[
+      scriptReducer.actionsArray.length - 1
+    ]?.timeStamp;
+    dispatch(updateSubtypePropertyInObjectOfActionsArray({
+      timeStamp: currentActionTimestamp,
+      subtype: newSubtype,
+    }))
+  }
+  const handleChangeQuality = (newQuality) => {
+    const currentActionTimestamp = scriptReducer.actionsArray[
+      scriptReducer.actionsArray.length - 1
+    ]?.timeStamp;
+    dispatch(updateQualityPropertyInObjectOfActionsArray({
+      timeStamp: currentActionTimestamp,
+      quality: newQuality,
     }))
   }
 
@@ -196,9 +215,9 @@ export default function ScriptingPortraitLive(props) {
         <View style={styles.vwActionDetails}>
           <View style={styles.vwActionDetailsQuality}>
             <SinglePickerWithSideBorders
-              arrayElements={[-2, -1, 0, 1, 2]}
-              onChange={props.setQuality}
-              value={props.quality}
+              arrayElements={scriptReducer.qualityArray}
+              onChange={handleChangeQuality}
+              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.quality || "0"}
               style={props.stdPickerStyle}
             />
           </View>
@@ -231,9 +250,9 @@ export default function ScriptingPortraitLive(props) {
           </View>
           <View style={styles.vwActionDetailsSubtype}>
             <SinglePickerWithSideBorders
-              arrayElements={props.truncateArrayElements(props.table04data, 4)}
-              onChange={props.setSubtype}
-              value={props.subtype}
+              arrayElements={scriptReducer.subtypesArray}
+              onChange={handleChangeSubtype}
+              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.subtype || ""}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
             />
           </View>

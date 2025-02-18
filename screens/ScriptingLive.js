@@ -158,6 +158,7 @@ export default function ScriptingLive({ navigation }) {
   };
 
   // ------- Swipe Pad --------------
+  const [testOuterWheelPosition, setTestOuterWheelPosition] = useState(0);
   const demoOption = "4-12";
   const [numTrianglesMiddle, setNumTrianglesMiddle] = useState(4); // 2, 4, or 5
   const [numTrianglesOuter, setNumTrianglesOuter] = useState(12); // 8, 10 or 12
@@ -407,7 +408,7 @@ export default function ScriptingLive({ navigation }) {
     if (distanceFromCenter > userReducer.circleRadiusInner) {
       // console.log("--- triggered action");
       // addAction(currentActionType);
-      addNewActionToScriptReducersActionsArray({ type: currentActionType });
+      addNewActionToScriptReducersActionsArray({ type: currentActionType, subtype: currentActionSubtype });
     }
   });
 
@@ -435,7 +436,7 @@ export default function ScriptingLive({ navigation }) {
       relativeToPadCenterY * (1 / Math.tan((Math.PI / 180) * 75));
 
     let wheelPositionMiddle = 0; // 0-4
-    let wheelPositionOuter = 0; // 5-12
+    let wheelPositionOuter = 5; // 5-12, 5 is like 0, according to the scriptReducer.subtypesArray
     if (Math.abs(relativeToPadCenterY) < boundary45Y) {
       // Right side
       wheelPositionMiddle = 1;
@@ -444,49 +445,59 @@ export default function ScriptingLive({ navigation }) {
       handleSwipeColorChange(wheelPositionMiddle);
       setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Bloc
       if (!inMiddleCircle) {
-        wheelPositionOuter = 16;
+        wheelPositionOuter = 16;// like 16
+        setTestOuterWheelPosition(wheelPositionOuter-5)
         if (-relativeToPadCenterY > boundary15Y) {
-          // setSwipeColorDict(defaultColors);
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setCurrentActionType(16);
           setCurrentActionType(
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 5]
+          // );
           setCurrentActionSubtype(
-            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+            scriptReducer.subtypesArray[testOuterWheelPosition]
           );
         } else if (Math.abs(relativeToPadCenterY) < boundary15Y) {
           // setSwipeColorDict(defaultColors);
           // handleSwipeColorChange(1, 5);
           // setCurrentActionType(5);
           wheelPositionOuter = 5;
+          setTestOuterWheelPosition(wheelPositionOuter-5)
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
           setCurrentActionType(
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Bloc
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 5]
+          // );
           setCurrentActionSubtype(
-            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+            scriptReducer.subtypesArray[testOuterWheelPosition]
           );
         } else {
           wheelPositionOuter = 6;
+          setTestOuterWheelPosition(wheelPositionOuter-5)
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
           setCurrentActionType(
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Bloc
           setCurrentActionSubtype(
-            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+            scriptReducer.subtypesArray[testOuterWheelPosition]
           );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 5]
+          // );
         }
       }
     } else if (relativeToPadCenterY > Math.abs(boundary45Y)) {
       // Bottom
       wheelPositionMiddle = 2;
-      // handleSwipeColorChange(2);
-      // setCurrentActionType(2);
+      
       handleSwipeColorChange(wheelPositionMiddle);
       setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Def
       if (!inMiddleCircle) {
         wheelPositionOuter = 7;
+        setTestOuterWheelPosition(wheelPositionOuter-5)
         if (relativeToPadCenterX > boundary75X) {
           // handleSwipeColorChange(2, 7);
           // setCurrentActionType(7);
@@ -495,10 +506,14 @@ export default function ScriptingLive({ navigation }) {
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Def
           setCurrentActionSubtype(
-            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+            scriptReducer.subtypesArray[testOuterWheelPosition]
           );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 5]
+          // );
         } else if (Math.abs(relativeToPadCenterX) < boundary75X) {
           wheelPositionOuter = 8;
+          setTestOuterWheelPosition(wheelPositionOuter-5)
           // handleSwipeColorChange(2, 8);
           // setCurrentActionType(8);
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
@@ -506,10 +521,14 @@ export default function ScriptingLive({ navigation }) {
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Def
           setCurrentActionSubtype(
-            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+            scriptReducer.subtypesArray[testOuterWheelPosition]
           );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 5]
+          // );
         } else {
           wheelPositionOuter = 9;
+          setTestOuterWheelPosition(wheelPositionOuter-5)
           // handleSwipeColorChange(2, 9);
           // setCurrentActionType(9);
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
@@ -517,42 +536,118 @@ export default function ScriptingLive({ navigation }) {
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Def
           setCurrentActionSubtype(
-            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+            scriptReducer.subtypesArray[testOuterWheelPosition]
           );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 5]
+          // );
         }
       }
     } else if (relativeToPadCenterY > boundary45Y) {
       // Left
-      handleSwipeColorChange(3);
-      setCurrentActionType(3);
+      wheelPositionMiddle = 3;
+      // handleSwipeColorChange(3);
+      // setCurrentActionType(3);
+      handleSwipeColorChange(wheelPositionMiddle);
+      setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Set
       if (!inMiddleCircle) {
+        wheelPositionOuter = 10;
+        setTestOuterWheelPosition(wheelPositionOuter-5)
         if (relativeToPadCenterY > Math.abs(boundary15Y)) {
           // setSwipeColorDict(defaultColors);
-          handleSwipeColorChange(3, 10);
-          setCurrentActionType(10);
+          // handleSwipeColorChange(3, 10);
+          // setCurrentActionType(10);
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Set
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[testOuterWheelPosition]
+          );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 5]
+          // );
         } else if (relativeToPadCenterY > boundary15Y) {
-          // setSwipeColorDict(defaultColors);
-          handleSwipeColorChange(3, 11);
-          setCurrentActionType(11);
+          // // setSwipeColorDict(defaultColors);
+          // handleSwipeColorChange(3, 11);
+          // setCurrentActionType(11);
+          wheelPositionOuter = 11;
+          setTestOuterWheelPosition(wheelPositionOuter-5)
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Set
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[  testOuterWheelPosition ]
+          );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 5]
+          // );
         } else {
-          handleSwipeColorChange(3, 12);
-          setCurrentActionType(12);
+          // handleSwipeColorChange(3, 12);
+          // setCurrentActionType(12);
+          wheelPositionOuter = 12;
+          setTestOuterWheelPosition(wheelPositionOuter-5)
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Set
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[testOuterWheelPosition]
+          );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 5]
+          // );
         }
       }
     } else if (relativeToPadCenterY < boundary45Y) {
       // Top
-      handleSwipeColorChange(4);
-      setCurrentActionType(4);
+      // handleSwipeColorChange(4);
+      // setCurrentActionType(4);
+      wheelPositionMiddle = 4;
+      handleSwipeColorChange(wheelPositionMiddle);
+      setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Att
       if (!inMiddleCircle) {
+        wheelPositionOuter = 13;
+        setTestOuterWheelPosition(wheelPositionOuter-5)
         if (relativeToPadCenterX < boundary75X) {
-          handleSwipeColorChange(4, 13);
-          setCurrentActionType(13);
+          // handleSwipeColorChange(4, 13);
+          // setCurrentActionType(13);
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Def
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[testOuterWheelPosition]
+          );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 1]
+          // );
         } else if (relativeToPadCenterX < Math.abs(boundary75X)) {
-          handleSwipeColorChange(4, 14);
-          setCurrentActionType(14);
+          wheelPositionOuter = 14;
+          setTestOuterWheelPosition(wheelPositionOuter-5)
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Att
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[testOuterWheelPosition]
+          );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[wheelPositionOuter - 1]
+          // );
         } else {
-          handleSwipeColorChange(4, 15);
-          setCurrentActionType(15);
+          // handleSwipeColorChange(4, 15);
+          // setCurrentActionType(15);
+          wheelPositionOuter = 15;
+          setTestOuterWheelPosition(wheelPositionOuter-5)
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Att
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[testOuterWheelPosition]
+          );
         }
       }
     } else {
@@ -614,8 +709,8 @@ export default function ScriptingLive({ navigation }) {
       type: actionPropertiesObj.type
         ? actionPropertiesObj.type
         : "missing type",
-      subType: actionPropertiesObj.subType
-        ? actionPropertiesObj.subType
+      subtype: actionPropertiesObj.subtype
+        ? actionPropertiesObj.subtype
         : " missing tap - sub",
       quality: actionPropertiesObj.quality ? actionPropertiesObj.quality : 0,
       playerId: actionPropertiesObj.playerId
@@ -837,8 +932,15 @@ export default function ScriptingLive({ navigation }) {
             : "no actions"}
         </Text>
         <Text>
-        tapIsActive:{" "}
-          {tapIsActive ? "true" : "false"}
+          quality:{" "}
+          {scriptReducer.actionsArray.length > 0
+            ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]
+                .quality
+            : "no actions"}
+        </Text>
+        <Text>
+        setTestOuterWheelPosition:{" "}
+          {testOuterWheelPosition}
         </Text>
       </View>
     </View>
