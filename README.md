@@ -8,17 +8,13 @@ Vollyball training application
 
 ## Changes from pervious version
 
-- Swipe Pad on ScriptingLive Portrait is nickel 👍
-- works with API08
+- Swipe Pad on ScriptingLive is correctly placed on user touch
+- Swipe Pad wheel is outer, middle, and inner radius set in user reducer
 
 ### not all yet implemented
 
 - Make the Top navigation bar smaller
 - design a new Portrait mode scripting with new design - must have space to tap.
-- This version will ask for onboarding number of players to script
-- portrait mode will have a space to tap the screen to indicate player whose action is being scripted.
-  - implement gesture GestureScreen06 with ActionWheel02 from this repo: https://github.com/costa-rica/NativeStuff17nonRectanglularButtons
-- probably needs local database?
 
 ## .env
 
