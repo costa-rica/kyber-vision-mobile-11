@@ -35,6 +35,8 @@ import {
   deleteScript,
   replaceScriptActionArray,
   updateQualityPropertyInObjectOfActionsArray,
+  updateTypePropertyInObjectOfActionsArray,
+  updateSubtypePropertyInObjectOfActionsArray,
 } from "../reducers/script";
 import { useDispatch } from "react-redux";
 
