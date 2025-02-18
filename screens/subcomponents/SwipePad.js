@@ -3,14 +3,31 @@ import { Polygon, Svg, Circle } from "react-native-svg";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
+const tableTypeDummyData = ["Bloc", "Def", "Set", "Att"];
+// const tableSubtypeDummyData = ["5", "6", "7", "8"];
+const tableSubtypeDummyDataPlaceholder = Array.from(
+  { length: 12 },
+  (_, i) => 5 + i
+);
+const tableSubtypeDummyData = [
+  "start 5",
+  ...tableSubtypeDummyDataPlaceholder.slice(1, -9), // Middle portion of placeholder
+  "Free\nball",
+  "",
+  "",
+  "NP",
+  "",
+  "Tip",
+  "Power",
+  "Roll",
+  "",
+];
 export default function SwipePad(props) {
+  // console.log(tableSubtypeDummyData);
   // console.log(" SWIPE PAD: are we called?");
   const userReducer = useSelector((state) => state.user);
-
-  //const circleRadius = userReducer.circleRadiusOuter; // Radius of the circle
   const cx = userReducer.circleRadiusMiddle; // Center x-coordinate
   const cy = userReducer.circleRadiusMiddle; // Center y-coordinate
-  //const numTrianglesMiddle = props.numTrianglesMiddle; // Number of triangles
   const numTrianglesOuter = props.numTrianglesOuter;
   const extensionFactor = 1.5; // Extend triangle base 10% beyond the circle
   // Generate triangle points for each triangle
@@ -135,30 +152,126 @@ export default function SwipePad(props) {
     width: userReducer.circleRadiusInner * 2,
     // zIndex: 3,
   };
-  // const sizeViewForTextMiddleCircle = 40
-  const dictTextPoitions = {
+
+  const estimatedWidthOfText = 10;
+  const estimatedHeightOfText = 10;
+  // --- back up  ------
+  // const dictTextPositionsMiddle = {
+  //   1: {
+  //     right:
+  //       userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle * 1.2,
+  //     bottom:
+  //       userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle / 2,
+  //   },
+  //   2: {
+  //     right: userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle / 2,
+  //     bottom:
+  //       userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle * 1.2,
+  //   },
+  //   3: {
+  //     right: userReducer.circleRadiusOuter * 1.1,
+  //     bottom:
+  //       userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle / 2,
+  //   },
+  //   4: {
+  //     right: userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle / 2,
+  //     bottom: userReducer.circleRadiusOuter * 1.1,
+  //   },
+  // };
+  const dictTextPositionsMiddle = {
     1: {
-      right:
-        userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle * 1.2,
-      bottom:
-        userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle / 2,
+      // Right (Bloc)
+      top: userReducer.circleRadiusOuter - estimatedHeightOfText,
+      left: userReducer.circleRadiusOuter + userReducer.circleRadiusInner,
+      selected: true,
     },
     2: {
-      right: userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle / 2,
-      bottom:
-        userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle * 1.2,
+      // Bottom (Def)
+      top: userReducer.circleRadiusOuter + userReducer.circleRadiusInner,
+      left: userReducer.circleRadiusOuter - estimatedWidthOfText / 2,
+      selected: true,
     },
     3: {
-      right: userReducer.circleRadiusOuter * 1.1,
-      bottom:
-        userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle / 2,
+      // Left (Set)
+      top: userReducer.circleRadiusOuter - estimatedHeightOfText,
+      left:
+        userReducer.circleRadiusOuter -
+        userReducer.circleRadiusInner -
+        estimatedWidthOfText,
+      selected: true,
     },
     4: {
-      right: userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle / 2,
-      bottom: userReducer.circleRadiusOuter * 1.1,
+      // Top (Att)
+      top:
+        userReducer.circleRadiusOuter -
+        userReducer.circleRadiusInner -
+        estimatedHeightOfText,
+      left: userReducer.circleRadiusOuter - estimatedWidthOfText / 2,
+      selected: true,
     },
   };
 
+  const dictTextPositionsOuterPlaceholder = Object.fromEntries(
+    Array.from({ length: 12 }, (_, i) => [i + 5, { right: 0, bottom: 0 }])
+  );
+
+  const dictTextPositionsOuter = {
+    ...dictTextPositionsOuterPlaceholder,
+    8: {
+      // Bottom-Center (Freeball)
+      top:
+        userReducer.circleRadiusOuter * 2 -
+        (userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle),
+      left: userReducer.circleRadiusOuter - estimatedWidthOfText,
+      selected: true,
+    },
+    11: {
+      // Right-Center (NP)
+      top: userReducer.circleRadiusOuter - estimatedHeightOfText / 2,
+      left:
+        userReducer.circleRadiusOuter -
+        userReducer.circleRadiusMiddle -
+        estimatedWidthOfText * 1.5,
+      selected: true,
+    },
+    13: {
+      // Top-Left (Tip)
+      top:
+        userReducer.circleRadiusOuter -
+        userReducer.circleRadiusMiddle / 1.1 -
+        estimatedHeightOfText,
+      // top: 20,
+      left:
+        userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle / 1.6,
+      selected: true,
+    },
+
+    14: {
+      // Top-Center (Power)
+      top:
+        userReducer.circleRadiusOuter -
+        userReducer.circleRadiusMiddle -
+        estimatedHeightOfText,
+      left: userReducer.circleRadiusOuter - estimatedWidthOfText,
+      selected: true,
+    },
+    15: {
+      // Top-Right (Roll)
+      top:
+        userReducer.circleRadiusOuter -
+        userReducer.circleRadiusMiddle / 1.1 -
+        estimatedHeightOfText,
+      // top: 20,
+      left:
+        userReducer.circleRadiusOuter +
+        userReducer.circleRadiusMiddle / 1.8 -
+        estimatedWidthOfText,
+      selected: true,
+    },
+  };
+
+  // console.log("what is dictTextPositionsOuter[index] ?");
+  // console.log(dictTextPositionsOuter[5]);
   return (
     // <View style={[props.styleVwMainPosition, styleVwOuter]}>
     <View style={props.styleVwMainPosition}>
@@ -230,17 +343,15 @@ export default function SwipePad(props) {
           key={index}
           style={{
             position: "absolute",
-            // transform: [{ rotate: "45deg" }],
-            // right: index * userReducer.circleRadiusMiddle,
-            // bottom: 0,
-            right: dictTextPoitions[index + 1].right,
-            bottom: dictTextPoitions[index + 1].bottom,
-            justifyContent: "center",
-            alignItems: "center",
-            width: userReducer.circleRadiusMiddle,
-            height: userReducer.circleRadiusMiddle,
-            // backgroundColor: "green",
-            // zIndex: 99,
+            top: dictTextPositionsMiddle[index + 1].top,
+            left: dictTextPositionsMiddle[index + 1].left,
+            // borderColor: dictTextPositionsMiddle[index + 1].selected
+            //   ? "black"
+            //   : null,
+            // borderWidth: dictTextPositionsMiddle[index + 1].selected ? 1 : null,
+            // borderStyle: dictTextPositionsMiddle[index + 1].selected
+            //   ? "dashed"
+            //   : null,
           }}
         >
           <Text
@@ -252,7 +363,51 @@ export default function SwipePad(props) {
               // transform: [{ rotate: "45deg" }],
             }}
           >
-            {props.tableTypeDummyData[index]}
+            {dictTextPositionsMiddle[index + 1].selected
+              ? tableTypeDummyData[index]
+              : null}
+          </Text>
+        </View>
+      ))}
+      {/* --- TEXT Outer Circle ---- */}
+      {Array.from({ length: 12 }, (_, index) => (
+        <View
+          key={index + 4}
+          onLayout={() => {
+            console.log(`index created: ${index}`);
+            console.log(dictTextPositionsOuter[index + 5]);
+          }}
+          style={{
+            position: "absolute",
+
+            top: dictTextPositionsOuter[index + 5].top,
+            // top: 20,
+            left: dictTextPositionsOuter[index + 5].left,
+            justifyContent: "center",
+            alignItems: "center",
+
+            // borderColor: dictTextPositionsOuter[index + 5].selected
+            //   ? "black"
+            //   : null,
+            // borderWidth: dictTextPositionsOuter[index + 5].selected ? 1 : null,
+            // borderStyle: dictTextPositionsOuter[index + 5].selected
+            //   ? "dashed"
+            //   : null,
+          }}
+        >
+          <Text
+            key={index}
+            style={{
+              color: props.swipeTextStyleDict[index + 5].color,
+              fontSize: props.swipeTextStyleDict[index + 5].fontSize,
+              // fontSize: 20,
+              fontWeight: props.swipeTextStyleDict[index + 5].fontWeight,
+              // transform: [{ rotate: "45deg" }],
+            }}
+          >
+            {dictTextPositionsOuter[index + 5].selected
+              ? tableSubtypeDummyData[index]
+              : null}
           </Text>
         </View>
       ))}

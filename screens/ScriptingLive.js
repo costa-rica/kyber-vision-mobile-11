@@ -789,7 +789,7 @@ export default function ScriptingLive({ navigation }) {
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
           swipeTextStyleDict={swipeTextStyleDict}
-          tableTypeDummyData={tableTypeDummyData}
+          // tableTypeDummyData={tableTypeDummyData}
         />
       )}
       {/* <View style={vwGestureCoords} /> */}
@@ -828,7 +828,7 @@ export default function ScriptingLive({ navigation }) {
                 swipeColorDict: swipeColorDict,
                 defaultColors: defaultColors,
                 swipeTextStyleDict: swipeTextStyleDict,
-                tableTypeDummyData: tableTypeDummyData,
+                // tableTypeDummyData: tableTypeDummyData,
               });
             }}
           >
