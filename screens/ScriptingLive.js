@@ -728,16 +728,16 @@ export default function ScriptingLive({ navigation }) {
     // console.log("👍 end add action");
   };
 
-  const vwGestureCoords = {
-    position: "absolute",
-    top: gestureViewCoords.y,
-    height: gestureViewCoords.height,
-    left: gestureViewCoords.x,
-    width: gestureViewCoords.width,
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "black",
-  };
+  // const vwGestureCoords = {
+  //   position: "absolute",
+  //   top: gestureViewCoords.y,
+  //   height: gestureViewCoords.height,
+  //   left: gestureViewCoords.x,
+  //   width: gestureViewCoords.width,
+  //   borderWidth: 1,
+  //   borderStyle: "dashed",
+  //   borderColor: "black",
+  // };
 
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
@@ -788,6 +788,8 @@ export default function ScriptingLive({ navigation }) {
           swipeColorDict={swipeColorDict}
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
+          swipeTextStyleDict={swipeTextStyleDict}
+          tableTypeDummyData={tableTypeDummyData}
         />
       )}
       {/* <View style={vwGestureCoords} /> */}
@@ -803,46 +805,42 @@ export default function ScriptingLive({ navigation }) {
           {Math.round(gestureViewCoords.height)}
         </Text>
       </View> */}
-      <View
-        style={{
-          position: "absolute",
-          right: 10,
-          top: 10,
-          width: 50,
-          height: 50,
-        }}
-      >
-        <TouchableOpacity
-          style={{ width: "100%", height: "100%" }}
-          // onPress={() => pressedGear()}
-          onPress={() => {
-            console.log(" going to SwipePad Settings");
-            // console.log(swipeColorDict);
-            navigation.navigate("SwipePadSettings", {
-              numTrianglesMiddle: numTrianglesMiddle,
-              numTrianglesOuter: numTrianglesOuter,
-              demoOption: demoOption,
-              // userReducer.circleRadiusInner: userReducer.userReducer.circleRadiusInner,
-              // userReducer.circleRadiusMiddle: userReducer.circleRadiusMiddle,
-              // userReducer.circleRadiusMiddle: userReducer.circleRadiusMiddle,
-              swipeColorDict: swipeColorDict,
-              defaultColors: defaultColors,
-              swipeTextStyleDict: swipeTextStyleDict,
-              tableTypeDummyData: tableTypeDummyData,
-              // setCircleRadiusOuter: setCircleRadiusOuter,
-            });
+      {process.env.EXPO_PUBLIC_ENVIRONMENT === "workstation" && (
+        <View
+          style={{
+            position: "absolute",
+            right: 10,
+            top: 10,
+            width: 50,
+            height: 50,
           }}
         >
-          {/* <Text> User: {userReducer.email}</Text> */}
-
-          <Image
+          <TouchableOpacity
             style={{ width: "100%", height: "100%" }}
-            source={require("../assets/images/btnGear.png")}
-            alt="logo"
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      </View>
+            // onPress={() => pressedGear()}
+            onPress={() => {
+              console.log(" going to SwipePad Settings");
+              // console.log(swipeColorDict);
+              navigation.navigate("SwipePadSettings", {
+                numTrianglesMiddle: numTrianglesMiddle,
+                numTrianglesOuter: numTrianglesOuter,
+                demoOption: demoOption,
+                swipeColorDict: swipeColorDict,
+                defaultColors: defaultColors,
+                swipeTextStyleDict: swipeTextStyleDict,
+                tableTypeDummyData: tableTypeDummyData,
+              });
+            }}
+          >
+            <Image
+              style={{ width: "100%", height: "100%" }}
+              source={require("../assets/images/btnGear.png")}
+              alt="logo"
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+      )}
       <ScriptingPortraitLive
         navigation={navigation}
         stdPickerStyle={stdPickerStylePortrait}

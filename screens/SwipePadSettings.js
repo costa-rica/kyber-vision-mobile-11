@@ -60,66 +60,22 @@ export default function SwipePadSettings({ route, navigation }) {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-
-    // backgroundColor: "purple",
-    // height: 300,
-    // width: Dimensions.get("window").width,
   };
   const {
-    // numTrianglesMiddle,
-    // numTrianglesOuter,
-    // demoOption,
-    // circleRadiusInner,
-    // circleRadiusMiddle,
-    // circleRadiusOuter,
     swipeColorDict,
-    // defaultColors,
+
     swipeTextStyleDict,
     tableTypeDummyData,
-    // setCircleRadiusOuter,
   } = route.params;
 
-  const handleStyleVwSwipePadOnLayout = (event) => {
-    const { x, y, width, height } = event.nativeEvent.layout;
-    setSwipePadStartX(x);
-    setSwipePadStartY(y);
-    setTapDetails({
-      timestamp: "",
-      padPosCenterX: x + width / 2,
-      padPosCenterY: y + height / 2,
-    });
-  };
-
   return (
-    // <GestureHandlerRootView
-    //   style={{
-    //     justifyContent: "center",
-    //     flex: 1,
-    //   }}
-    // >
-    // {/* <SafeAreaView style={{ flex: 1 }}> */}
     <View style={styles.container}>
       <View style={styles.vwTitle}>
         <Text style={styles.txtTitle}>Customize your wheel</Text>
       </View>
-      {/* <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 5,
-          width: Dimensions.get("window").width * 0.9,
-        }}
-      ></View> */}
 
-      <View
-        style={styleVwSwipePad}
-        // onLayout={(event) => handleStyleVwSwipePadOnLayout(event)}
-      >
+      <View style={styleVwSwipePad}>
         <SwipePad
-          // circleRadiusInner={circleRadiusInner}
-          // circleRadiusMiddle={circleRadiusMiddle}
-          // circleRadiusOuter={circleRadiusOuter}
           styleVwMainPosition={{}}
           swipeColorDict={swipeColorDict}
           swipeTextStyleDict={swipeTextStyleDict}
@@ -137,10 +93,6 @@ export default function SwipePadSettings({ route, navigation }) {
           minimumValue={60}
           maximumValue={120}
           step={1}
-          // value={circleRadiusOuter}
-          // onValueChange={(value) => {
-          //   setCircleRadiusOuter(value);
-          // }}
           value={circleRadiusOuter}
           onValueChange={(value) => {
             circleRadiusOuterRef.current = value; // Update ref only
@@ -169,9 +121,6 @@ export default function SwipePadSettings({ route, navigation }) {
           maximumValue={90}
           step={1}
           value={circleRadiusMiddle}
-          // onValueChange={(value) => {
-          //   setCircleRadiusMiddle(value);
-          // }}
           onValueChange={(value) => {
             circleRadiusMiddleRef.current = value; // Update ref only
           }}
@@ -197,9 +146,6 @@ export default function SwipePadSettings({ route, navigation }) {
           maximumValue={60}
           step={1}
           value={circleRadiusInner}
-          // onValueChange={(value) => {
-          //   setCircleRadiusInner(value);
-          // }}
           onValueChange={(value) => {
             circleRadiusInnerRef.current = value; // Update ref only
           }}
@@ -260,8 +206,6 @@ export default function SwipePadSettings({ route, navigation }) {
         </ButtonKv>
       </View>
     </View>
-    // {/* </SafeAreaView> */}
-    // </GestureHandlerRootView>
   );
 }
 
@@ -283,7 +227,6 @@ const styles = StyleSheet.create({
   vwSlider: {
     marginTop: 20,
     alignItems: "center",
-    // backgroundColor: "purple",
   },
   txtLabel: {
     fontSize: 18,
