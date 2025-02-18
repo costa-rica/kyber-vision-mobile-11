@@ -30,10 +30,23 @@ import SwipePad from "./subcomponents/SwipePad";
 // import { useDispatch } from "react-redux";
 // import { reducerSetUserSwipePadWheel } from "../reducers/user";
 import { useSelector } from "react-redux";
+import {
+  newScript,
+  deleteScript,
+  replaceScriptActionArray,
+  updateQualityPropertyInObjectOfActionsArray,
+} from "../reducers/script";
+import { useDispatch } from "react-redux";
 
 export default function ScriptingLive({ navigation }) {
   // const dispatch = useDispatch();
   const userReducer = useSelector((state) => state.user);
+  const scriptReducer = useSelector((state) => state.script);
+  const dispatch = useDispatch();
+  const [scriptReducerActionArray, setScriptReducerActionArray] = useState(
+    scriptReducer.actionsArray
+  );
+  const [scriptId, setScriptId] = useState(scriptReducer.scriptId);
   const stdPickerStylePortrait = {
     color: "white",
     fontSize: 25,
@@ -148,29 +161,7 @@ export default function ScriptingLive({ navigation }) {
   const demoOption = "4-12";
   const [numTrianglesMiddle, setNumTrianglesMiddle] = useState(4); // 2, 4, or 5
   const [numTrianglesOuter, setNumTrianglesOuter] = useState(12); // 8, 10 or 12
-  // const [userReducer.circleRadiusMiddle, setCircleRadiusOuter] = useState(80);
-  // const [userReducer.circleRadiusMiddle, setCircleRadiusMiddle] = useState(60);
-  // const [userReducer.circleRadiusInner, setCircleRadiusInner] = useState(20);
-  // console.log(
-  //   `--> userReducer.userReducer.circleRadiusMiddle: ${userReducer.userReducer.circleRadiusMiddle}`
-  // );
-  // console.log(typeof userReducer.userReducer.circleRadiusMiddle);
-  // const [userReducer.circleRadiusMiddle, setCircleRadiusOuter] = useState(
-  //   userReducer.userReducer.circleRadiusMiddle
-  // );
-  // const [userReducer.circleRadiusMiddle, setCircleRadiusMiddle] = useState(
-  //   userReducer.userReducer.circleRadiusMiddle
-  // );
-  // const [userReducer.circleRadiusInner, setCircleRadiusInner] = useState(
-  //   userReducer.userReducer.circleRadiusInner
-  // );
   const [padPositionCenter, setPadPositionCenter] = useState({ x: 0, y: 0 });
-  // const [gestureBoundaries, setGestureBoundaries] = useState({
-  //   low_x: 0,
-  //   high_x: Dimensions.get("window").width,
-  //   low_y: 0,
-  //   high_y: Dimensions.get("window").height,
-  // });
   const [gestureViewCoords, setGestureViewCoords] = useState({
     x: 0,
     width: Dimensions.get("window").width,
@@ -185,6 +176,7 @@ export default function ScriptingLive({ navigation }) {
   });
   const [tapIsActive, setTapIsActive] = useState(true);
   const [currentActionType, setCurrentActionType] = useState(null);
+  const [currentActionSubtype, setCurrentActionSubtype] = useState(null);
   const [actionList, setActionList] = useState([]);
   const defaultColors = {
     1: "rgba(255, 143, 143, 1)", // right
@@ -222,7 +214,6 @@ export default function ScriptingLive({ navigation }) {
   const [swipeTextStyleDict, setSwipeTextStyleDict] =
     useState(defaultTextStyles);
   // ----- Swipe Pad: Dynamic Styles -----------
-  // const getVwVolleBallCourtBoundaries=()
 
   const styleVwMainPosition = {
     position: "absolute",
@@ -415,7 +406,8 @@ export default function ScriptingLive({ navigation }) {
     }
     if (distanceFromCenter > userReducer.circleRadiusInner) {
       // console.log("--- triggered action");
-      addAction(currentActionType);
+      // addAction(currentActionType);
+      addNewActionToScriptReducersActionsArray({ type: currentActionType });
     }
   });
 
@@ -427,178 +419,6 @@ export default function ScriptingLive({ navigation }) {
     gestureSwipeOnChange
     // gestureLongPress
   );
-
-  const logicFourEightCircle = (
-    relativeToPadCenterX,
-    relativeToPadCenterY,
-    inMiddleCircle
-  ) => {
-    const boundary45 = relativeToPadCenterX * Math.tan((Math.PI / 180) * 45);
-    if (relativeToPadCenterX > 0 && relativeToPadCenterY > 0) {
-      // Bottom Right
-      handleSwipeColorChange(1);
-      setCurrentActionType(1);
-      setType(tableTypeDummyData[1]);
-      if (!inMiddleCircle) {
-        if (relativeToPadCenterY < boundary45) {
-          handleSwipeColorChange(1, 5);
-          setCurrentActionType(5);
-        } else {
-          handleSwipeColorChange(1, 6);
-          setCurrentActionType(6);
-        }
-      }
-    } else if (relativeToPadCenterX < 0 && relativeToPadCenterY > 0) {
-      // Bottom Left
-      handleSwipeColorChange(2);
-      setCurrentActionType(2);
-      setType(tableTypeDummyData[2]);
-      if (!inMiddleCircle) {
-        if (relativeToPadCenterY > Math.abs(boundary45)) {
-          handleSwipeColorChange(2, 7);
-          setCurrentActionType(7);
-        } else {
-          handleSwipeColorChange(2, 8);
-          setCurrentActionType(8);
-        }
-      }
-    } else if (relativeToPadCenterX < 0 && relativeToPadCenterY < 0) {
-      // Top Left
-      handleSwipeColorChange(3);
-      setCurrentActionType(3);
-      setType(tableTypeDummyData[3]);
-      // console.log("set Att");
-      if (!inMiddleCircle) {
-        if (relativeToPadCenterY > boundary45) {
-          handleSwipeColorChange(3, 9);
-          setCurrentActionType(9);
-        } else {
-          handleSwipeColorChange(3, 10);
-          setCurrentActionType(10);
-        }
-      }
-    } else if (relativeToPadCenterX > 0 && relativeToPadCenterY < 0) {
-      // Top Right
-      handleSwipeColorChange(4);
-      setCurrentActionType(4);
-      setType(tableTypeDummyData[0]);
-      if (!inMiddleCircle) {
-        if (Math.abs(relativeToPadCenterY) > boundary45) {
-          handleSwipeColorChange(4, 11);
-          setCurrentActionType(11);
-        } else {
-          handleSwipeColorChange(4, 12);
-          setCurrentActionType(12);
-        }
-      }
-    } else {
-      setSwipeColorDict(defaultColors);
-    }
-  };
-
-  const logicFiveTenCircle = (
-    relativeToPadCenterX,
-    relativeToPadCenterY,
-    inMiddleCircle
-  ) => {
-    // Y dependent
-    const boundary345Y = relativeToPadCenterX * Math.tan((Math.PI / 180) * 345); // sector 1 beginning
-    const boundary57Y = relativeToPadCenterX * Math.tan((Math.PI / 180) * 57); // sector 1 end sector 2 begin
-    const boundary21Y = relativeToPadCenterX * Math.tan((Math.PI / 180) * 21); // sector 1-1 end 1-2 begin
-    const boundary129Y = relativeToPadCenterX * Math.tan((Math.PI / 180) * 129); // sector 2 end 3begin
-    const boundary93Y = relativeToPadCenterX * Math.tan((Math.PI / 180) * 93); // splits sector 2
-    const boundary201Y = relativeToPadCenterX * Math.tan((Math.PI / 180) * 201); // sector 3-1 top end
-    const boundary165Y = relativeToPadCenterX * Math.tan((Math.PI / 180) * 165); // sector 3-1 top end
-    const boundary273Y = relativeToPadCenterX * Math.tan((Math.PI / 180) * 273); // sector 4 end 5 begin
-    const boundary237Y = relativeToPadCenterX * Math.tan((Math.PI / 180) * 237); // splits sector 4
-    const boundary309Y = relativeToPadCenterX * Math.tan((Math.PI / 180) * 309); // splits sector 5
-
-    if (
-      relativeToPadCenterY > boundary345Y &&
-      relativeToPadCenterY < boundary57Y
-    ) {
-      // Right (bottom - ish) side (sector 1)
-      handleSwipeColorChange(1);
-      setCurrentActionType(1);
-
-      if (!inMiddleCircle) {
-        if (relativeToPadCenterY < boundary21Y) {
-          handleSwipeColorChange(1, 6);
-          setCurrentActionType(6);
-        } else {
-          handleSwipeColorChange(1, 7);
-          setCurrentActionType(7);
-        }
-      }
-    } else if (
-      relativeToPadCenterY > boundary57Y &&
-      relativeToPadCenterY > boundary129Y
-    ) {
-      // Bottom (sector 2)
-      handleSwipeColorChange(2);
-      setCurrentActionType(2);
-      if (!inMiddleCircle) {
-        if (relativeToPadCenterY > boundary93Y) {
-          handleSwipeColorChange(2, 8);
-          setCurrentActionType(8);
-        } else {
-          handleSwipeColorChange(2, 9);
-          setCurrentActionType(9);
-        }
-      }
-    }
-    //
-    else if (
-      // relativeToPadCenterY < -boundary231Y &&
-      relativeToPadCenterY > boundary201Y
-    ) {
-      // Left
-      handleSwipeColorChange(3);
-      setCurrentActionType(3);
-      if (!inMiddleCircle) {
-        if (relativeToPadCenterY > boundary165Y) {
-          // line that splits the the outer sectors and cuts the middle sector in half
-          handleSwipeColorChange(3, 10);
-          setCurrentActionType(10);
-        } else {
-          handleSwipeColorChange(3, 11);
-          setCurrentActionType(11);
-        }
-      }
-    }
-    //
-    else if (
-      relativeToPadCenterY < boundary273Y
-      // &&
-      // relativeToPadCenterY > boundary201Y
-    ) {
-      // Top Left
-      handleSwipeColorChange(4);
-      setCurrentActionType(4);
-      if (!inMiddleCircle) {
-        if (relativeToPadCenterY > boundary237Y) {
-          handleSwipeColorChange(4, 12);
-          setCurrentActionType(12);
-        } else {
-          handleSwipeColorChange(4, 13);
-          setCurrentActionType(13);
-        }
-      }
-    } else {
-      // setSwipeColorDict(defaultColors);
-      handleSwipeColorChange(5);
-      setCurrentActionType(5);
-      if (!inMiddleCircle) {
-        if (relativeToPadCenterY < boundary309Y) {
-          handleSwipeColorChange(5, 14);
-          setCurrentActionType(14);
-        } else {
-          handleSwipeColorChange(5, 15);
-          setCurrentActionType(15);
-        }
-      }
-    }
-  };
 
   const logicFourTwelveCircle = (
     relativeToPadCenterX,
@@ -614,38 +434,91 @@ export default function ScriptingLive({ navigation }) {
     const boundary75X =
       relativeToPadCenterY * (1 / Math.tan((Math.PI / 180) * 75));
 
+    let wheelPositionMiddle = 0; // 0-4
+    let wheelPositionOuter = 0; // 5-12
     if (Math.abs(relativeToPadCenterY) < boundary45Y) {
       // Right side
-      handleSwipeColorChange(1);
-      setCurrentActionType(1);
+      wheelPositionMiddle = 1;
+
+      // setCurrentActionType(1);
+      handleSwipeColorChange(wheelPositionMiddle);
+      setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Bloc
       if (!inMiddleCircle) {
+        wheelPositionOuter = 16;
         if (-relativeToPadCenterY > boundary15Y) {
           // setSwipeColorDict(defaultColors);
-          handleSwipeColorChange(1, 16);
-          setCurrentActionType(16);
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          // setCurrentActionType(16);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          );
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+          );
         } else if (Math.abs(relativeToPadCenterY) < boundary15Y) {
           // setSwipeColorDict(defaultColors);
-          handleSwipeColorChange(1, 5);
-          setCurrentActionType(5);
+          // handleSwipeColorChange(1, 5);
+          // setCurrentActionType(5);
+          wheelPositionOuter = 5;
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Bloc
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+          );
         } else {
-          handleSwipeColorChange(1, 6);
-          setCurrentActionType(6);
+          wheelPositionOuter = 6;
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Bloc
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+          );
         }
       }
     } else if (relativeToPadCenterY > Math.abs(boundary45Y)) {
       // Bottom
-      handleSwipeColorChange(2);
-      setCurrentActionType(2);
+      wheelPositionMiddle = 2;
+      // handleSwipeColorChange(2);
+      // setCurrentActionType(2);
+      handleSwipeColorChange(wheelPositionMiddle);
+      setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Def
       if (!inMiddleCircle) {
+        wheelPositionOuter = 7;
         if (relativeToPadCenterX > boundary75X) {
-          handleSwipeColorChange(2, 7);
-          setCurrentActionType(7);
+          // handleSwipeColorChange(2, 7);
+          // setCurrentActionType(7);
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Def
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+          );
         } else if (Math.abs(relativeToPadCenterX) < boundary75X) {
-          handleSwipeColorChange(2, 8);
-          setCurrentActionType(8);
+          wheelPositionOuter = 8;
+          // handleSwipeColorChange(2, 8);
+          // setCurrentActionType(8);
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Def
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+          );
         } else {
-          handleSwipeColorChange(2, 9);
-          setCurrentActionType(9);
+          wheelPositionOuter = 9;
+          // handleSwipeColorChange(2, 9);
+          // setCurrentActionType(9);
+          handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
+          setCurrentActionType(
+            scriptReducer.typesArray[wheelPositionMiddle - 1]
+          ); // Def
+          setCurrentActionSubtype(
+            scriptReducer.subtypesArray[wheelPositionOuter - 1]
+          );
         }
       }
     } else if (relativeToPadCenterY > boundary45Y) {
@@ -714,30 +587,76 @@ export default function ScriptingLive({ navigation }) {
         Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
     );
   };
-  const addAction = (direction) => {
-    // console.log("👍 start add action");
-    console.log(direction);
-    if (direction === null) return;
-    if (actionList?.length > 0) {
-      setActionList([...actionList, direction]);
+  // const addAction = (direction) => {
+  //   // console.log("👍 start add action");
+  //   console.log(direction);
+  //   if (direction === null) return;
+  //   if (actionList?.length > 0) {
+  //     setActionList([...actionList, direction]);
+  //   } else {
+  //     setActionList([direction]);
+  //   }
+  //   setPadVisible(false);
+  //   setTapIsActive(true);
+  //   // console.log("👍 end add action");
+  // };
+  // const addNewActionToScriptReducersActionsArray =(actionPropertiesObj) => {
+  //   console.log("Temp action adder")
+  //       setPadVisible(false);
+  //   setTapIsActive(true);
+  // }
+  const addNewActionToScriptReducersActionsArray = (actionPropertiesObj) => {
+    // const updateScriptReducerActionsArray = (actionPropertiesObj) => {
+
+    const newActionObj = {
+      dateScripted: new Date().toISOString(), // Convert to ISO string
+      timeStamp: new Date().toISOString(),
+      type: actionPropertiesObj.type
+        ? actionPropertiesObj.type
+        : "missing type",
+      subType: actionPropertiesObj.subType
+        ? actionPropertiesObj.subType
+        : " missing tap - sub",
+      quality: actionPropertiesObj.quality ? actionPropertiesObj.quality : 0,
+      playerId: actionPropertiesObj.playerId
+        ? actionPropertiesObj.playerId
+        : "Player 1",
+      scriptId: actionPropertiesObj.scriptId
+        ? actionPropertiesObj.scriptId
+        : scriptReducer.scriptId,
+      newAction: actionPropertiesObj.newAction
+        ? actionPropertiesObj.newAction
+        : true,
+      // quality: 0,
+      // playerId: "Player 1",
+      // scriptId: scriptReducer.scriptId,
+      // newAction: true,
+    };
+
+    // console.log(`adding new action with timeStamp = ${newActionObj.timeStamp}`);
+    // updateScriptReducerActionsArray(newActionObj);
+
+    // create new array with
+    let newScriptReducerActionArray = [
+      ...scriptReducer.actionsArray,
+      newActionObj,
+    ];
+    // sort
+    newScriptReducerActionArray.sort((a, b) => a.timeStamp - b.timeStamp);
+    dispatch(
+      replaceScriptActionArray({ actionsArray: newScriptReducerActionArray })
+    );
+
+    // dispatch(appendAction({ newActionObj }));
+    if (scriptReducerActionArray.length > 0) {
+      setScriptReducerActionArray([...scriptReducerActionArray, newActionObj]);
     } else {
-      setActionList([direction]);
+      setScriptReducerActionArray([newActionObj]);
     }
     setPadVisible(false);
     setTapIsActive(true);
     // console.log("👍 end add action");
   };
-
-  // const vwGestureCoords = {
-  //   position: "absolute",
-  //   top: gestureViewCoords.y,
-  //   height: gestureViewCoords.height,
-  //   left: gestureViewCoords.x,
-  //   width: gestureViewCoords.width,
-  //   borderWidth: 1,
-  //   borderStyle: "dashed",
-  //   borderColor: "black",
-  // };
 
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
@@ -878,9 +797,6 @@ export default function ScriptingLive({ navigation }) {
       />
       {padVisible && (
         <SwipePad
-          // userReducer.circleRadiusInner={userReducer.userReducer.circleRadiusInner}
-          // userReducer.circleRadiusMiddle={userReducer.userReducer.circleRadiusMiddle}
-          // userReducer.circleRadiusMiddle={userReducer.userReducer.circleRadiusMiddle}
           styleVwMainPosition={styleVwMainPosition}
           swipeColorDict={swipeColorDict}
           swipeTextStyleDict={swipeTextStyleDict}
@@ -889,9 +805,42 @@ export default function ScriptingLive({ navigation }) {
           tableTypeDummyData={tableTypeDummyData}
         />
       )}
-      {/* <View style={vwPositionBoundaries}></View> */}
-
-      {/* <View style={vwGestureCoords} /> */}
+      {/* ---- For Testing Only ---- */}
+      <View
+        style={{
+          position: "absolute",
+          bottom: 10,
+          left: 10,
+          padding: 10,
+        }}
+      >
+        <Text>actions saved: {scriptReducer.actionsArray.length}</Text>
+        <Text>
+          timestamp:{" "}
+          {scriptReducer.actionsArray.length > 0
+            ? scriptReducer.actionsArray[
+              scriptReducer.actionsArray.length - 1
+              ].timeStamp.substring(11, 25)
+            : "no actions"}
+        </Text>
+        <Text>
+          type:{" "}
+          {scriptReducer.actionsArray.length > 0
+            ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].type
+            : "no actions"}
+        </Text>
+        <Text>
+          subtype:{" "}
+          {scriptReducer.actionsArray.length > 0
+            ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]
+                .subtype
+            : "no actions"}
+        </Text>
+        <Text>
+        tapIsActive:{" "}
+          {tapIsActive ? "true" : "false"}
+        </Text>
+      </View>
     </View>
     //   </GestureDetector>
     // </GestureHandlerRootView>

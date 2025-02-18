@@ -25,7 +25,7 @@ import {
   newScript,
   deleteScript,
   replaceScriptActionArray,
-  updatePropertyInObjectOfActionsArray,
+  updateQualityPropertyInObjectOfActionsArray,
 } from "../reducers/script";
 import { useDispatch } from "react-redux";
 
@@ -363,7 +363,7 @@ export default function Scripting({ navigation, route }) {
     );
 
     dispatch(
-      updatePropertyInObjectOfActionsArray({
+      updateQualityPropertyInObjectOfActionsArray({
         timeStamp: currentAction.timeStamp,
         quality: newQuality,
       })

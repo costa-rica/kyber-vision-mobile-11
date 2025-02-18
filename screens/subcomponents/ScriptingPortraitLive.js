@@ -19,7 +19,19 @@ import {
   Gesture,
 } from "react-native-gesture-handler";
 
+import {
+  newScript,
+  deleteScript,
+  replaceScriptActionArray,
+  updateQualityPropertyInObjectOfActionsArray,
+  updateTypePropertyInObjectOfActionsArray,
+} from "../../reducers/script"
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+
 export default function ScriptingPortraitLive(props) {
+  const scriptReducer = useSelector((state) => state.script);
+  const dispatch = useDispatch();
   const [vwVolleyballCourtCoords, setVwVolleyballCourtCoords] = useState(null);
   const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
     console.log(
@@ -64,43 +76,16 @@ export default function ScriptingPortraitLive(props) {
     console.log(`setGestureViewCoords have been set`);
   };
 
-  // const handleGestureHandlerRootViewLayout = (event) => {
-  //   console.log(`- 2 handleGestureHandlerRootViewLayout event ${Platform.OS}-`);
-  //   console.log(event.nativeEvent.layout);
-  //   const { width, height, x, y } = event.nativeEvent.layout;
-  //   const new_y = props.gestureViewCoords.low_y + y;
-  //   console.log(`y: ${props.gestureViewCoords.low_y}, new_y: ${new_y}`);
-  //   props.setGestureViewCoords({
-  //     ...props.gestureViewCoords,
-  //     low_y: new_y,
-  //     high_y: new_y + height,
-  //   });
+  const handleChangeType = (newType) => {
+    const currentActionTimestamp = scriptReducer.actionsArray[
+      scriptReducer.actionsArray.length - 1
+    ]?.timeStamp;
+    dispatch(updateTypePropertyInObjectOfActionsArray({
+      timeStamp: currentActionTimestamp,
+      type: newType,
+    }))
+  }
 
-  //   console.log(`setGestureViewCoords have been set`);
-  // };
-  // const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
-  //   console.log(
-  //     `- 1 handleVwVolleyballCourtAndGestSuperLayout event ${Platform.OS}-`
-  //   );
-  //   console.log(event.nativeEvent.layout);
-  //   const { width, height, x, y } = event.nativeEvent.layout;
-  //   props.setGestureViewCoords({
-  //     low_x: x,
-  //     high_x: x + width,
-  //     low_y: y,
-  //     high_y: y + height,
-  //   });
-  // };
-  // useEffect(() => {
-  //   if (vwVolleyballCourtCoords) {
-  //     console.log("Updating gesture view coordinates after parent view layout");
-  //     props.setGestureViewCoords((prev) => ({
-  //       ...prev,
-  //       low_y: vwVolleyballCourtCoords.y + (prev.low_y || 0),
-  //       high_y: vwVolleyballCourtCoords.y + (prev.high_y || 0),
-  //     }));
-  //   }
-  // }, [vwVolleyballCourtCoords]);
   return (
     <View style={styles.container}>
       {/* <Text style={{ position: "absolute", left: 100, top: 10 }}>
@@ -236,9 +221,10 @@ export default function ScriptingPortraitLive(props) {
           </View>
           <View style={styles.vwActionDetailsType}>
             <SinglePickerWithSideBorders
-              arrayElements={props.tableTypeDummyData}
-              onChange={props.setType}
-              value={props.type}
+              arrayElements={scriptReducer.typesArray}
+              onChange={handleChangeType}
+              // value={props.type}
+              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.type || "Bloc"}
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
             />
@@ -256,8 +242,8 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwScriptingManagementLeft}>
             <ButtonKv
               onPress={() => {
-                Alert.alert("start");
-                props.setPosition((prev) => prev + 1);
+                dispatch(deleteScript());
+                // props.setPosition((prev) => prev + 1);
               }}
               // colorBackground={"#970F9A"}
               // colorText={"white"}
