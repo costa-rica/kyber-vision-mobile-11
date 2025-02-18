@@ -346,7 +346,10 @@ const styles = StyleSheet.create({
     // marginBottom: -20,
     paddingTop: 10,
     paddingLeft: 10,
+    paddingRight: 10,
     width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   touchOpBtnBackArrow: {
     width: 50,
@@ -359,6 +362,14 @@ const styles = StyleSheet.create({
     borderColor: "lightgray",
   },
   imgBtnBackArrow: {
+    // width: "100%",
+    // height: "100%",
+    // borderRadius: 35, // Match circle's border radius
+    width: "100%",
+    height: "100%",
+    borderRadius: 17, // Match circle's border radius
+  },
+  imgGearGray: {
     // width: "100%",
     // height: "100%",
     // borderRadius: 35, // Match circle's border radius

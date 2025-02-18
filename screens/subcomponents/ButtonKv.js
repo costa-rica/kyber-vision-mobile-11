@@ -1,15 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, View, Text } from "react-native";
 
-const ButtonKv = ({
-  onPress,
-  // colorBackground = "#A3A3A3",
-  // colorText = "white",
-  // width = 140,
-  // fontSize = 20,
-  style,
-  children,
-}) => {
+const ButtonKv = ({ onPress, style, children }) => {
   const scaleValue = useRef(new Animated.Value(1)).current;
 
   // Define default styles

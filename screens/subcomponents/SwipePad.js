@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 export default function SwipePad(props) {
   // console.log(" SWIPE PAD: are we called?");
+
   //const circleRadius = props.circleRadiusOuter; // Radius of the circle
   const cx = props.circleRadiusMiddle; // Center x-coordinate
   const cy = props.circleRadiusMiddle; // Center y-coordinate
@@ -217,7 +218,7 @@ export default function SwipePad(props) {
           </Svg>
         </View>
       </View>
-      {/* TEXT MIDDLE Circle */}
+      {/* --- TEXT MIDDLE Circle ---- */}
       {Array.from({ length: 4 }, (_, index) => (
         <View
           key={index}
@@ -249,6 +250,13 @@ export default function SwipePad(props) {
           </Text>
         </View>
       ))}
+
+      {/* --- TEXT OUter Circle ----- */}
+      {/* {Array.from({ length: 12 }, (_, index) => (
+        <View>
+          <Text>{index + 4}</Text>
+        </View>
+      ))} */}
     </View>
   );
 }

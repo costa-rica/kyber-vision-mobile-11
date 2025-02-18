@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { View, Platform, StyleSheet, Dimensions, Text } from "react-native";
+import {
+  View,
+  Platform,
+  StyleSheet,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 
 import * as ScreenOrientation from "expo-screen-orientation";
 import ScriptingLandscapeLive from "./subcomponents/ScriptingLandscapeLive";
@@ -19,8 +27,13 @@ const scoreOptions = Array.from({ length: 26 }, (_, i) => i);
 // SwipePad
 import { Gesture } from "react-native-gesture-handler";
 import SwipePad from "./subcomponents/SwipePad";
+// import { useDispatch } from "react-redux";
+// import { reducerSetUserSwipePadWheel } from "../reducers/user";
+import { useSelector } from "react-redux";
 
 export default function ScriptingLive({ navigation }) {
+  // const dispatch = useDispatch();
+  const userReducer = useSelector((state) => state.user);
   const stdPickerStylePortrait = {
     color: "white",
     fontSize: 25,
@@ -135,9 +148,22 @@ export default function ScriptingLive({ navigation }) {
   const demoOption = "4-12";
   const [numTrianglesMiddle, setNumTrianglesMiddle] = useState(4); // 2, 4, or 5
   const [numTrianglesOuter, setNumTrianglesOuter] = useState(12); // 8, 10 or 12
-  const [circleRadiusOuter, setCircleRadiusOuter] = useState(80);
-  const [circleRadiusMiddle, setCircleRadiusMiddle] = useState(40);
+  // const [circleRadiusOuter, setCircleRadiusOuter] = useState(80);
+  const [circleRadiusMiddle, setCircleRadiusMiddle] = useState(60);
   const [circleRadiusInner, setCircleRadiusInner] = useState(20);
+  // console.log(
+  //   `--> userReducer.circleRadiusOuter: ${userReducer.circleRadiusOuter}`
+  // );
+  // console.log(typeof userReducer.circleRadiusOuter);
+  const [circleRadiusOuter, setCircleRadiusOuter] = useState(
+    userReducer.circleRadiusOuter
+  );
+  // const [circleRadiusMiddle, setCircleRadiusMiddle] = useState(
+  //   userReducer.circleRadiusMiddle
+  // );
+  // const [circleRadiusInner, setCircleRadiusInner] = useState(
+  //   userReducer.circleRadiusInner
+  // );
   const [padPositionCenter, setPadPositionCenter] = useState({ x: 0, y: 0 });
   // const [gestureBoundaries, setGestureBoundaries] = useState({
   //   low_x: 0,
@@ -388,7 +414,7 @@ export default function ScriptingLive({ navigation }) {
       return;
     }
     if (distanceFromCenter > circleRadiusInner) {
-      console.log("--- triggered action");
+      // console.log("--- triggered action");
       addAction(currentActionType);
     }
   });
@@ -753,7 +779,7 @@ export default function ScriptingLive({ navigation }) {
           circleRadiusMiddle={circleRadiusMiddle}
           styleVwMainPosition={styleVwMainPosition}
           swipeColorDict={swipeColorDict}
-          circleRadiusOuter={circleRadiusOuter}
+          circleRadiusOuter={userReducer.circleRadiusOuter}
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
         />
@@ -771,6 +797,46 @@ export default function ScriptingLive({ navigation }) {
           {Math.round(gestureViewCoords.height)}
         </Text>
       </View> */}
+      <View
+        style={{
+          position: "absolute",
+          right: 10,
+          top: 10,
+          width: 50,
+          height: 50,
+        }}
+      >
+        <TouchableOpacity
+          style={{ width: "100%", height: "100%" }}
+          // onPress={() => pressedGear()}
+          onPress={() => {
+            console.log(" going to SwipePad Settings");
+            // console.log(swipeColorDict);
+            navigation.navigate("SwipePadSettings", {
+              numTrianglesMiddle: numTrianglesMiddle,
+              numTrianglesOuter: numTrianglesOuter,
+              demoOption: demoOption,
+              circleRadiusInner: circleRadiusInner,
+              circleRadiusMiddle: circleRadiusMiddle,
+              circleRadiusOuter: circleRadiusOuter,
+              swipeColorDict: swipeColorDict,
+              defaultColors: defaultColors,
+              swipeTextStyleDict: swipeTextStyleDict,
+              tableTypeDummyData: tableTypeDummyData,
+              // setCircleRadiusOuter: setCircleRadiusOuter,
+            });
+          }}
+        >
+          {/* <Text> User: {userReducer.email}</Text> */}
+
+          <Image
+            style={{ width: "100%", height: "100%" }}
+            source={require("../assets/images/btnGear.png")}
+            alt="logo"
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      </View>
       <ScriptingPortraitLive
         navigation={navigation}
         stdPickerStyle={stdPickerStylePortrait}
@@ -808,12 +874,12 @@ export default function ScriptingLive({ navigation }) {
       />
       {padVisible && (
         <SwipePad
-          circleRadiusInner={circleRadiusInner}
-          circleRadiusMiddle={circleRadiusMiddle}
+          circleRadiusInner={userReducer.circleRadiusInner}
+          circleRadiusMiddle={userReducer.circleRadiusMiddle}
           styleVwMainPosition={styleVwMainPosition}
           swipeColorDict={swipeColorDict}
           swipeTextStyleDict={swipeTextStyleDict}
-          circleRadiusOuter={circleRadiusOuter}
+          circleRadiusOuter={userReducer.circleRadiusOuter}
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
           tableTypeDummyData={tableTypeDummyData}

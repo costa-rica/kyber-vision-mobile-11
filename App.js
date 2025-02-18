@@ -11,6 +11,8 @@ import Scripting from "./screens/Scripting";
 import Admin from "./screens/Admin";
 import ScriptingLive from "./screens/ScriptingLive";
 
+import SwipePadSettings from "./screens/SwipePadSettings";
+
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
@@ -61,6 +63,10 @@ export default function App() {
             <Stack.Screen name="Scripting" component={Scripting} />
             <Stack.Screen name="ScriptingLive" component={ScriptingLive} />
             <Stack.Screen name="Admin" component={Admin} />
+            <Stack.Screen
+              name="SwipePadSettings"
+              component={SwipePadSettings}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>

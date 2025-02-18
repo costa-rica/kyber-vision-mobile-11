@@ -7,7 +7,9 @@ const initialState = {
   portraitWidth: null,
   profile: null,
   video: {}, //list received from API GET /videos
-  // },
+  circleRadiusOuter: 90,
+  circleRadiusMiddle: 60,
+  circleRadiusInner: 30,
 };
 
 export const userSlice = createSlice({
@@ -28,6 +30,11 @@ export const userSlice = createSlice({
       state.portraitHeight = action.payload.portraitHeight;
       state.portraitWidth = action.payload.portraitWidth;
     },
+    reducerSetUserSwipePadWheel: (state, action) => {
+      state.circleRadiusOuter = action.payload.circleRadiusOuter;
+      state.circleRadiusMiddle = action.payload.circleRadiusMiddle;
+      state.circleRadiusInner = action.payload.circleRadiusInner;
+    },
   },
 });
 
@@ -35,5 +42,6 @@ export const {
   loginUser,
   storeVideoDetailsInRedux,
   reducerSetScreenDimensions,
+  reducerSetUserSwipePadWheel,
 } = userSlice.actions;
 export default userSlice.reducer;
