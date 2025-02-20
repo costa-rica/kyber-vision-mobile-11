@@ -26,7 +26,7 @@ import {
   updateQualityPropertyInObjectOfActionsArray,
   updateTypePropertyInObjectOfActionsArray,
   updateSubtypePropertyInObjectOfActionsArray,
-} from "../../reducers/script"
+} from "../../reducers/script";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
@@ -143,7 +143,7 @@ export default function ScriptingPortraitLive(props) {
               {/* Belongs to Set Team Analyzed SinglePickerWithSideBorders */}
 
               <SinglePickerWithSideBorders
-                arrayElements={props.setOptions}
+                arrayElements={scriptReducer.setOptionsArray}
                 itemHeight={props.stdPickerHeight}
                 onChange={props.setSetsTeamAnalyzed}
                 value={props.setsTeamAnalyzed}
@@ -153,7 +153,7 @@ export default function ScriptingPortraitLive(props) {
             {/* <View style={{ flex: 1 }} /> */}
             <View style={styles.vwScoreBothTeamsScores}>
               <DoublePickerWithSideBorders
-                arrayElements={props.scoreOptions}
+                arrayElements={scriptReducer.pointsArray}
                 onChange={props.setScoreTeamAnalyzed}
                 value={props.scoreTeamAnalyzed}
                 onChange02={props.setScoreTeamOpponent}
@@ -162,14 +162,14 @@ export default function ScriptingPortraitLive(props) {
                 // elementsFontSize={props.stdPickerFontSize}
                 // parentViewWidth={props.stdPickerParentViewWidth}
                 // elementPickerBorderRadius={props.stdPickerBorderRadius}
-                style={props.stdPickerStyle}
+                style={{ ...props.stdPickerStyle, fontSize: 21 }}
               />
             </View>
 
             {/* Belongs to Score SinglePickerWithSideBorders */}
             <View style={styles.vwScoreSetTeamOpponent}>
               <SinglePickerWithSideBorders
-                arrayElements={props.setOptions}
+                arrayElements={scriptReducer.setOptionsArray}
                 onChange={props.setSetsTeamOpponent}
                 value={props.setsTeamOpponent}
                 style={props.stdPickerStyle}
@@ -179,9 +179,9 @@ export default function ScriptingPortraitLive(props) {
 
           <View style={styles.vwScorePoistionalFormation}>
             <SinglePickerWithSideBorders
-              arrayElements={["P1", "P2", "P3", "P4", "P5", "P6"]}
-              onChange={props.setPositionalFormation}
-              value={props.positionalFormation}
+              arrayElements={scriptReducer.rotationArray}
+              onChange={props.setRotation}
+              value={props.rotation}
               style={{ ...props.stdPickerStyle, width: 50 }}
             />
           </View>
@@ -217,7 +217,11 @@ export default function ScriptingPortraitLive(props) {
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.qualityArray}
               onChange={props.handleChangeQuality}
-              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.quality || "0"}
+              value={
+                scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ]?.quality || "0"
+              }
               style={props.stdPickerStyle}
             />
           </View>
@@ -231,7 +235,10 @@ export default function ScriptingPortraitLive(props) {
           </View>
           <View style={styles.vwActionDetailsPlayer}>
             <SinglePickerWithSideBorders
-              arrayElements={props.truncateArrayElements(props.table02data, 4)}
+              arrayElements={props.truncateArrayElements(
+                scriptReducer.playerNamesArray,
+                4
+              )}
               onChange={props.setPlayerName}
               value={props.playerName}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
@@ -243,7 +250,11 @@ export default function ScriptingPortraitLive(props) {
               arrayElements={scriptReducer.typesArray}
               onChange={props.handleChangeType}
               // value={props.type}
-              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.type || "Bloc"}
+              value={
+                scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ]?.type || "Bloc"
+              }
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
             />
@@ -252,7 +263,11 @@ export default function ScriptingPortraitLive(props) {
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.subtypesArray}
               onChange={props.handleChangeSubtype}
-              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.subtype || ""}
+              value={
+                scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ]?.subtype || ""
+              }
               // value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype : ""}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
             />
@@ -307,8 +322,18 @@ export default function ScriptingPortraitLive(props) {
             <View style={styles.vwScriptingManagementRightRight}>
               <ButtonKv
                 onPress={() => {
+                  props.handleWinButtonPress();
                   // Alert.alert("pressed W");
-                  props.setScoreTeamAnalyzed((prev) => prev + 1);
+                  // props.setScoreTeamAnalyzed((prev) => prev + 1);
+                  // // Set rotation to the next element in scriptReducer.rotationArray if the next is beyond scriptReducer.rotationArray.length go back to the first
+                  // const nextRotationIndex =
+                  //   (scriptReducer.rotationArray.indexOf(props.rotation) + 1) %
+                  //   scriptReducer.rotationArray.length;
+                  // console.log(nextRotationIndex);
+                  // console.log(scriptReducer.rotationArray[nextRotationIndex]);
+                  // props.setRotation(
+                  //   scriptReducer.rotationArray[nextRotationIndex]
+                  // );
                 }}
                 style={{
                   backgroundColor: "#970F9A",

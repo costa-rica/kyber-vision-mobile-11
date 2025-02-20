@@ -94,8 +94,8 @@ export default function ScriptingLandscapeLive(props) {
           <View style={styles.vwPositionCapsule}>
             <SinglePickerWithSideBorders
               arrayElements={["P1", "P2", "P3", "P4", "P5", "P6"]}
-              onChange={props.setPositionalFormation}
-              value={props.positionalFormation}
+              onChange={props.setRotation}
+              value={props.rotation}
               style={{
                 ...props.stdPickerStyle,
                 itemHeight: 30,
@@ -124,7 +124,7 @@ export default function ScriptingLandscapeLive(props) {
           </View>
           <View style={styles.vwScore}>
             <DoublePickerWithSideBorders
-              arrayElements={props.scoreOptions}
+              arrayElements={scriptReducer.pointsArray}
               onChange={props.setScoreTeamAnalyzed}
               value={props.scoreTeamAnalyzed}
               onChange02={props.setScoreTeamOpponent}
@@ -293,7 +293,10 @@ export default function ScriptingLandscapeLive(props) {
           </View>
           <View style={styles.vwActionDetailsPlayer}>
             <SinglePickerWithSideBorders
-              arrayElements={props.truncateArrayElements(props.table02data, 4)}
+              arrayElements={props.truncateArrayElements(
+                scriptReducer.playerNamesArray,
+                4
+              )}
               onChange={props.setPlayerName}
               value={props.playerName}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
@@ -302,14 +305,8 @@ export default function ScriptingLandscapeLive(props) {
           </View>
           <View style={styles.vwActionDetailsType}>
             <SinglePickerWithSideBorders
-              // arrayElements={props.tableTypeDummyData}
-              // onChange={props.setType}
-              // value={props.type}
-              // style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
-              // selectedIsBold={false}
               arrayElements={scriptReducer.typesArray}
               onChange={props.handleChangeType}
-              // value={props.type}
               value={
                 scriptReducer.actionsArray[
                   scriptReducer.actionsArray.length - 1
@@ -328,16 +325,12 @@ export default function ScriptingLandscapeLive(props) {
                   scriptReducer.actionsArray.length - 1
                 ]?.subtype || ""
               }
-              // arrayElements={props.truncateArrayElements(props.table04data, 4)}
-              // onChange={props.setSubtype}
-              // value={props.subtype}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
             />
           </View>
           <View style={styles.vwScriptingManagementLeft}>
             <ButtonKv
               onPress={() => {
-                // Alert.alert("start");
                 dispatch(deleteScript());
               }}
               style={{ backgroundColor: "#970F9A", width: 100, fontSize: 25 }}

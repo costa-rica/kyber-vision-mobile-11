@@ -12,17 +12,17 @@ import {
 import * as ScreenOrientation from "expo-screen-orientation";
 import ScriptingLandscapeLive from "./subcomponents/ScriptingLandscapeLive";
 import ScriptingPortraitLive from "./subcomponents/ScriptingPortraitLive";
-const table01data = {
-  User41: "Ted",
-  User42: "Sarah",
-  User56: "Jeremy",
-  User62: "Melody",
-};
-const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
-const tableTypeDummyData = ["Bloc", "Def", "Set", "Att"];
-const table04data = ["DefSub", "SetSub", "AttSub"];
-const setOptions = [0, 1, 2, 3];
-const scoreOptions = Array.from({ length: 26 }, (_, i) => i);
+// const table01data = {
+//   User41: "Ted",
+//   User42: "Sarah",
+//   User56: "Jeremy",
+//   User62: "Melody",
+// };
+// const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
+// const tableTypeDummyData = ["Bloc", "Def", "Set", "Att"];
+// const table04data = ["DefSub", "SetSub", "AttSub"];
+// const setOptions = [0, 1, 2, 3];
+// const scoreOptions = Array.from({ length: 26 }, (_, i) => i);
 
 // SwipePad
 import { Gesture } from "react-native-gesture-handler";
@@ -37,6 +37,7 @@ import {
   updateQualityPropertyInObjectOfActionsArray,
   updateTypePropertyInObjectOfActionsArray,
   updateSubtypePropertyInObjectOfActionsArray,
+  updatePointsTableArray,
 } from "../reducers/script";
 import { useDispatch } from "react-redux";
 
@@ -74,12 +75,14 @@ export default function ScriptingLive({ navigation }) {
   const [scoreTeamOpponent, setScoreTeamOpponent] = useState(0);
   const [setsTeamOpponent, setSetsTeamOpponent] = useState(0);
   // Belongs to positional formation SinglePickerWithSideBorders
-  const [positionalFormation, setPositionalFormation] = useState("P1");
-  const [quality, setQuality] = useState(0);
+  const [rotation, setRotation] = useState(scriptReducer.rotationArray[0]);
+  const [quality, setQuality] = useState(scriptReducer.qualityArray[2]);
   const [position, setPosition] = useState(1);
-  const [playerName, setPlayerName] = useState(table02data[0]);
-  const [type, setType] = useState(tableTypeDummyData[0]);
-  const [subtype, setSubtype] = useState(table04data[0]);
+  const [playerName, setPlayerName] = useState(
+    scriptReducer.playerNamesArray[0]
+  );
+  const [type, setType] = useState(scriptReducer.typesArray[0]);
+  const [subtype, setSubtype] = useState(scriptReducer.subtypesArray[0]);
 
   // orientation
   const [orientation, setOrientation] = useState("portrait");
@@ -180,7 +183,7 @@ export default function ScriptingLive({ navigation }) {
   const [tapIsActive, setTapIsActive] = useState(true);
   const [currentActionType, setCurrentActionType] = useState(null);
   const [currentActionSubtype, setCurrentActionSubtype] = useState(null);
-  const [actionList, setActionList] = useState([]);
+  // const [actionList, setActionList] = useState([]);
   const defaultColors = {
     1: "rgba(255, 143, 143, 1)", // right
     2: "rgba(255, 143, 143, 1)", // bottom
@@ -806,6 +809,43 @@ export default function ScriptingLive({ navigation }) {
     );
   };
 
+  // Score Logic
+  const handleWinButtonPress = () => {
+    const teamOpponentPreviousScore =
+      scriptReducer.pointsTableArray[scriptReducer.pointsTableArray.length - 1]
+        ?.scoreTeamOpponent;
+    console.log(`previous score: ${teamOpponentPreviousScore}`);
+
+    let rotationTemp = rotation;
+    console.log(
+      `prevScore: ${teamOpponentPreviousScore}, newScore: ${scoreTeamAnalyzed}`
+    );
+    if (teamOpponentPreviousScore !== scoreTeamOpponent) {
+      const nextRotationIndex =
+        (scriptReducer.rotationArray.indexOf(rotation) + 1) %
+        scriptReducer.rotationArray.length;
+      rotationTemp = scriptReducer.rotationArray[nextRotationIndex];
+    }
+    const newScoreTeamAnalyzed = scoreTeamAnalyzed + 1;
+    const pointsTableArrayElemObj = {
+      pointsId: `${
+        setsTeamAnalyzed + setsTeamOpponent + 1
+      } - ${newScoreTeamAnalyzed} - ${scoreTeamOpponent}`,
+      setNumber: setsTeamAnalyzed + setsTeamOpponent + 1,
+      scoreTeamAnalyzed: newScoreTeamAnalyzed,
+      scoreTeamOpponent: scoreTeamOpponent,
+      rotation: rotationTemp,
+    };
+
+    const pointsTableArray = [
+      ...scriptReducer.pointsTableArray,
+      pointsTableArrayElemObj,
+    ];
+    setRotation(rotationTemp);
+    setScoreTeamAnalyzed(newScoreTeamAnalyzed);
+    dispatch(updatePointsTableArray({ pointsTableArray }));
+  };
+
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
     <View style={{ flex: 1 }}>
@@ -818,29 +858,29 @@ export default function ScriptingLive({ navigation }) {
       <ScriptingLandscapeLive
         handleSetCirclePress={handleSetCirclePress}
         setsTeamAnalyzed={setsTeamAnalyzed}
-        scoreOptions={scoreOptions}
+        // scoreOptions={scoreOptions}
         setScoreTeamAnalyzed={setScoreTeamAnalyzed}
         scoreTeamAnalyzed={scoreTeamAnalyzed}
         setScoreTeamOpponent={setScoreTeamOpponent}
         scoreTeamOpponent={scoreTeamOpponent}
         setsTeamOpponent={setsTeamOpponent}
         stdPickerStyle={stdPickerStyleLandscape}
-        setPositionalFormation={setPositionalFormation}
-        positionalFormation={positionalFormation}
+        setRotation={setRotation}
+        rotation={rotation}
         setQuality={setQuality}
         quality={quality}
         setPosition={setPosition}
         position={position}
         truncateArrayElements={truncateArrayElements}
-        table02data={table02data}
+        // table02data={table02data}
         setPlayerName={setPlayerName}
         playerName={playerName}
-        tableTypeDummyData={tableTypeDummyData}
+        // tableTypeDummyData={tableTypeDummyData}
         setType={setType}
         type={type}
         setSubtype={setSubtype}
         subtype={subtype}
-        table04data={table04data}
+        // table04data={table04data}
         combinedGestures={combinedGestures}
         // setGestureBoundaries={setGestureBoundaries}
         // gestureBoundaries={gestureBoundaries}
@@ -848,6 +888,7 @@ export default function ScriptingLive({ navigation }) {
         handleChangeType={handleChangeType}
         handleChangeSubtype={handleChangeSubtype}
         handleChangeQuality={handleChangeQuality}
+        handleWinButtonPress={handleWinButtonPress}
       />
       {padVisible && (
         <SwipePad
@@ -925,32 +966,32 @@ export default function ScriptingLive({ navigation }) {
       <ScriptingPortraitLive
         navigation={navigation}
         stdPickerStyle={stdPickerStylePortrait}
-        setOptions={setOptions}
+        // setOptions={setOptions}
         setSetsTeamAnalyzed={setSetsTeamAnalyzed}
         setsTeamAnalyzed={setsTeamAnalyzed}
-        scoreOptions={scoreOptions}
+        // scoreOptions={scoreOptions}
         setScoreTeamAnalyzed={setScoreTeamAnalyzed}
         scoreTeamAnalyzed={scoreTeamAnalyzed}
         setScoreTeamOpponent={setScoreTeamOpponent}
         scoreTeamOpponent={scoreTeamOpponent}
         setSetsTeamOpponent={setSetsTeamOpponent}
         setsTeamOpponent={setsTeamOpponent}
-        setPositionalFormation={setPositionalFormation}
-        positionalFormation={positionalFormation}
+        setRotation={setRotation}
+        rotation={rotation}
         setQuality={setQuality}
         quality={quality}
         setPosition={setPosition}
         position={position}
         truncateArrayElements={truncateArrayElements}
-        table02data={table02data}
+        // table02data={table02data}
         setPlayerName={setPlayerName}
         playerName={playerName}
-        tableTypeDummyData={tableTypeDummyData}
+        // tableTypeDummyData={tableTypeDummyData}
         setType={setType}
         type={type}
         setSubtype={setSubtype}
         subtype={subtype}
-        table04data={table04data}
+        // table04data={table04data}
         combinedGestures={combinedGestures}
         // setGestureBoundaries={setGestureBoundaries}
         // gestureBoundaries={gestureBoundaries}
@@ -959,6 +1000,7 @@ export default function ScriptingLive({ navigation }) {
         handleChangeType={handleChangeType}
         handleChangeSubtype={handleChangeSubtype}
         handleChangeQuality={handleChangeQuality}
+        handleWinButtonPress={handleWinButtonPress}
       />
       {padVisible && (
         <SwipePad
@@ -967,7 +1009,7 @@ export default function ScriptingLive({ navigation }) {
           swipeTextStyleDict={swipeTextStyleDict}
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
-          tableTypeDummyData={tableTypeDummyData}
+          // tableTypeDummyData={tableTypeDummyData}
         />
       )}
       {/* ---- For Testing Only ---- */}

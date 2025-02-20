@@ -28,10 +28,8 @@ export default function SwipePad(props) {
   const userReducer = useSelector((state) => state.user);
   const scriptReducer = useSelector((state) => state.script);
 
-  const tableTypeDummyData = scriptReducer.typesArray;
+  // const tableTypeDummyData = scriptReducer.typesArray;
   const tableSubtypeDummyData = scriptReducer.subtypesArray;
-
-
 
   const cx = userReducer.circleRadiusMiddle; // Center x-coordinate
   const cy = userReducer.circleRadiusMiddle; // Center y-coordinate
@@ -371,7 +369,7 @@ export default function SwipePad(props) {
             }}
           >
             {dictTextPositionsMiddle[index + 1].selected
-              ? tableTypeDummyData[index]
+              ? scriptReducer.typesArray[index]
               : null}
           </Text>
         </View>

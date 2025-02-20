@@ -91,8 +91,8 @@ export default function ScriptingPortraitVideo(props) {
           <View style={styles.vwScorePoistionalFormation}>
             <SinglePickerWithSideBorders
               arrayElements={["P1", "P2", "P3", "P4", "P5", "P6"]}
-              onChange={props.setPositionalFormation}
-              value={props.positionalFormation}
+              onChange={props.setRotation}
+              value={props.rotation}
               style={{ ...props.stdPickerStyle, width: 50 }}
             />
           </View>

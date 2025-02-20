@@ -88,7 +88,7 @@ export default function Scripting({ navigation, route }) {
   const [scoreTeamOpponent, setScoreTeamOpponent] = useState(0);
   const [setsTeamOpponent, setSetsTeamOpponent] = useState(0);
   // Belongs to positional formation SinglePickerWithSideBorders
-  const [positionalFormation, setPositionalFormation] = useState("P1");
+  const [rotation, setRotation] = useState("P1");
   const [quality, setQuality] = useState(0);
   const [position, setPosition] = useState(1);
   const [playerName, setPlayerName] = useState(table02data[0]);
@@ -521,8 +521,8 @@ export default function Scripting({ navigation, route }) {
           setsTeamOpponent={setsTeamOpponent}
           setSetsTeamOpponent={setSetsTeamOpponent}
           stdPickerStyle={stdPickerStyleLandscape}
-          setPositionalFormation={setPositionalFormation}
-          positionalFormation={positionalFormation}
+          setRotation={setRotation}
+          rotation={rotation}
           setQuality={setQuality}
           quality={quality}
           setPosition={setPosition}
