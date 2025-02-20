@@ -24,17 +24,19 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-video"],
+    "plugins": [
+      "expo-video"
+    ],
     "extra": {
       "eas": {
-        "projectId": "85640bf0-7278-4953-ba80-dbac92d0682a"
+        "projectId": "4cf94a18-97c5-4929-984b-7ab881b46446"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/85640bf0-7278-4953-ba80-dbac92d0682a"
+      "url": "https://u.expo.dev/4cf94a18-97c5-4929-984b-7ab881b46446"
     },
     "owner": "costa-rica"
   }

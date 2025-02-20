@@ -291,28 +291,29 @@ export default function ScriptingLive({ navigation }) {
       const timestamp = new Date().toISOString();
       const { x, y, absoluteX, absoluteY } = event;
       // console.log(`x: ${x}, y:${y}`);
-      console.log(`absoluteX: ${absoluteX}, absoluteY: ${absoluteY}`);
-      // console.log(`gestureBoundaries.low_y: ${gestureBoundaries.low_y}`);
-      if (
-        absoluteY > gestureViewCoords.y &&
-        absoluteY < gestureViewCoords.y + gestureViewCoords.height &&
-        absoluteX > gestureViewCoords.x &&
-        absoluteX < gestureViewCoords.x + gestureViewCoords.width
-      ) {
-        setPadPositionCenter({
-          x: calculatePadPositionCenter(absoluteX, absoluteY).x,
-          y: calculatePadPositionCenter(absoluteX, absoluteY).y,
-        });
-        setPadVisible(true);
-        setTapDetails({
-          timestamp,
-          padPosCenterX: calculatePadPositionCenter(absoluteX, absoluteY).x,
-          padPosCenterY: calculatePadPositionCenter(absoluteX, absoluteY).y,
-        });
+      // console.log(`absoluteX: ${absoluteX}, absoluteY: ${absoluteY}`);
+      // prevent SwipePad/Wheel from appearing
+      // if (
+      //   absoluteY > gestureViewCoords.y &&
+      //   absoluteY < gestureViewCoords.y + gestureViewCoords.height &&
+      //   absoluteX > gestureViewCoords.x &&
+      //   absoluteX < gestureViewCoords.x + gestureViewCoords.width
+      // ) {
+      // console.log("- IN gestureTapBegin");
+      setPadPositionCenter({
+        x: calculatePadPositionCenter(absoluteX, absoluteY).x,
+        y: calculatePadPositionCenter(absoluteX, absoluteY).y,
+      });
+      setPadVisible(true);
+      setTapDetails({
+        timestamp,
+        padPosCenterX: calculatePadPositionCenter(absoluteX, absoluteY).x,
+        padPosCenterY: calculatePadPositionCenter(absoluteX, absoluteY).y,
+      });
 
-        setTapIsActive(false);
-        handleSwipeColorChange("center");
-      }
+      setTapIsActive(false);
+      handleSwipeColorChange("center");
+      // }
     }
   });
 
@@ -338,57 +339,63 @@ export default function ScriptingLive({ navigation }) {
       }
     });
 
-  const gestureSwipeOnChange = Gesture.Pan().onChange((event) => {
-    // console.log("👍 start gestureSwipeOnChange");
+  const gestureSwipeOnChange = Gesture.Pan().onChange(
+    (event) => {
+      // console.log("👍 start gestureSwipeOnChange");
 
-    const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
+      const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
-    // prevent logic from firing left of landscape image
-    if (absoluteX < gestureViewCoords.x) {
-      return;
-    }
-    // const swipePosX = calculatePadPositionCenter(x, y).x;
-    // const swipePosY = calculatePadPositionCenter(x, y).y;
-    const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
-    const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
+      // prevent logic from firing left of landscape image
+      // if (
+      //   absoluteY > gestureViewCoords.y &&
+      //   absoluteY < gestureViewCoords.y + gestureViewCoords.height &&
+      //   absoluteX > gestureViewCoords.x &&
+      //   absoluteX < gestureViewCoords.x + gestureViewCoords.width
+      // ) {
+      // console.log("- IN gestureSwipeOnChange");
+      const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
+      const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
 
-    const distanceFromCenter = calculateDistanceFromCenter(
-      swipePosX,
-      swipePosY
-    );
+      const distanceFromCenter = calculateDistanceFromCenter(
+        swipePosX,
+        swipePosY
+      );
 
-    const relativeToPadCenterX = swipePosX - tapDetails.padPosCenterX;
-    const relativeToPadCenterY = swipePosY - tapDetails.padPosCenterY;
+      const relativeToPadCenterX = swipePosX - tapDetails.padPosCenterX;
+      const relativeToPadCenterY = swipePosY - tapDetails.padPosCenterY;
 
-    const inInnerCircle = distanceFromCenter < userReducer.circleRadiusInner;
-    const inMiddleCircle = distanceFromCenter < userReducer.circleRadiusMiddle;
+      const inInnerCircle = distanceFromCenter < userReducer.circleRadiusInner;
+      const inMiddleCircle =
+        distanceFromCenter < userReducer.circleRadiusMiddle;
 
-    if (inInnerCircle) {
-      handleSwipeColorChange("center");
-      setCurrentActionType(null);
-    } else {
-      if (demoOption === "4-8")
-        logicFourEightCircle(
-          relativeToPadCenterX,
-          relativeToPadCenterY,
-          inMiddleCircle
-        );
+      if (inInnerCircle) {
+        handleSwipeColorChange("center");
+        setCurrentActionType(null);
+      } else {
+        if (demoOption === "4-8")
+          logicFourEightCircle(
+            relativeToPadCenterX,
+            relativeToPadCenterY,
+            inMiddleCircle
+          );
 
-      if (demoOption == "5-10")
-        logicFiveTenCircle(
-          relativeToPadCenterX,
-          relativeToPadCenterY,
-          inMiddleCircle
-        );
-      if (demoOption === "4-12")
-        logicFourTwelveCircle(
-          relativeToPadCenterX,
-          relativeToPadCenterY,
-          inMiddleCircle
-        );
+        if (demoOption == "5-10")
+          logicFiveTenCircle(
+            relativeToPadCenterX,
+            relativeToPadCenterY,
+            inMiddleCircle
+          );
+        if (demoOption === "4-12")
+          logicFourTwelveCircle(
+            relativeToPadCenterX,
+            relativeToPadCenterY,
+            inMiddleCircle
+          );
+      }
     }
     // console.log("👍 end gestureSwipeOnChange");
-  });
+    // }
+  );
   // Combine swipe and tap gestures
   const gestureSwipeOnEnd = Gesture.Pan().onEnd((event) => {
     const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
@@ -402,16 +409,32 @@ export default function ScriptingLive({ navigation }) {
     );
 
     // Trying to prevent actions logic from triggering outside iOS Landscape X
-    if (absoluteX < gestureViewCoords.x) {
-      setPadVisible(false);
-      setTapIsActive(true);
-      return;
-    }
+    // if (
+    //   absoluteY > gestureViewCoords.y &&
+    //   absoluteY < gestureViewCoords.y + gestureViewCoords.height &&
+    //   absoluteX > gestureViewCoords.x &&
+    //   absoluteX < gestureViewCoords.x + gestureViewCoords.width
+    // ) {
+    // console.log("- IN gestureSwipeOnEnd");
+    // if (absoluteX < gestureViewCoords.x) {
+    //   setPadVisible(false);
+    //   setTapIsActive(true);
+    //   return;
+    // }
     if (distanceFromCenter > userReducer.circleRadiusInner) {
       // console.log("--- triggered action");
       // addAction(currentActionType);
-      addNewActionToScriptReducersActionsArray({ type: currentActionType, subtype: currentActionSubtype });
+      addNewActionToScriptReducersActionsArray({
+        type: currentActionType,
+        subtype: currentActionSubtype,
+      });
     }
+    // } else {
+    //   // console.log("- OUT gestureSwipeOnEnd");
+    //   setPadVisible(false);
+    //   setTapIsActive(true);
+    //   return;
+    // }
   });
 
   // Combine swipe and tap gestures
@@ -446,9 +469,9 @@ export default function ScriptingLive({ navigation }) {
       // setCurrentActionType(1);
       handleSwipeColorChange(wheelPositionMiddle);
       setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Bloc
-      setCurrentActionSubtype("")
+      setCurrentActionSubtype("");
       if (!inMiddleCircle) {
-        wheelPositionOuter = 16;// like 16
+        wheelPositionOuter = 16; // like 16
         // setTestOuterWheelPosition(wheelPositionOuter-5)
         if (-relativeToPadCenterY > boundary15Y) {
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
@@ -495,10 +518,10 @@ export default function ScriptingLive({ navigation }) {
     } else if (relativeToPadCenterY > Math.abs(boundary45Y)) {
       // Bottom
       wheelPositionMiddle = 2;
-      
+
       handleSwipeColorChange(wheelPositionMiddle);
       setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Def
-      setCurrentActionSubtype("")
+      setCurrentActionSubtype("");
       if (!inMiddleCircle) {
         wheelPositionOuter = 7;
         // setTestOuterWheelPosition(wheelPositionOuter-5)
@@ -509,9 +532,9 @@ export default function ScriptingLive({ navigation }) {
           setCurrentActionType(
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Def
-          setCurrentActionSubtype(
-            scriptReducer.subtypesArray[testOuterWheelPosition]
-          );
+          // setCurrentActionSubtype(
+          //   scriptReducer.subtypesArray[testOuterWheelPosition]
+          // );
           setCurrentActionSubtype(
             scriptReducer.subtypesArray[wheelPositionOuter - 5]
           );
@@ -554,7 +577,7 @@ export default function ScriptingLive({ navigation }) {
       // setCurrentActionType(3);
       handleSwipeColorChange(wheelPositionMiddle);
       setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Set
-      setCurrentActionSubtype("")
+      setCurrentActionSubtype("");
       if (!inMiddleCircle) {
         wheelPositionOuter = 10;
         // setTestOuterWheelPosition(wheelPositionOuter-5)
@@ -612,7 +635,7 @@ export default function ScriptingLive({ navigation }) {
       wheelPositionMiddle = 4;
       handleSwipeColorChange(wheelPositionMiddle);
       setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Att
-      setCurrentActionSubtype("")
+      setCurrentActionSubtype("");
       if (!inMiddleCircle) {
         wheelPositionOuter = 13;
         // setTestOuterWheelPosition(wheelPositionOuter-5)
@@ -624,9 +647,8 @@ export default function ScriptingLive({ navigation }) {
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Def
           setCurrentActionSubtype(
-            scriptReducer.subtypesArray[wheelPositionOuter-5]
+            scriptReducer.subtypesArray[wheelPositionOuter - 5]
           );
-
         } else if (relativeToPadCenterX < Math.abs(boundary75X)) {
           wheelPositionOuter = 14;
           // setTestOuterWheelPosition(wheelPositionOuter-5)
@@ -635,9 +657,8 @@ export default function ScriptingLive({ navigation }) {
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Att
           setCurrentActionSubtype(
-            scriptReducer.subtypesArray[wheelPositionOuter-5]
+            scriptReducer.subtypesArray[wheelPositionOuter - 5]
           );
-
         } else {
           // handleSwipeColorChange(4, 15);
           // setCurrentActionType(15);
@@ -648,7 +669,7 @@ export default function ScriptingLive({ navigation }) {
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Att
           setCurrentActionSubtype(
-            scriptReducer.subtypesArray[wheelPositionOuter-5]
+            scriptReducer.subtypesArray[wheelPositionOuter - 5]
           );
         }
       }
@@ -665,14 +686,10 @@ export default function ScriptingLive({ navigation }) {
     if (Platform.OS === "ios") {
       if (orientation === "portrait") {
         centeredY =
-          y -
-          userReducer.circleRadiusOuter * 2 +
-          userReducer.circleRadiusMiddle;
+          y - userReducer.circleRadiusOuter * 2 + userReducer.circleRadiusInner;
       } else if (orientation === "landscape") {
         centeredX =
-          x -
-          userReducer.circleRadiusOuter * 2 +
-          userReducer.circleRadiusMiddle;
+          x - userReducer.circleRadiusOuter * 2 + userReducer.circleRadiusInner;
       }
     }
 
@@ -756,34 +773,38 @@ export default function ScriptingLive({ navigation }) {
   };
 
   const handleChangeType = (newType) => {
-    const currentActionTimestamp = scriptReducer.actionsArray[
-      scriptReducer.actionsArray.length - 1
-    ]?.timeStamp;
-    dispatch(updateTypePropertyInObjectOfActionsArray({
-      timeStamp: currentActionTimestamp,
-      type: newType,
-    }))
-  }
+    const currentActionTimestamp =
+      scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]
+        ?.timeStamp;
+    dispatch(
+      updateTypePropertyInObjectOfActionsArray({
+        timeStamp: currentActionTimestamp,
+        type: newType,
+      })
+    );
+  };
   const handleChangeSubtype = (newSubtype) => {
-    const currentActionTimestamp = scriptReducer.actionsArray[
-      scriptReducer.actionsArray.length - 1
-    ]?.timeStamp;
-    dispatch(updateSubtypePropertyInObjectOfActionsArray({
-      timeStamp: currentActionTimestamp,
-      subtype: newSubtype,
-    }))
-  }
+    const currentActionTimestamp =
+      scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]
+        ?.timeStamp;
+    dispatch(
+      updateSubtypePropertyInObjectOfActionsArray({
+        timeStamp: currentActionTimestamp,
+        subtype: newSubtype,
+      })
+    );
+  };
   const handleChangeQuality = (newQuality) => {
-    const currentActionTimestamp = scriptReducer.actionsArray[
-      scriptReducer.actionsArray.length - 1
-    ]?.timeStamp;
-    dispatch(updateQualityPropertyInObjectOfActionsArray({
-      timeStamp: currentActionTimestamp,
-      quality: newQuality,
-    }))
-  }
-
-
+    const currentActionTimestamp =
+      scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]
+        ?.timeStamp;
+    dispatch(
+      updateQualityPropertyInObjectOfActionsArray({
+        timeStamp: currentActionTimestamp,
+        quality: newQuality,
+      })
+    );
+  };
 
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
@@ -848,47 +869,58 @@ export default function ScriptingLive({ navigation }) {
       style={{ flex: 1, marginTop: 0 }}
       // onLayout={(event) => handleVwScriptingPortraitLiveParent(event)}
     >
-      {/* <View style={{ position: "absolute", left: 60, width: 300 }}>
+      {/* <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          height: gestureViewCoords.height,
+          left: gestureViewCoords.x,
+          width: gestureViewCoords.width,
+          borderColor: "black",
+          borderWidth: 1,
+          zIndex: 1,
+        }}
+      >
         <Text>
           gestureViewCoords: {Math.round(gestureViewCoords.y)},{" "}
           {Math.round(gestureViewCoords.height)}
         </Text>
       </View> */}
       {/* {process.env.EXPO_PUBLIC_ENVIRONMENT === "workstation" && ( */}
-        <View
-          style={{
-            position: "absolute",
-            right: 10,
-            top: 10,
-            width: 50,
-            height: 50,
+      <View
+        style={{
+          position: "absolute",
+          right: 10,
+          top: 10,
+          width: 50,
+          height: 50,
+        }}
+      >
+        <TouchableOpacity
+          style={{ width: "100%", height: "100%" }}
+          // onPress={() => pressedGear()}
+          onPress={() => {
+            console.log(" going to SwipePad Settings");
+            // console.log(swipeColorDict);
+            navigation.navigate("SwipePadSettings", {
+              numTrianglesMiddle: numTrianglesMiddle,
+              numTrianglesOuter: numTrianglesOuter,
+              demoOption: demoOption,
+              swipeColorDict: swipeColorDict,
+              defaultColors: defaultColors,
+              swipeTextStyleDict: swipeTextStyleDict,
+              // tableTypeDummyData: tableTypeDummyData,
+            });
           }}
         >
-          <TouchableOpacity
+          <Image
             style={{ width: "100%", height: "100%" }}
-            // onPress={() => pressedGear()}
-            onPress={() => {
-              console.log(" going to SwipePad Settings");
-              // console.log(swipeColorDict);
-              navigation.navigate("SwipePadSettings", {
-                numTrianglesMiddle: numTrianglesMiddle,
-                numTrianglesOuter: numTrianglesOuter,
-                demoOption: demoOption,
-                swipeColorDict: swipeColorDict,
-                defaultColors: defaultColors,
-                swipeTextStyleDict: swipeTextStyleDict,
-                // tableTypeDummyData: tableTypeDummyData,
-              });
-            }}
-          >
-            <Image
-              style={{ width: "100%", height: "100%" }}
-              source={require("../assets/images/btnGear.png")}
-              alt="logo"
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
+            source={require("../assets/images/btnGear.png")}
+            alt="logo"
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      </View>
       {/* )} */}
       <ScriptingPortraitLive
         navigation={navigation}
@@ -939,45 +971,50 @@ export default function ScriptingLive({ navigation }) {
         />
       )}
       {/* ---- For Testing Only ---- */}
-      {process.env.EXPO_PUBLIC_ENVIRONMENT === "workstation" && (<View
-        style={{
-          position: "absolute",
-          bottom: 10,
-          left: 10,
-          padding: 10,
-        }}
-      >
-        <Text>actions saved: {scriptReducer.actionsArray.length}</Text>
-        <Text>
-          timestamp:{" "}
-          {scriptReducer.actionsArray.length > 0
-            ? scriptReducer.actionsArray[
-              scriptReducer.actionsArray.length - 1
-              ].timeStamp.substring(11, 25)
-            : "no actions"}
-        </Text>
-        <Text>
-          type:{" "}
-          {scriptReducer.actionsArray.length > 0
-            ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].type
-            : "no actions"}
-        </Text>
-        <Text>
-          subtype:{" "}
-          {scriptReducer.actionsArray.length > 0
-            ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]
-                .subtype
-            : "no actions"}
-        </Text>
-        <Text>
-          quality:{" "}
-          {scriptReducer.actionsArray.length > 0
-            ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]
-                .quality
-            : "no actions"}
-        </Text>
-
-      </View>)}
+      {process.env.EXPO_PUBLIC_ENVIRONMENT === "workstation" && (
+        <View
+          style={{
+            position: "absolute",
+            bottom: 10,
+            left: 10,
+            padding: 10,
+          }}
+        >
+          <Text>actions saved: {scriptReducer.actionsArray.length}</Text>
+          <Text>
+            timestamp:{" "}
+            {scriptReducer.actionsArray.length > 0
+              ? scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ].timeStamp.substring(11, 25)
+              : "no actions"}
+          </Text>
+          <Text>
+            type:{" "}
+            {scriptReducer.actionsArray.length > 0
+              ? scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ].type
+              : "no actions"}
+          </Text>
+          <Text>
+            subtype:{" "}
+            {scriptReducer.actionsArray.length > 0
+              ? scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ].subtype
+              : "no actions"}
+          </Text>
+          <Text>
+            quality:{" "}
+            {scriptReducer.actionsArray.length > 0
+              ? scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ].quality
+              : "no actions"}
+          </Text>
+        </View>
+      )}
     </View>
     //   </GestureDetector>
     // </GestureHandlerRootView>

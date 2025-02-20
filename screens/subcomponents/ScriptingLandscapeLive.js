@@ -19,11 +19,8 @@ import {
   GestureDetector,
   Gesture,
 } from "react-native-gesture-handler";
-import {
-  deleteScript,
-} from "../../reducers/script"
+import { deleteScript } from "../../reducers/script";
 import { useDispatch, useSelector } from "react-redux";
-
 
 export default function ScriptingLandscapeLive(props) {
   const scriptReducer = useSelector((state) => state.script);
@@ -176,7 +173,8 @@ export default function ScriptingLandscapeLive(props) {
         onLayout={(event) => handleContainerMiddleLayout(event)}
       >
         <GestureHandlerRootView
-        // onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
+          // onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
+          style={{ alignItems: "center" }}
         >
           <GestureDetector gesture={props.combinedGestures}>
             <View style={styles.vwVolleyballCourt}>
@@ -277,7 +275,11 @@ export default function ScriptingLandscapeLive(props) {
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.qualityArray}
               onChange={props.handleChangeQuality}
-              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.quality || "0"}
+              value={
+                scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ]?.quality || "0"
+              }
               style={props.stdPickerStyle}
             />
           </View>
@@ -308,7 +310,11 @@ export default function ScriptingLandscapeLive(props) {
               arrayElements={scriptReducer.typesArray}
               onChange={props.handleChangeType}
               // value={props.type}
-              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.type || "Bloc"}
+              value={
+                scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ]?.type || "Bloc"
+              }
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
             />
@@ -317,8 +323,12 @@ export default function ScriptingLandscapeLive(props) {
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.subtypesArray}
               onChange={props.handleChangeSubtype}
-              value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]?.subtype || ""}
-// arrayElements={props.truncateArrayElements(props.table04data, 4)}
+              value={
+                scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ]?.subtype || ""
+              }
+              // arrayElements={props.truncateArrayElements(props.table04data, 4)}
               // onChange={props.setSubtype}
               // value={props.subtype}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
@@ -404,6 +414,8 @@ const styles = StyleSheet.create({
     flex: 1,
     // borderWidth: 1,
     // borderStyle: "dashed",
+    // justifyContent: "center",
+    alignItems: "center",
   },
   vwVolleyballCourt: {
     // backgroundColor: "green",
