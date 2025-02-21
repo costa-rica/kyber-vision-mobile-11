@@ -297,7 +297,7 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwScriptingManagementRight}>
             <View style={styles.vwScriptingManagementRightLeft}>
               <ButtonKv
-                onPress={() => Alert.alert("pressed S")}
+                onPress={() => props.handlePressedServeOrReception("S")}
                 style={{
                   backgroundColor: "#310732",
                   color: "white",
@@ -308,7 +308,7 @@ export default function ScriptingPortraitLive(props) {
                 S
               </ButtonKv>
               <ButtonKv
-                onPress={() => Alert.alert("pressed R")}
+                onPress={() => props.handlePressedServeOrReception("R")}
                 style={{
                   backgroundColor: "#310732",
                   color: "white",

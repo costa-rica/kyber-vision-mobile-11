@@ -184,6 +184,10 @@ export default function ScriptingLive({ navigation }) {
   const [currentActionType, setCurrentActionType] = useState(null);
   const [currentActionSubtype, setCurrentActionSubtype] = useState(null);
   // const [actionList, setActionList] = useState([]);
+  const [opponentServed, setOpponentServed] = useState(
+    scriptReducer.pointsTableArray[scriptReducer.pointsTableArray.length - 1]
+      ?.opponentServed || false
+  );
   const defaultColors = {
     1: "rgba(255, 143, 143, 1)", // right
     2: "rgba(255, 143, 143, 1)", // bottom
@@ -811,16 +815,37 @@ export default function ScriptingLive({ navigation }) {
 
   // Score Logic
   const handleWinButtonPress = () => {
+    // Rotation advance logic:
+    // - if teamOpponentPrevious score is the same as before
+    // - if teamOpponentPrevious score = 0 and teamOpponentServed
     const teamOpponentPreviousScore =
       scriptReducer.pointsTableArray[scriptReducer.pointsTableArray.length - 1]
         ?.scoreTeamOpponent;
+
     console.log(`previous score: ${teamOpponentPreviousScore}`);
 
     let rotationTemp = rotation;
     console.log(
       `prevScore: ${teamOpponentPreviousScore}, newScore: ${scoreTeamAnalyzed}`
     );
-    if (teamOpponentPreviousScore !== scoreTeamOpponent) {
+
+    console.log(
+      `teamOpponentPreviousScore: ${teamOpponentPreviousScore}, scoreTeamOpponent: ${scoreTeamOpponent}, logic: ${
+        teamOpponentPreviousScore != null &&
+        teamOpponentPreviousScore !== scoreTeamOpponent
+      }`
+    );
+    console.log(
+      `opponentServed: ${opponentServed}, scoreTeamAnalyzed: ${scoreTeamAnalyzed}, logic: ${
+        opponentServed && scoreTeamAnalyzed === 0
+      }`
+    );
+
+    if (
+      (teamOpponentPreviousScore != null &&
+        teamOpponentPreviousScore !== scoreTeamOpponent) ||
+      (opponentServed && scoreTeamAnalyzed === 0)
+    ) {
       const nextRotationIndex =
         (scriptReducer.rotationArray.indexOf(rotation) + 1) %
         scriptReducer.rotationArray.length;
@@ -835,6 +860,7 @@ export default function ScriptingLive({ navigation }) {
       scoreTeamAnalyzed: newScoreTeamAnalyzed,
       scoreTeamOpponent: scoreTeamOpponent,
       rotation: rotationTemp,
+      opponentServed: opponentServed,
     };
 
     const pointsTableArray = [
@@ -844,6 +870,13 @@ export default function ScriptingLive({ navigation }) {
     setRotation(rotationTemp);
     setScoreTeamAnalyzed(newScoreTeamAnalyzed);
     dispatch(updatePointsTableArray({ pointsTableArray }));
+  };
+
+  const handlePressedServeOrReception = (serveOrReception) => {
+    // If opponentServer "R" was pressed
+    // Else if teamAnalyzed serverd "S" was pressed
+    console.log(`serveOrReception: ${serveOrReception}`);
+    setOpponentServed(serveOrReception == "R");
   };
 
   return orientation == "landscape" ? (
@@ -858,7 +891,6 @@ export default function ScriptingLive({ navigation }) {
       <ScriptingLandscapeLive
         handleSetCirclePress={handleSetCirclePress}
         setsTeamAnalyzed={setsTeamAnalyzed}
-        // scoreOptions={scoreOptions}
         setScoreTeamAnalyzed={setScoreTeamAnalyzed}
         scoreTeamAnalyzed={scoreTeamAnalyzed}
         setScoreTeamOpponent={setScoreTeamOpponent}
@@ -872,38 +904,29 @@ export default function ScriptingLive({ navigation }) {
         setPosition={setPosition}
         position={position}
         truncateArrayElements={truncateArrayElements}
-        // table02data={table02data}
         setPlayerName={setPlayerName}
         playerName={playerName}
-        // tableTypeDummyData={tableTypeDummyData}
         setType={setType}
         type={type}
         setSubtype={setSubtype}
         subtype={subtype}
-        // table04data={table04data}
         combinedGestures={combinedGestures}
-        // setGestureBoundaries={setGestureBoundaries}
-        // gestureBoundaries={gestureBoundaries}
         setGestureViewCoords={setGestureViewCoords}
         handleChangeType={handleChangeType}
         handleChangeSubtype={handleChangeSubtype}
         handleChangeQuality={handleChangeQuality}
         handleWinButtonPress={handleWinButtonPress}
+        handlePressedServeOrReception={handlePressedServeOrReception}
       />
       {padVisible && (
         <SwipePad
-          // userReducer.circleRadiusInner={userReducer.userReducer.circleRadiusInner}
-          // userReducer.circleRadiusMiddle={userReducer.userReducer.circleRadiusMiddle}
-          // userReducer.circleRadiusMiddle={userReducer.userReducer.circleRadiusMiddle}
           styleVwMainPosition={styleVwMainPosition}
           swipeColorDict={swipeColorDict}
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
           swipeTextStyleDict={swipeTextStyleDict}
-          // tableTypeDummyData={tableTypeDummyData}
         />
       )}
-      {/* <View style={vwGestureCoords} /> */}
     </View>
   ) : (
     <View
@@ -939,10 +962,8 @@ export default function ScriptingLive({ navigation }) {
       >
         <TouchableOpacity
           style={{ width: "100%", height: "100%" }}
-          // onPress={() => pressedGear()}
           onPress={() => {
             console.log(" going to SwipePad Settings");
-            // console.log(swipeColorDict);
             navigation.navigate("SwipePadSettings", {
               numTrianglesMiddle: numTrianglesMiddle,
               numTrianglesOuter: numTrianglesOuter,
@@ -950,7 +971,6 @@ export default function ScriptingLive({ navigation }) {
               swipeColorDict: swipeColorDict,
               defaultColors: defaultColors,
               swipeTextStyleDict: swipeTextStyleDict,
-              // tableTypeDummyData: tableTypeDummyData,
             });
           }}
         >
@@ -962,14 +982,11 @@ export default function ScriptingLive({ navigation }) {
           />
         </TouchableOpacity>
       </View>
-      {/* )} */}
       <ScriptingPortraitLive
         navigation={navigation}
         stdPickerStyle={stdPickerStylePortrait}
-        // setOptions={setOptions}
         setSetsTeamAnalyzed={setSetsTeamAnalyzed}
         setsTeamAnalyzed={setsTeamAnalyzed}
-        // scoreOptions={scoreOptions}
         setScoreTeamAnalyzed={setScoreTeamAnalyzed}
         scoreTeamAnalyzed={scoreTeamAnalyzed}
         setScoreTeamOpponent={setScoreTeamOpponent}
@@ -983,24 +1000,20 @@ export default function ScriptingLive({ navigation }) {
         setPosition={setPosition}
         position={position}
         truncateArrayElements={truncateArrayElements}
-        // table02data={table02data}
         setPlayerName={setPlayerName}
         playerName={playerName}
-        // tableTypeDummyData={tableTypeDummyData}
         setType={setType}
         type={type}
         setSubtype={setSubtype}
         subtype={subtype}
-        // table04data={table04data}
         combinedGestures={combinedGestures}
-        // setGestureBoundaries={setGestureBoundaries}
-        // gestureBoundaries={gestureBoundaries}
         setGestureViewCoords={setGestureViewCoords}
         gestureViewCoords={gestureViewCoords}
         handleChangeType={handleChangeType}
         handleChangeSubtype={handleChangeSubtype}
         handleChangeQuality={handleChangeQuality}
         handleWinButtonPress={handleWinButtonPress}
+        handlePressedServeOrReception={handlePressedServeOrReception}
       />
       {padVisible && (
         <SwipePad
@@ -1009,7 +1022,6 @@ export default function ScriptingLive({ navigation }) {
           swipeTextStyleDict={swipeTextStyleDict}
           numTrianglesMiddle={numTrianglesMiddle}
           numTrianglesOuter={numTrianglesOuter}
-          // tableTypeDummyData={tableTypeDummyData}
         />
       )}
       {/* ---- For Testing Only ---- */}
@@ -1022,40 +1034,80 @@ export default function ScriptingLive({ navigation }) {
             padding: 10,
           }}
         >
-          <Text>actions saved: {scriptReducer.actionsArray.length}</Text>
+          <Text>
+            scriptReducer.pointsTableArray:{" "}
+            {scriptReducer.pointsTableArray.length}
+          </Text>
           <Text>
             timestamp:{" "}
-            {scriptReducer.actionsArray.length > 0
-              ? scriptReducer.actionsArray[
-                  scriptReducer.actionsArray.length - 1
-                ].timeStamp.substring(11, 25)
-              : "no actions"}
+            {scriptReducer.pointsTableArray.length > 0
+              ? scriptReducer.pointsTableArray[
+                  scriptReducer.pointsTableArray.length - 1
+                ].pointId
+              : "no points"}
           </Text>
           <Text>
-            type:{" "}
-            {scriptReducer.actionsArray.length > 0
-              ? scriptReducer.actionsArray[
-                  scriptReducer.actionsArray.length - 1
-                ].type
-              : "no actions"}
+            setNumbrer:{" "}
+            {scriptReducer.pointsTableArray.length > 0
+              ? scriptReducer.pointsTableArray[
+                  scriptReducer.pointsTableArray.length - 1
+                ].setNumber
+              : "no points"}
           </Text>
           <Text>
-            subtype:{" "}
-            {scriptReducer.actionsArray.length > 0
-              ? scriptReducer.actionsArray[
-                  scriptReducer.actionsArray.length - 1
-                ].subtype
-              : "no actions"}
+            opponentServed:{" "}
+            {scriptReducer.pointsTableArray.length > 0
+              ? scriptReducer.pointsTableArray[
+                  scriptReducer.pointsTableArray.length - 1
+                ].opponentServed
+                ? "true"
+                : "false"
+              : "null"}
           </Text>
-          <Text>
-            quality:{" "}
-            {scriptReducer.actionsArray.length > 0
-              ? scriptReducer.actionsArray[
-                  scriptReducer.actionsArray.length - 1
-                ].quality
-              : "no actions"}
-          </Text>
+          <Text>scoreTeamAnalyzed: {scoreTeamAnalyzed}</Text>
         </View>
+        // <View
+        //   style={{
+        //     position: "absolute",
+        //     bottom: 10,
+        //     left: 10,
+        //     padding: 10,
+        //   }}
+        // >
+        //   <Text>actions saved: {scriptReducer.actionsArray.length}</Text>
+        //   <Text>
+        //     timestamp:{" "}
+        //     {scriptReducer.actionsArray.length > 0
+        //       ? scriptReducer.actionsArray[
+        //           scriptReducer.actionsArray.length - 1
+        //         ].timeStamp.substring(11, 25)
+        //       : "no actions"}
+        //   </Text>
+        //   <Text>
+        //     type:{" "}
+        //     {scriptReducer.actionsArray.length > 0
+        //       ? scriptReducer.actionsArray[
+        //           scriptReducer.actionsArray.length - 1
+        //         ].type
+        //       : "no actions"}
+        //   </Text>
+        //   <Text>
+        //     subtype:{" "}
+        //     {scriptReducer.actionsArray.length > 0
+        //       ? scriptReducer.actionsArray[
+        //           scriptReducer.actionsArray.length - 1
+        //         ].subtype
+        //       : "no actions"}
+        //   </Text>
+        //   <Text>
+        //     quality:{" "}
+        //     {scriptReducer.actionsArray.length > 0
+        //       ? scriptReducer.actionsArray[
+        //           scriptReducer.actionsArray.length - 1
+        //         ].quality
+        //       : "no actions"}
+        //   </Text>
+        // </View>
       )}
     </View>
     //   </GestureDetector>
