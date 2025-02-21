@@ -93,7 +93,7 @@ export default function ScriptingLandscapeLive(props) {
         <View style={styles.vwTopCenterBlurryCapsule}>
           <View style={styles.vwPositionCapsule}>
             <SinglePickerWithSideBorders
-              arrayElements={["P1", "P2", "P3", "P4", "P5", "P6"]}
+              arrayElements={scriptReducer.rotationArray}
               onChange={props.setRotation}
               value={props.rotation}
               style={{
@@ -214,7 +214,7 @@ export default function ScriptingLandscapeLive(props) {
           <View style={styles.vwScriptingManagementRight}>
             <View style={styles.vwScriptingManagementRightLeft}>
               <ButtonKv
-                onPress={() => Alert.alert("pressed S")}
+                onPress={() => props.handlePressedServeOrReception("S")}
                 style={{
                   backgroundColor: "#310732",
                   color: "white",
@@ -225,7 +225,7 @@ export default function ScriptingLandscapeLive(props) {
                 S
               </ButtonKv>
               <ButtonKv
-                onPress={() => Alert.alert("pressed R")}
+                onPress={() => props.handlePressedServeOrReception("R")}
                 style={{
                   backgroundColor: "#310732",
                   color: "white",
@@ -238,7 +238,7 @@ export default function ScriptingLandscapeLive(props) {
             </View>
             <View style={styles.vwScriptingManagementRightRight}>
               <ButtonKv
-                onPress={() => props.setScoreTeamAnalyzed((prev) => prev + 1)}
+                onPress={() => props.handleWinButtonPress()}
                 style={{
                   backgroundColor: "#970F9A",
                   color: "white",

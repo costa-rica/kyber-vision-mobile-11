@@ -50,6 +50,7 @@ const initialState = {
 // scoreTeamAnalyzed: 0,
 // scoreTeamOpponent: 0,
 // rotation: p1
+// opponentServed: false
 
 export const scriptSlice = createSlice({
   name: "script",

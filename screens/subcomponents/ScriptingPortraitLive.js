@@ -323,17 +323,6 @@ export default function ScriptingPortraitLive(props) {
               <ButtonKv
                 onPress={() => {
                   props.handleWinButtonPress();
-                  // Alert.alert("pressed W");
-                  // props.setScoreTeamAnalyzed((prev) => prev + 1);
-                  // // Set rotation to the next element in scriptReducer.rotationArray if the next is beyond scriptReducer.rotationArray.length go back to the first
-                  // const nextRotationIndex =
-                  //   (scriptReducer.rotationArray.indexOf(props.rotation) + 1) %
-                  //   scriptReducer.rotationArray.length;
-                  // console.log(nextRotationIndex);
-                  // console.log(scriptReducer.rotationArray[nextRotationIndex]);
-                  // props.setRotation(
-                  //   scriptReducer.rotationArray[nextRotationIndex]
-                  // );
                 }}
                 style={{
                   backgroundColor: "#970F9A",
