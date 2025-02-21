@@ -204,7 +204,15 @@ export default function ScriptingLive({ navigation }) {
   const stdSwipePadDefaultTextColor = "black";
   const stdSwipePadDefaultTextFontSize = 10;
   const stdLengthOfPositionLines = 10;
-  const stdColorOfPositionLines = "gray";
+  // const stdColorOfPositionLines = "gray";
+  const [stdColorOfPositionLines, setStdColorOfPositionLines] = useState(
+    userReducer.scriptPositionGuides ? "gray" : "transparent"
+  );
+  useEffect(() => {
+    setStdColorOfPositionLines(
+      userReducer.scriptPositionGuides ? "gray" : "transparent"
+    );
+  }, [userReducer.scriptPositionGuides]);
   const stdWidthOfPoistionLines = 1;
   const stdStyleOfPositionLines = "solid";
   const defaultTextStyles = Object.fromEntries(
@@ -840,12 +848,14 @@ export default function ScriptingLive({ navigation }) {
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
     <View style={{ flex: 1 }}>
-      <View style={{ position: "absolute", right: 0, bottom: 10, width: 300 }}>
+      {/* <View style={{ position: "absolute", right: 0, bottom: 10, width: 350 }}>
         <Text>
-          gestureViewCoords X: {Math.round(gestureViewCoords.x)}, width:{" "}
-          {Math.round(gestureViewCoords.width)}
+          gestureViewCoords X: {Math.round(gestureViewCoords.x)}, Y:
+          {Math.round(gestureViewCoords.y)} width:{" "}
+          {Math.round(gestureViewCoords.width)}, height:
+          {Math.round(gestureViewCoords.height)}
         </Text>
-      </View>
+      </View> */}
       <ScriptingLandscapeLive
         handleSetCirclePress={handleSetCirclePress}
         setsTeamAnalyzed={setsTeamAnalyzed}
@@ -876,6 +886,11 @@ export default function ScriptingLive({ navigation }) {
         handleChangeQuality={handleChangeQuality}
         handleWinButtonPress={handleWinButtonPress}
         handlePressedServeOrReception={handlePressedServeOrReception}
+        stdLengthOfPositionLines={stdLengthOfPositionLines}
+        stdColorOfPositionLines={stdColorOfPositionLines}
+        setStdColorOfPositionLines={setStdColorOfPositionLines}
+        stdWidthOfPoistionLines={stdWidthOfPoistionLines}
+        stdStyleOfPositionLines={stdStyleOfPositionLines}
       />
       {padVisible && (
         <SwipePad
@@ -974,6 +989,7 @@ export default function ScriptingLive({ navigation }) {
         handleChangeQuality={handleChangeQuality}
         handleWinButtonPress={handleWinButtonPress}
         handlePressedServeOrReception={handlePressedServeOrReception}
+        setStdColorOfPositionLines={setStdColorOfPositionLines}
       />
       {padVisible && (
         <SwipePad

@@ -70,8 +70,21 @@ export default function ScriptingLandscapeLive(props) {
         height: height,
       };
     });
+    setVwVolleyballCourtCoords((prev) => {
+      const new_y = prev.y + y;
+      console.log(`prev.y: ${prev.y}, new_y: ${new_y}`);
+
+      return {
+        ...prev,
+        // y: new_y,
+        x: x,
+        width: width,
+        height: height,
+      };
+    });
     console.log(`setGestureViewCoords have been set`);
   };
+  useEffect(() => {}, [props.gestureViewCoords]);
 
   return (
     <View style={styles.container}>
@@ -172,6 +185,14 @@ export default function ScriptingLandscapeLive(props) {
         style={styles.containerMiddle}
         onLayout={(event) => handleContainerMiddleLayout(event)}
       >
+        {/* <View style={{ position: "absolute", top: 50 }}>
+          <Text>
+            vwVolleyballCourtCoords x: {vwVolleyballCourtCoords?.x} y:{" "}
+            {vwVolleyballCourtCoords?.y}, width:{" "}
+            {vwVolleyballCourtCoords?.width}, height:{" "}
+            {vwVolleyballCourtCoords?.height}
+          </Text>
+        </View> */}
         <GestureHandlerRootView
           // onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
           style={{ alignItems: "center" }}
@@ -186,6 +207,432 @@ export default function ScriptingLandscapeLive(props) {
                 resizeMode="contain" // Prevents stretching
                 style={styles.imgVolleyBallCourt}
                 onLayout={(event) => handleImageLayout(event)}
+              />
+
+              {/*Top Left Position Lines P4 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              {/* TOP Center Position Lines P4-P3 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left:
+                    vwVolleyballCourtCoords?.width / 3 -
+                    props.stdLengthOfPositionLines,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: vwVolleyballCourtCoords?.width / 3,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: vwVolleyballCourtCoords?.width / 3,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              {/* TOP Center Position Lines P3-P2 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left:
+                    vwVolleyballCourtCoords?.width * (2 / 3) -
+                    props.stdLengthOfPositionLines,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: vwVolleyballCourtCoords?.width * (2 / 3),
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: vwVolleyballCourtCoords?.width * (2 / 3),
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              {/*Top Right Position Lines P2 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left:
+                    vwVolleyballCourtCoords?.width -
+                    props.stdLengthOfPositionLines,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: vwVolleyballCourtCoords?.width,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+
+              {/*Middle Left Position Lines P4-P5 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top:
+                    vwVolleyballCourtCoords?.height / 2 -
+                    props.stdLengthOfPositionLines / 2,
+                  left: 0,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height / 2,
+                  left: 0,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height / 2,
+                  left: 0,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              {/*Middle Left Position Lines P4-P3-P5-P6 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top:
+                    vwVolleyballCourtCoords?.height / 2 -
+                    props.stdLengthOfPositionLines,
+                  left: vwVolleyballCourtCoords?.width / 3,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height / 2,
+                  left: vwVolleyballCourtCoords?.width / 3,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height / 2,
+                  left: vwVolleyballCourtCoords?.width / 3,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                  backgroundColor: props.stdColorOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height / 2,
+                  left:
+                    vwVolleyballCourtCoords?.width / 3 -
+                    props.stdLengthOfPositionLines,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                  backgroundColor: props.stdColorOfPositionLines,
+                }}
+              />
+              {/*Middle Left Position Lines P3-P2-P6-P1 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top:
+                    vwVolleyballCourtCoords?.height / 2 -
+                    props.stdLengthOfPositionLines,
+                  left: vwVolleyballCourtCoords?.width * (2 / 3),
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height / 2,
+                  left: vwVolleyballCourtCoords?.width * (2 / 3),
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height / 2,
+                  left: vwVolleyballCourtCoords?.width * (2 / 3),
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height / 2,
+                  left:
+                    vwVolleyballCourtCoords?.width * (2 / 3) -
+                    props.stdLengthOfPositionLines,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              {/*Middle Right Position Lines P2-P1 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top:
+                    vwVolleyballCourtCoords?.height / 2 -
+                    props.stdLengthOfPositionLines,
+                  left: vwVolleyballCourtCoords?.width,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height / 2,
+                  left:
+                    vwVolleyballCourtCoords?.width -
+                    props.stdLengthOfPositionLines,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height / 2,
+                  left: vwVolleyballCourtCoords?.width,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              {/*Bottom Left Position Lines P5*/}
+              <View
+                style={{
+                  position: "absolute",
+                  top:
+                    vwVolleyballCourtCoords?.height -
+                    props.stdLengthOfPositionLines,
+                  left: 0,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height,
+                  left: 0,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              {/* Bottom Center Position Lines P5-P6 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height,
+                  left:
+                    vwVolleyballCourtCoords?.width / 3 -
+                    props.stdLengthOfPositionLines,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top:
+                    vwVolleyballCourtCoords?.height -
+                    props.stdLengthOfPositionLines,
+                  left: vwVolleyballCourtCoords?.width / 3,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height,
+                  left: vwVolleyballCourtCoords?.width / 3,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              {/* Bottom Center Position Lines P6-P1 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height,
+                  left:
+                    vwVolleyballCourtCoords?.width * (2 / 3) -
+                    props.stdLengthOfPositionLines,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top:
+                    vwVolleyballCourtCoords?.height -
+                    props.stdLengthOfPositionLines,
+                  left: vwVolleyballCourtCoords?.width * (2 / 3),
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height,
+                  left: vwVolleyballCourtCoords?.width * (2 / 3),
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              {/*Bottom Right Position Lines P1 */}
+              <View
+                style={{
+                  position: "absolute",
+                  top: vwVolleyballCourtCoords?.height,
+                  left:
+                    vwVolleyballCourtCoords?.width -
+                    props.stdLengthOfPositionLines +
+                    props.stdWidthOfPoistionLines,
+                  width: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top:
+                    vwVolleyballCourtCoords?.height -
+                    props.stdLengthOfPositionLines +
+                    props.stdWidthOfPoistionLines,
+                  left: vwVolleyballCourtCoords?.width,
+                  height: props.stdLengthOfPositionLines,
+                  borderColor: props.stdColorOfPositionLines,
+                  borderWidth: props.stdWidthOfPoistionLines,
+                  borderStyle: props.stdStyleOfPositionLines,
+                }}
               />
             </View>
           </GestureDetector>
@@ -334,6 +781,7 @@ export default function ScriptingLandscapeLive(props) {
             <ButtonKv
               onPress={() => {
                 dispatch(deleteScript());
+                // props.setStdColorOfPositionLines("transparent");
               }}
               style={{ backgroundColor: "#970F9A", width: 100, fontSize: 25 }}
             >

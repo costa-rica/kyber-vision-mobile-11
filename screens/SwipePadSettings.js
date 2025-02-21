@@ -2,10 +2,11 @@ import {
   StyleSheet,
   Text,
   View,
+  Dimensions,
+  Switch,
   TouchableOpacity,
   Image,
   ScrollView,
-  Dimensions,
   Platform,
 } from "react-native";
 
@@ -14,7 +15,10 @@ import { useEffect, useState, useRef } from "react";
 import Slider from "@react-native-community/slider";
 import ButtonKv from "./subcomponents/ButtonKv";
 import { useDispatch } from "react-redux";
-import { reducerSetUserSwipePadWheel } from "../reducers/user";
+import {
+  reducerSetUserSwipePadWheel,
+  switchPositionGuides,
+} from "../reducers/user";
 import { useSelector } from "react-redux";
 
 export default function SwipePadSettings({ route, navigation }) {
@@ -39,17 +43,21 @@ export default function SwipePadSettings({ route, navigation }) {
 
   const [swipePadStartX, setSwipePadStartX] = useState(0);
   const [swipePadStartY, setSwipePadStartY] = useState(0);
-  const [tapDetails, setTapDetails] = useState({
-    timestamp: "no date",
-    padPosCenterX: swipePadStartX + circleRadiusOuter / 2 - 2.5,
-    padPosCenterY: swipePadStartY + circleRadiusOuter / 2 - 2.5,
-  });
+  const [scriptPositionGuides, setScriptPositionGuides] = useState(
+    userReducer.scriptPositionGuides
+  );
+  // const [tapDetails, setTapDetails] = useState({
+  //   timestamp: "no date",
+  //   padPosCenterX: swipePadStartX + circleRadiusOuter / 2 - 2.5,
+  //   padPosCenterY: swipePadStartY + circleRadiusOuter / 2 - 2.5,
+  // });
 
-  const calculatePadPositionCenter = (x, y) => {
-    const centeredX = x - circleRadiusOuter;
-    const centeredY = y - circleRadiusOuter;
-    return { x: centeredX, y: centeredY };
-  };
+  // const calculatePadPositionCenter = (x, y) => {
+  //   const centeredX = x - circleRadiusOuter;
+  //   const centeredY = y - circleRadiusOuter;
+  //   return { x: centeredX, y: centeredY };
+  // };
+
   // ----- Dynamic Styles -----------------
   const styleVwMainPosition = {
     position: "absolute",
@@ -72,6 +80,22 @@ export default function SwipePadSettings({ route, navigation }) {
     <View style={styles.container}>
       <View style={styles.vwTitle}>
         <Text style={styles.txtTitle}>Customize your wheel</Text>
+      </View>
+
+      <View style={styles.vwPositionGuides}>
+        <Text style={styles.txtPositionGuides}>
+          Show position guides:{userReducer.scriptPositionGuides ? "ON" : "OFF"}
+        </Text>
+        <View style={styles.vwSwitchPositionGuides}>
+          <Switch
+            trackColor={{ false: "#ddd", true: "gray" }}
+            thumbColor={userReducer.scriptPositionGuides ? "white" : "gray"}
+            thumbTintColor="black"
+            onValueChange={() => dispatch(switchPositionGuides())}
+            value={userReducer.scriptPositionGuides}
+            style={styles.switchPositionGuides}
+          />
+        </View>
       </View>
 
       <View style={styleVwSwipePad}>
@@ -223,7 +247,24 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "#fff",
   },
-
+  vwPositionGuides: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  vwSwitchPositionGuides: {
+    borderRadius: 35, // Makes it a circle
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 5,
+    // width: "45%",
+    transform: Platform.OS === "android" ? [{ scale: 1.4 }] : [{ scale: 1.0 }],
+  },
+  switchPositionGuides: {
+    borderWidth: 1, // Border around the switch
+    borderColor: "black", // Border color
+    borderRadius: 20, // Rounded corners
+  },
   vwSlider: {
     marginTop: 20,
     alignItems: "center",

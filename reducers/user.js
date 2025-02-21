@@ -10,6 +10,7 @@ const initialState = {
   circleRadiusOuter: 90,
   circleRadiusMiddle: 60,
   circleRadiusInner: 30,
+  scriptPositionGuides: true,
 };
 
 export const userSlice = createSlice({
@@ -35,6 +36,10 @@ export const userSlice = createSlice({
       state.circleRadiusMiddle = action.payload.circleRadiusMiddle;
       state.circleRadiusInner = action.payload.circleRadiusInner;
     },
+    switchPositionGuides: (state) => {
+      console.log("switchPositionGuides");
+      state.scriptPositionGuides = !state.scriptPositionGuides;
+    },
   },
 });
 
@@ -43,5 +48,6 @@ export const {
   storeVideoDetailsInRedux,
   reducerSetScreenDimensions,
   reducerSetUserSwipePadWheel,
+  switchPositionGuides,
 } = userSlice.actions;
 export default userSlice.reducer;
