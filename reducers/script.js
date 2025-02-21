@@ -163,10 +163,8 @@ export const scriptSlice = createSlice({
       if (state.playerNamesArrayRotated.length > 1) {
         // Rotate array elements to the left
         state.playerNamesArrayRotated = [
-          state.playerNamesArrayRotated[
-            state.playerNamesArrayRotated.length - 1
-          ],
-          ...state.playerNamesArrayRotated.slice(0, -1),
+          ...state.playerNamesArrayRotated.slice(1),
+          state.playerNamesArrayRotated[0],
         ];
       }
     },
