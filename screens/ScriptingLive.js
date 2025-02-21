@@ -12,23 +12,10 @@ import {
 import * as ScreenOrientation from "expo-screen-orientation";
 import ScriptingLandscapeLive from "./subcomponents/ScriptingLandscapeLive";
 import ScriptingPortraitLive from "./subcomponents/ScriptingPortraitLive";
-// const table01data = {
-//   User41: "Ted",
-//   User42: "Sarah",
-//   User56: "Jeremy",
-//   User62: "Melody",
-// };
-// const table02data = ["Lea", "Odeyssa", "Yoann", "Johanne"];
-// const tableTypeDummyData = ["Bloc", "Def", "Set", "Att"];
-// const table04data = ["DefSub", "SetSub", "AttSub"];
-// const setOptions = [0, 1, 2, 3];
-// const scoreOptions = Array.from({ length: 26 }, (_, i) => i);
 
 // SwipePad
 import { Gesture } from "react-native-gesture-handler";
 import SwipePad from "./subcomponents/SwipePad";
-// import { useDispatch } from "react-redux";
-// import { reducerSetUserSwipePadWheel } from "../reducers/user";
 import { useSelector } from "react-redux";
 import {
   newScript,
@@ -38,6 +25,8 @@ import {
   updateTypePropertyInObjectOfActionsArray,
   updateSubtypePropertyInObjectOfActionsArray,
   updatePointsTableArray,
+  rotatePlayerNamesArray,
+  initializePlayerNamesArrayRotated,
 } from "../reducers/script";
 import { useDispatch } from "react-redux";
 
@@ -79,7 +68,7 @@ export default function ScriptingLive({ navigation }) {
   const [quality, setQuality] = useState(scriptReducer.qualityArray[2]);
   const [position, setPosition] = useState(1);
   const [playerName, setPlayerName] = useState(
-    scriptReducer.playerNamesArray[0]
+    scriptReducer.playerNamesArrayRotated[0]
   );
   const [type, setType] = useState(scriptReducer.typesArray[0]);
   const [subtype, setSubtype] = useState(scriptReducer.subtypesArray[0]);
@@ -136,7 +125,11 @@ export default function ScriptingLive({ navigation }) {
 
   useEffect(() => {}, [position]);
   // --- Dynamic styles ---
-  const truncateArrayElements = (arr, maxLength) => {
+  const stdTruncatePlayerNameLength = 4;
+  const truncateArrayElements = (
+    arr,
+    maxLength = stdTruncatePlayerNameLength
+  ) => {
     // console.log("- in trucnateArrayEleements");
     // console.log(arr);
     return arr.map((item) =>
@@ -210,6 +203,10 @@ export default function ScriptingLive({ navigation }) {
   const [swipeColorDict, setSwipeColorDict] = useState(defaultColors);
   const stdSwipePadDefaultTextColor = "black";
   const stdSwipePadDefaultTextFontSize = 10;
+  const stdLengthOfPositionLines = 10;
+  const stdColorOfPositionLines = "gray";
+  const stdWidthOfPoistionLines = 1;
+  const stdStyleOfPositionLines = "solid";
   const defaultTextStyles = Object.fromEntries(
     Array.from({ length: 16 }, (_, i) => [
       i + 1, // Key: 1 to 16
@@ -293,30 +290,50 @@ export default function ScriptingLive({ navigation }) {
       }));
     }
   };
+
+  const determineTapPlayer = (x, y) => {
+    if (y < gestureViewCoords.height / 2 && x < gestureViewCoords.width / 3) {
+      // P4 ; array postion 3
+      setPlayerName(scriptReducer.playerNamesArrayRotated[3]);
+    } else if (
+      y < gestureViewCoords.height / 2 &&
+      x < gestureViewCoords.width * (2 / 3)
+    ) {
+      // P3 ; array postion 2
+      setPlayerName(scriptReducer.playerNamesArrayRotated[2]);
+    } else if (y < gestureViewCoords.height / 2) {
+      // P2 ; array postion 1
+      setPlayerName(scriptReducer.playerNamesArrayRotated[1]);
+    } else if (x < gestureViewCoords.width / 3) {
+      // P5 ; array postion 4
+      setPlayerName(scriptReducer.playerNamesArrayRotated[4]);
+    } else if (x < gestureViewCoords.width * (2 / 3)) {
+      // P6 ; array postion 5
+      setPlayerName(scriptReducer.playerNamesArrayRotated[5]);
+    } else {
+      // P1 ; array postion 0
+      setPlayerName(scriptReducer.playerNamesArrayRotated[0]);
+    }
+  };
+
   const gestureTapBegin = Gesture.Tap().onBegin((event) => {
     if (tapIsActive) {
       const timestamp = new Date().toISOString();
       const { x, y, absoluteX, absoluteY } = event;
       // console.log(`x: ${x}, y:${y}`);
-      // console.log(`absoluteX: ${absoluteX}, absoluteY: ${absoluteY}`);
-      // prevent SwipePad/Wheel from appearing
-      // if (
-      //   absoluteY > gestureViewCoords.y &&
-      //   absoluteY < gestureViewCoords.y + gestureViewCoords.height &&
-      //   absoluteX > gestureViewCoords.x &&
-      //   absoluteX < gestureViewCoords.x + gestureViewCoords.width
-      // ) {
-      // console.log("- IN gestureTapBegin");
+      const padPosCenterX = calculatePadPositionCenter(absoluteX, absoluteY).x;
+      const padPosCenterY = calculatePadPositionCenter(absoluteX, absoluteY).y;
       setPadPositionCenter({
-        x: calculatePadPositionCenter(absoluteX, absoluteY).x,
-        y: calculatePadPositionCenter(absoluteX, absoluteY).y,
+        x: padPosCenterX,
+        y: padPosCenterY,
       });
       setPadVisible(true);
       setTapDetails({
         timestamp,
-        padPosCenterX: calculatePadPositionCenter(absoluteX, absoluteY).x,
-        padPosCenterY: calculatePadPositionCenter(absoluteX, absoluteY).y,
+        padPosCenterX: padPosCenterX,
+        padPosCenterY: padPosCenterY,
       });
+      determineTapPlayer(x, y);
 
       setTapIsActive(false);
       handleSwipeColorChange("center");
@@ -415,33 +432,12 @@ export default function ScriptingLive({ navigation }) {
         Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
     );
 
-    // Trying to prevent actions logic from triggering outside iOS Landscape X
-    // if (
-    //   absoluteY > gestureViewCoords.y &&
-    //   absoluteY < gestureViewCoords.y + gestureViewCoords.height &&
-    //   absoluteX > gestureViewCoords.x &&
-    //   absoluteX < gestureViewCoords.x + gestureViewCoords.width
-    // ) {
-    // console.log("- IN gestureSwipeOnEnd");
-    // if (absoluteX < gestureViewCoords.x) {
-    //   setPadVisible(false);
-    //   setTapIsActive(true);
-    //   return;
-    // }
     if (distanceFromCenter > userReducer.circleRadiusInner) {
-      // console.log("--- triggered action");
-      // addAction(currentActionType);
       addNewActionToScriptReducersActionsArray({
         type: currentActionType,
         subtype: currentActionSubtype,
       });
     }
-    // } else {
-    //   // console.log("- OUT gestureSwipeOnEnd");
-    //   setPadVisible(false);
-    //   setTapIsActive(true);
-    //   return;
-    // }
   });
 
   // Combine swipe and tap gestures
@@ -531,47 +527,29 @@ export default function ScriptingLive({ navigation }) {
       setCurrentActionSubtype("");
       if (!inMiddleCircle) {
         wheelPositionOuter = 7;
-        // setTestOuterWheelPosition(wheelPositionOuter-5)
         if (relativeToPadCenterX > boundary75X) {
-          // handleSwipeColorChange(2, 7);
-          // setCurrentActionType(7);
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
           setCurrentActionType(
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Def
-          // setCurrentActionSubtype(
-          //   scriptReducer.subtypesArray[testOuterWheelPosition]
-          // );
           setCurrentActionSubtype(
             scriptReducer.subtypesArray[wheelPositionOuter - 5]
           );
         } else if (Math.abs(relativeToPadCenterX) < boundary75X) {
           wheelPositionOuter = 8;
-          // setTestOuterWheelPosition(wheelPositionOuter-5)
-          // handleSwipeColorChange(2, 8);
-          // setCurrentActionType(8);
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
           setCurrentActionType(
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Def
-          // setCurrentActionSubtype(
-          //   scriptReducer.subtypesArray[testOuterWheelPosition]
-          // );
           setCurrentActionSubtype(
             scriptReducer.subtypesArray[wheelPositionOuter - 5]
           );
         } else {
           wheelPositionOuter = 9;
-          // setTestOuterWheelPosition(wheelPositionOuter-5)
-          // handleSwipeColorChange(2, 9);
-          // setCurrentActionType(9);
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
           setCurrentActionType(
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Def
-          // setCurrentActionSubtype(
-          //   scriptReducer.subtypesArray[testOuterWheelPosition]
-          // );
           setCurrentActionSubtype(
             scriptReducer.subtypesArray[wheelPositionOuter - 5]
           );
@@ -580,56 +558,35 @@ export default function ScriptingLive({ navigation }) {
     } else if (relativeToPadCenterY > boundary45Y) {
       // Left
       wheelPositionMiddle = 3;
-      // handleSwipeColorChange(3);
-      // setCurrentActionType(3);
       handleSwipeColorChange(wheelPositionMiddle);
       setCurrentActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]); // Set
       setCurrentActionSubtype("");
       if (!inMiddleCircle) {
         wheelPositionOuter = 10;
-        // setTestOuterWheelPosition(wheelPositionOuter-5)
         if (relativeToPadCenterY > Math.abs(boundary15Y)) {
-          // setSwipeColorDict(defaultColors);
-          // handleSwipeColorChange(3, 10);
-          // setCurrentActionType(10);
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
           setCurrentActionType(
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Set
-          // setCurrentActionSubtype(
-          //   scriptReducer.subtypesArray[testOuterWheelPosition]
-          // );
           setCurrentActionSubtype(
             scriptReducer.subtypesArray[wheelPositionOuter - 5]
           );
         } else if (relativeToPadCenterY > boundary15Y) {
-          // // setSwipeColorDict(defaultColors);
-          // handleSwipeColorChange(3, 11);
-          // setCurrentActionType(11);
           wheelPositionOuter = 11;
-          // setTestOuterWheelPosition(wheelPositionOuter-5)
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
           setCurrentActionType(
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Set
-          // setCurrentActionSubtype(
-          //   scriptReducer.subtypesArray[  testOuterWheelPosition ]
-          // );
+
           setCurrentActionSubtype(
             scriptReducer.subtypesArray[wheelPositionOuter - 5]
           );
         } else {
-          // handleSwipeColorChange(3, 12);
-          // setCurrentActionType(12);
           wheelPositionOuter = 12;
-          // setTestOuterWheelPosition(wheelPositionOuter-5)
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
           setCurrentActionType(
             scriptReducer.typesArray[wheelPositionMiddle - 1]
           ); // Set
-          // setCurrentActionSubtype(
-          //   scriptReducer.subtypesArray[testOuterWheelPosition]
-          // );
           setCurrentActionSubtype(
             scriptReducer.subtypesArray[wheelPositionOuter - 5]
           );
@@ -850,6 +807,7 @@ export default function ScriptingLive({ navigation }) {
         (scriptReducer.rotationArray.indexOf(rotation) + 1) %
         scriptReducer.rotationArray.length;
       rotationTemp = scriptReducer.rotationArray[nextRotationIndex];
+      dispatch(rotatePlayerNamesArray());
     }
     const newScoreTeamAnalyzed = scoreTeamAnalyzed + 1;
     const pointsTableArrayElemObj = {
@@ -904,6 +862,7 @@ export default function ScriptingLive({ navigation }) {
         setPosition={setPosition}
         position={position}
         truncateArrayElements={truncateArrayElements}
+        stdTruncatePlayerNameLength={stdTruncatePlayerNameLength}
         setPlayerName={setPlayerName}
         playerName={playerName}
         setType={setType}
@@ -1000,6 +959,7 @@ export default function ScriptingLive({ navigation }) {
         setPosition={setPosition}
         position={position}
         truncateArrayElements={truncateArrayElements}
+        stdTruncatePlayerNameLength={stdTruncatePlayerNameLength}
         setPlayerName={setPlayerName}
         playerName={playerName}
         setType={setType}
@@ -1024,48 +984,490 @@ export default function ScriptingLive({ navigation }) {
           numTrianglesOuter={numTrianglesOuter}
         />
       )}
+      {/*Top Left Position Lines P4 */}
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          left: gestureViewCoords.x,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          left: gestureViewCoords.x,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      {/* TOP Center Position Lines P4-P3 */}
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          left:
+            gestureViewCoords.x +
+            gestureViewCoords.width / 3 -
+            stdLengthOfPositionLines,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          left: gestureViewCoords.x + gestureViewCoords.width / 3,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          left: gestureViewCoords.x + gestureViewCoords.width / 3,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      {/* TOP Center Position Lines P3-P2 */}
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          left:
+            gestureViewCoords.x +
+            gestureViewCoords.width * (2 / 3) -
+            stdLengthOfPositionLines,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          left: gestureViewCoords.x + gestureViewCoords.width * (2 / 3),
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          left: gestureViewCoords.x + gestureViewCoords.width * (2 / 3),
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      {/*Top Right Position Lines P2 */}
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          left:
+            gestureViewCoords.x +
+            gestureViewCoords.width -
+            stdLengthOfPositionLines,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y,
+          left: gestureViewCoords.x + gestureViewCoords.width,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      {/*Middle Left Position Lines P4-P5 */}
+      <View
+        style={{
+          position: "absolute",
+          top:
+            gestureViewCoords.y +
+            gestureViewCoords.height / 2 -
+            stdLengthOfPositionLines,
+          left: gestureViewCoords.x,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height / 2,
+          left: gestureViewCoords.x,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height / 2,
+          left: gestureViewCoords.x,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+
+      {/*Middle Left Position Lines P4-P3-P5-P6 */}
+      <View
+        style={{
+          position: "absolute",
+          top:
+            gestureViewCoords.y +
+            gestureViewCoords.height / 2 -
+            stdLengthOfPositionLines,
+          left: gestureViewCoords.x + gestureViewCoords.width / 3,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height / 2,
+          left: gestureViewCoords.x + gestureViewCoords.width / 3,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height / 2,
+          left: gestureViewCoords.x + gestureViewCoords.width / 3,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height / 2,
+          left:
+            gestureViewCoords.x +
+            gestureViewCoords.width / 3 -
+            stdLengthOfPositionLines,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      {/*Middle Left Position Lines P3-P2-P6-P1 */}
+      <View
+        style={{
+          position: "absolute",
+          top:
+            gestureViewCoords.y +
+            gestureViewCoords.height / 2 -
+            stdLengthOfPositionLines,
+          left: gestureViewCoords.x + gestureViewCoords.width * (2 / 3),
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height / 2,
+          left: gestureViewCoords.x + gestureViewCoords.width * (2 / 3),
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height / 2,
+          left: gestureViewCoords.x + gestureViewCoords.width * (2 / 3),
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height / 2,
+          left:
+            gestureViewCoords.x +
+            gestureViewCoords.width * (2 / 3) -
+            stdLengthOfPositionLines,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      {/*Middle Right Position Lines P2-P1 */}
+      <View
+        style={{
+          position: "absolute",
+          top:
+            gestureViewCoords.y +
+            gestureViewCoords.height / 2 -
+            stdLengthOfPositionLines,
+          left: gestureViewCoords.x + gestureViewCoords.width,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height / 2,
+          left:
+            gestureViewCoords.x +
+            gestureViewCoords.width -
+            stdLengthOfPositionLines,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height / 2,
+          left: gestureViewCoords.x + gestureViewCoords.width,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      {/*Bottom Left Position Lines P5*/}
+      <View
+        style={{
+          position: "absolute",
+          top:
+            gestureViewCoords.y +
+            gestureViewCoords.height -
+            stdLengthOfPositionLines,
+          left: gestureViewCoords.x,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height,
+          left: gestureViewCoords.x,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+
+      {/* Bottom Center Position Lines P5-P6 */}
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height,
+          left:
+            gestureViewCoords.x +
+            gestureViewCoords.width / 3 -
+            stdLengthOfPositionLines,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top:
+            gestureViewCoords.y +
+            gestureViewCoords.height -
+            stdLengthOfPositionLines,
+          left: gestureViewCoords.x + gestureViewCoords.width / 3,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height,
+          left: gestureViewCoords.x + gestureViewCoords.width / 3,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      {/* Bottom Center Position Lines P6-P1 */}
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height,
+          left:
+            gestureViewCoords.x +
+            gestureViewCoords.width * (2 / 3) -
+            stdLengthOfPositionLines,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top:
+            gestureViewCoords.y +
+            gestureViewCoords.height -
+            stdLengthOfPositionLines,
+          left: gestureViewCoords.x + gestureViewCoords.width * (2 / 3),
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height,
+          left: gestureViewCoords.x + gestureViewCoords.width * (2 / 3),
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      {/*Bottom Right Position Lines P1 */}
+      <View
+        style={{
+          position: "absolute",
+          top: gestureViewCoords.y + gestureViewCoords.height,
+          left:
+            gestureViewCoords.x +
+            gestureViewCoords.width -
+            stdLengthOfPositionLines +
+            stdWidthOfPoistionLines,
+          width: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          top:
+            gestureViewCoords.y +
+            gestureViewCoords.height -
+            stdLengthOfPositionLines +
+            stdWidthOfPoistionLines,
+          left: gestureViewCoords.x + gestureViewCoords.width,
+          height: stdLengthOfPositionLines,
+          borderColor: stdColorOfPositionLines,
+          borderWidth: stdWidthOfPoistionLines,
+          borderStyle: stdStyleOfPositionLines,
+        }}
+      />
       {/* ---- For Testing Only ---- */}
       {process.env.EXPO_PUBLIC_ENVIRONMENT === "workstation" && (
-        <View
-          style={{
-            position: "absolute",
-            bottom: 10,
-            left: 10,
-            padding: 10,
-          }}
-        >
-          <Text>
-            scriptReducer.pointsTableArray:{" "}
-            {scriptReducer.pointsTableArray.length}
-          </Text>
-          <Text>
-            timestamp:{" "}
-            {scriptReducer.pointsTableArray.length > 0
-              ? scriptReducer.pointsTableArray[
-                  scriptReducer.pointsTableArray.length - 1
-                ].pointId
-              : "no points"}
-          </Text>
-          <Text>
-            setNumbrer:{" "}
-            {scriptReducer.pointsTableArray.length > 0
-              ? scriptReducer.pointsTableArray[
-                  scriptReducer.pointsTableArray.length - 1
-                ].setNumber
-              : "no points"}
-          </Text>
-          <Text>
-            opponentServed:{" "}
-            {scriptReducer.pointsTableArray.length > 0
-              ? scriptReducer.pointsTableArray[
-                  scriptReducer.pointsTableArray.length - 1
-                ].opponentServed
-                ? "true"
-                : "false"
-              : "null"}
-          </Text>
-          <Text>scoreTeamAnalyzed: {scoreTeamAnalyzed}</Text>
-        </View>
+        <View />
+        // <View
+        //   style={{
+        //     position: "absolute",
+        //     bottom: 10,
+        //     left: 10,
+        //     padding: 10,
+        //   }}
+        // >
+        //   <Text>
+        //     scriptReducer.pointsTableArray:{" "}
+        //     {scriptReducer.pointsTableArray.length}
+        //   </Text>
+        //   <Text>
+        //     timestamp:{" "}
+        //     {scriptReducer.pointsTableArray.length > 0
+        //       ? scriptReducer.pointsTableArray[
+        //           scriptReducer.pointsTableArray.length - 1
+        //         ].pointId
+        //       : "no points"}
+        //   </Text>
+        //   <Text>
+        //     setNumbrer:{" "}
+        //     {scriptReducer.pointsTableArray.length > 0
+        //       ? scriptReducer.pointsTableArray[
+        //           scriptReducer.pointsTableArray.length - 1
+        //         ].setNumber
+        //       : "no points"}
+        //   </Text>
+        //   <Text>
+        //     opponentServed:{" "}
+        //     {scriptReducer.pointsTableArray.length > 0
+        //       ? scriptReducer.pointsTableArray[
+        //           scriptReducer.pointsTableArray.length - 1
+        //         ].opponentServed
+        //         ? "true"
+        //         : "false"
+        //       : "null"}
+        //   </Text>
+        //   <Text>scoreTeamAnalyzed: {scoreTeamAnalyzed}</Text>
+        // </View>
         // <View
         //   style={{
         //     position: "absolute",

@@ -21,7 +21,11 @@ import TemplateView from "./subcomponents/TemplateView";
 import { useDispatch } from "react-redux";
 import { storeVideoDetailsInRedux } from "../reducers/user";
 import { useSelector } from "react-redux";
-import { appendAction, deleteScript } from "../reducers/script";
+import {
+  appendAction,
+  deleteScript,
+  initializePlayerNamesArrayRotated,
+} from "../reducers/script";
 import ButtonKv from "./subcomponents/ButtonKv";
 
 export default function ScriptingMatchSelection({ navigation }) {
@@ -35,6 +39,7 @@ export default function ScriptingMatchSelection({ navigation }) {
 
   useEffect(() => {
     fetchVideoListApiCall();
+    dispatch(initializePlayerNamesArrayRotated());
   }, []);
 
   const fetchVideoListApiCall = async () => {

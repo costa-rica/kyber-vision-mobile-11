@@ -29,10 +29,13 @@ const initialState = {
   ],
   qualityArray: ["=", "-", "0", "+", "#"],
   rotationArray: ["P1", "P2", "P3", "P4", "P5", "P6"],
-  playerNamesArray: ["Lea", "Odeyssa", "Yoann", "Johanne"],
+  playerNamesArray: ["Lea", "Odeyssa", "Yoann", "Johanne", "Ted", "Sarah"],
+  playerNamesArrayRotated: [], // Initialized empty, will be set in reducer
   pointsArray: Array.from({ length: 50 }, (_, i) => i),
   setOptionsArray: Array.from({ length: 4 }, (_, i) => i),
 };
+// *** Important Type Inforamtion ***
+
 // actionsArray element properties
 // dateScripted: new Date().toISOString(), // Convert to ISO string
 // timeStamp: player.currentTime,
@@ -51,6 +54,8 @@ const initialState = {
 // scoreTeamOpponent: 0,
 // rotation: p1
 // opponentServed: false
+
+// *** (END) Important Type Inforamtion ***
 
 export const scriptSlice = createSlice({
   name: "script",
@@ -150,6 +155,41 @@ export const scriptSlice = createSlice({
     updatePointsTableArray: (state, action) => {
       state.pointsTableArray = action.payload.pointsTableArray;
     },
+    rotatePlayerNamesArray: (state) => {
+      if (state.playerNamesArrayRotated.length === 0) {
+        // Initialize if not already set
+        state.playerNamesArrayRotated = [...state.playerNamesArray];
+      }
+      if (state.playerNamesArrayRotated.length > 1) {
+        // Rotate array elements to the left
+        state.playerNamesArrayRotated = [
+          state.playerNamesArrayRotated[
+            state.playerNamesArrayRotated.length - 1
+          ],
+          ...state.playerNamesArrayRotated.slice(0, -1),
+        ];
+      }
+    },
+    // rotatePlayerNamesArray: (state) => {
+    //   if (state.playerNamesArrayRotated.length === 0) {
+    //     // Initialize if not already set
+    //     state.playerNamesArrayRotated = [...state.playerNamesArray];
+    //   }
+    //   if (state.playerNamesArrayRotated.length > 1) {
+    //     // Rotate array elements
+    //     state.playerNamesArrayRotated = [
+    //       state.playerNamesArrayRotated[
+    //         state.playerNamesArrayRotated.length - 1
+    //       ],
+    //       ...state.playerNamesArrayRotated.slice(0, -1),
+    //     ];
+    //   }
+    // },
+    initializePlayerNamesArrayRotated: (state) => {
+      console.log("--- >  initializePlayerNamesArrayRotated");
+      // This action can be dispatched at app startup to ensure correct initialization
+      state.playerNamesArrayRotated = [...state.playerNamesArray];
+    },
   },
 });
 
@@ -162,5 +202,7 @@ export const {
   updateTypePropertyInObjectOfActionsArray,
   updateSubtypePropertyInObjectOfActionsArray,
   updatePointsTableArray,
+  rotatePlayerNamesArray,
+  initializePlayerNamesArrayRotated,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

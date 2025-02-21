@@ -3,25 +3,6 @@ import { Polygon, Svg, Circle } from "react-native-svg";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-// const tableTypeDummyData = ["Bloc", "Def", "Set", "Att"];
-// // const tableSubtypeDummyData = ["5", "6", "7", "8"];
-// const tableSubtypeDummyDataPlaceholder = Array.from(
-//   { length: 12 },
-//   (_, i) => 5 + i
-// );
-// const tableSubtypeDummyData = [
-//   "start 5",
-//   ...tableSubtypeDummyDataPlaceholder.slice(1, -9), // Middle portion of placeholder
-//   "Free\nball",
-//   "",
-//   "",
-//   "NP",
-//   "",
-//   "Tip",
-//   "Power",
-//   "Roll",
-//   "",
-// ];
 export default function SwipePad(props) {
   // console.log(tableSubtypeDummyData);
   // console.log(" SWIPE PAD: are we called?");
@@ -104,9 +85,9 @@ export default function SwipePad(props) {
   const [rotateOuter, setRotateOuter] = useState(false);
   const [rotateMiddle, setRotateMiddle] = useState(false);
   useEffect(() => {
-    console.log(
-      `--> props.numTrianglesMiddle: ${props.numTrianglesMiddle}, props.numTrianglesOuter: ${props.numTrianglesOuter}`
-    );
+    // console.log(
+    //   `--> props.numTrianglesMiddle: ${props.numTrianglesMiddle}, props.numTrianglesOuter: ${props.numTrianglesOuter}`
+    // );
     if (props.numTrianglesMiddle === 5) {
       setRotateOuter(true);
       setRotateMiddle(false);
@@ -378,10 +359,10 @@ export default function SwipePad(props) {
       {Array.from({ length: 12 }, (_, index) => (
         <View
           key={index + 4}
-          onLayout={() => {
-            console.log(`index created: ${index}`);
-            console.log(dictTextPositionsOuter[index + 5]);
-          }}
+          // onLayout={() => {
+          //   console.log(`index created: ${index}`);
+          //   console.log(dictTextPositionsOuter[index + 5]);
+          // }}
           style={{
             position: "absolute",
 

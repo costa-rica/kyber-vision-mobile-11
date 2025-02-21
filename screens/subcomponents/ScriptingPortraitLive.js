@@ -77,34 +77,6 @@ export default function ScriptingPortraitLive(props) {
     console.log(`setGestureViewCoords have been set`);
   };
 
-  // const handleChangeType = (newType) => {
-  //   const currentActionTimestamp = scriptReducer.actionsArray[
-  //     scriptReducer.actionsArray.length - 1
-  //   ]?.timeStamp;
-  //   dispatch(updateTypePropertyInObjectOfActionsArray({
-  //     timeStamp: currentActionTimestamp,
-  //     type: newType,
-  //   }))
-  // }
-  // const handleChangeSubtype = (newSubtype) => {
-  //   const currentActionTimestamp = scriptReducer.actionsArray[
-  //     scriptReducer.actionsArray.length - 1
-  //   ]?.timeStamp;
-  //   dispatch(updateSubtypePropertyInObjectOfActionsArray({
-  //     timeStamp: currentActionTimestamp,
-  //     subtype: newSubtype,
-  //   }))
-  // }
-  // const handleChangeQuality = (newQuality) => {
-  //   const currentActionTimestamp = scriptReducer.actionsArray[
-  //     scriptReducer.actionsArray.length - 1
-  //   ]?.timeStamp;
-  //   dispatch(updateQualityPropertyInObjectOfActionsArray({
-  //     timeStamp: currentActionTimestamp,
-  //     quality: newQuality,
-  //   }))
-  // }
-
   return (
     <View style={styles.container}>
       {/* <Text style={{ position: "absolute", left: 100, top: 10 }}>
@@ -158,10 +130,6 @@ export default function ScriptingPortraitLive(props) {
                 value={props.scoreTeamAnalyzed}
                 onChange02={props.setScoreTeamOpponent}
                 value02={props.scoreTeamOpponent}
-                // itemHeight={props.stdPickerHeight}
-                // elementsFontSize={props.stdPickerFontSize}
-                // parentViewWidth={props.stdPickerParentViewWidth}
-                // elementPickerBorderRadius={props.stdPickerBorderRadius}
                 style={{ ...props.stdPickerStyle, fontSize: 21 }}
               />
             </View>
@@ -235,12 +203,15 @@ export default function ScriptingPortraitLive(props) {
           </View>
           <View style={styles.vwActionDetailsPlayer}>
             <SinglePickerWithSideBorders
+              // arrayElements={scriptReducer.playerNamesArrayRotated}
               arrayElements={props.truncateArrayElements(
-                scriptReducer.playerNamesArray,
-                4
+                scriptReducer.playerNamesArrayRotated
               )}
               onChange={props.setPlayerName}
-              value={props.playerName}
+              value={props.playerName.substring(
+                0,
+                props.stdTruncatePlayerNameLength
+              )}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
               selectedIsBold={false}
             />
