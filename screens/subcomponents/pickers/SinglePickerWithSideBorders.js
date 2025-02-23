@@ -3,6 +3,7 @@ import { View, StyleSheet, Dimensions } from "react-native";
 import CustomPicker from "./CustomPicker";
 
 export default function SinglePickerWithSideBorders({
+  pickerName = "unnamed",
   arrayElements,
   // itemHeight,
   value,
@@ -50,6 +51,7 @@ export default function SinglePickerWithSideBorders({
           value={value}
           style={style}
           selectedIsBold={selectedIsBold}
+          pickerName={pickerName}
         />
       </View>
     </View>

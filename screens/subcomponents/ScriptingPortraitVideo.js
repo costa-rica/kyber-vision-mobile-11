@@ -59,6 +59,7 @@ export default function ScriptingPortraitVideo(props) {
                 onChange={props.setSetsTeamAnalyzed}
                 value={props.setsTeamAnalyzed}
                 style={props.stdPickerStyle}
+                pickerName={"setsTeamAnalyzedPortrait"}
               />
             </View>
             {/* <View style={{ flex: 1 }} /> */}
@@ -74,6 +75,8 @@ export default function ScriptingPortraitVideo(props) {
                 // parentViewWidth={props.stdPickerParentViewWidth}
                 // elementPickerBorderRadius={props.stdPickerBorderRadius}
                 style={props.stdPickerStyle}
+                pickerName={"scoreTeamAnalyzedPortrait"}
+                pickerName02={"scoreTeamOpponentPortrait"}
               />
             </View>
 
@@ -84,6 +87,7 @@ export default function ScriptingPortraitVideo(props) {
                 onChange={props.setSetsTeamOpponent}
                 value={props.setsTeamOpponent}
                 style={props.stdPickerStyle}
+                pickerName="setsTeamOpponentPortrait"
               />
             </View>
           </View>
@@ -94,6 +98,7 @@ export default function ScriptingPortraitVideo(props) {
               onChange={props.setRotation}
               value={props.rotation}
               style={{ ...props.stdPickerStyle, width: 50 }}
+              pickerName="rotationPortrait"
             />
           </View>
         </View>
@@ -122,14 +127,16 @@ export default function ScriptingPortraitVideo(props) {
               onChange={props.setQuality}
               value={props.quality}
               style={props.stdPickerStyle}
+              pickerName="qualityPortrait"
             />
           </View>
           <View style={styles.vwActionDetailsPosition}>
             <SinglePickerWithSideBorders
               arrayElements={[1, 2, 3, 4, 5, 6]}
-              onChange={props.setPosition}
-              value={props.position}
+              onChange={props.setPositionalArea}
+              value={props.positionalArea}
               style={props.stdPickerStyle}
+              pickerName="positionalAreaPortrait"
             />
           </View>
           <View style={styles.vwActionDetailsPlayer}>
@@ -139,6 +146,7 @@ export default function ScriptingPortraitVideo(props) {
               value={props.playerName}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
               selectedIsBold={false}
+              pickerName="playerPortrait"
             />
           </View>
           <View style={styles.vwActionDetailsType}>
@@ -148,6 +156,7 @@ export default function ScriptingPortraitVideo(props) {
               value={props.type}
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
+              pickerName="typePortrait"
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
@@ -156,6 +165,7 @@ export default function ScriptingPortraitVideo(props) {
               onChange={props.setSubtype}
               value={props.subtype}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
+              pickerName="subtypePortrait"
             />
           </View>
         </View>

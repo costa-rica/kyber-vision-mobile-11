@@ -16,6 +16,8 @@ import ScriptingPortraitLive from "./subcomponents/ScriptingPortraitLive";
 // SwipePad
 import { Gesture } from "react-native-gesture-handler";
 import SwipePad from "./subcomponents/SwipePad";
+import SwipePadReception from "./subcomponents/SwipePadReception";
+import SwipePadServe from "./subcomponents/SwipePadServe";
 import { useSelector } from "react-redux";
 import {
   newScript,
@@ -38,7 +40,7 @@ export default function ScriptingLive({ navigation }) {
   const [scriptReducerActionArray, setScriptReducerActionArray] = useState(
     scriptReducer.actionsArray
   );
-  const [scriptId, setScriptId] = useState(scriptReducer.scriptId);
+  // const [scriptId, setScriptId] = useState(scriptReducer.scriptId);
   const stdPickerStylePortrait = {
     color: "white",
     fontSize: 25,
@@ -66,7 +68,10 @@ export default function ScriptingLive({ navigation }) {
   // Belongs to positional formation SinglePickerWithSideBorders
   const [rotation, setRotation] = useState(scriptReducer.rotationArray[0]);
   const [quality, setQuality] = useState(scriptReducer.qualityArray[2]);
-  const [position, setPosition] = useState(1);
+  // const [position, setPosition] = useState(1);
+  const [positionalArea, setPositionalArea] = useState(
+    scriptReducer.positionalAreasArray[0]
+  );
   const [playerName, setPlayerName] = useState(
     scriptReducer.playerNamesArrayRotated[0]
   );
@@ -123,7 +128,7 @@ export default function ScriptingLive({ navigation }) {
     }
   };
 
-  useEffect(() => {}, [position]);
+  useEffect(() => {}, [positionalArea]);
   // --- Dynamic styles ---
   const stdTruncatePlayerNameLength = 4;
   const truncateArrayElements = (
@@ -181,26 +186,12 @@ export default function ScriptingLive({ navigation }) {
     scriptReducer.pointsTableArray[scriptReducer.pointsTableArray.length - 1]
       ?.opponentServed || false
   );
-  const defaultColors = {
-    1: "rgba(255, 143, 143, 1)", // right
-    2: "rgba(255, 143, 143, 1)", // bottom
-    3: "rgba(255, 143, 143, 1)", // bottombottomleft
-    4: "rgba(255, 143, 143, 1)",
-    5: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-    6: "rgba(247, 255, 162, 0.5)",
-    7: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-    8: "rgba(247, 255, 162, 0.5)",
-    9: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-    10: "rgba(247, 255, 162, 0.5)",
-    11: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-    12: "rgba(247, 255, 162, 0.5)",
-    13: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-    14: "rgba(247, 255, 162, 0.5)",
-    15: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-    16: "rgba(247, 255, 162, 0.5)",
-    center: "gray",
-  };
-  const [swipeColorDict, setSwipeColorDict] = useState(defaultColors);
+  const [swipePadServeIsActive, setSwipePadServeIsActive] = useState(false);
+  const [swipePadReceptionIsActive, setSwipePadReceptionIsActive] =
+    useState(false);
+  const [swipeColorDict, setSwipeColorDict] = useState(
+    userReducer.defaultWheelColors
+  );
   const stdSwipePadDefaultTextColor = "black";
   const stdSwipePadDefaultTextFontSize = 10;
   const stdLengthOfPositionLines = 10;
@@ -238,33 +229,13 @@ export default function ScriptingLive({ navigation }) {
 
   // Function to temporarily change color
   const handleSwipeColorChange = (direction, outerDirection = false) => {
-    setSwipeColorDict(defaultColors);
+    setSwipeColorDict(userReducer.defaultWheelColors);
     setSwipeTextStyleDict(defaultTextStyles);
-    const brightColors = {
-      1: "rgba(255, 255, 143, 1)", // right
-      // 2: "brown", // right
-      2: "rgba(255, 255, 143, 1)", // bottom
-      3: "rgba(255, 255, 143, 1)", // left
-      4: "rgba(255, 255, 143, 1)", // top
-      5: "rgba(255, 143, 143, 1)",
-      6: "rgba(255, 143, 143, 1)",
-      7: "rgba(255, 143, 143, 1)",
-      8: "rgba(255, 143, 143, 1)",
-      9: "rgba(255, 143, 143, 1)",
-      10: "rgba(255, 143, 143, 1)",
-      11: "rgba(255, 143, 143, 1)",
-      12: "rgba(255, 143, 143, 1)",
-      13: "rgba(255, 143, 143, 1)",
-      14: "rgba(255, 143, 143, 1)",
-      15: "rgba(255, 143, 143, 1)",
-      16: "rgba(255, 143, 143, 1)",
-      center: "white",
-    };
 
     if (!outerDirection) {
       setSwipeColorDict((prevColors) => ({
         ...prevColors,
-        [direction]: brightColors[direction],
+        [direction]: userReducer.selectedWheelColors[direction],
       }));
       setSwipeTextStyleDict((prevTextStyles) => ({
         ...prevTextStyles,
@@ -278,8 +249,8 @@ export default function ScriptingLive({ navigation }) {
     } else {
       setSwipeColorDict((prevColors) => ({
         ...prevColors,
-        [direction]: brightColors[direction],
-        [outerDirection]: brightColors[outerDirection],
+        [direction]: userReducer.selectedWheelColors[direction],
+        [outerDirection]: userReducer.selectedWheelColors[outerDirection],
       }));
       setSwipeTextStyleDict((prevTextStyles) => ({
         ...prevTextStyles,
@@ -303,24 +274,30 @@ export default function ScriptingLive({ navigation }) {
     if (y < gestureViewCoords.height / 2 && x < gestureViewCoords.width / 3) {
       // P4 ; array postion 3
       setPlayerName(scriptReducer.playerNamesArrayRotated[3]);
+      setPositionalArea(scriptReducer.positionalAreasArray[3]);
     } else if (
       y < gestureViewCoords.height / 2 &&
       x < gestureViewCoords.width * (2 / 3)
     ) {
       // P3 ; array postion 2
       setPlayerName(scriptReducer.playerNamesArrayRotated[2]);
+      setPositionalArea(scriptReducer.positionalAreasArray[2]);
     } else if (y < gestureViewCoords.height / 2) {
       // P2 ; array postion 1
       setPlayerName(scriptReducer.playerNamesArrayRotated[1]);
+      setPositionalArea(scriptReducer.positionalAreasArray[1]);
     } else if (x < gestureViewCoords.width / 3) {
       // P5 ; array postion 4
       setPlayerName(scriptReducer.playerNamesArrayRotated[4]);
+      setPositionalArea(scriptReducer.positionalAreasArray[4]);
     } else if (x < gestureViewCoords.width * (2 / 3)) {
       // P6 ; array postion 5
       setPlayerName(scriptReducer.playerNamesArrayRotated[5]);
+      setPositionalArea(scriptReducer.positionalAreasArray[5]);
     } else {
       // P1 ; array postion 0
       setPlayerName(scriptReducer.playerNamesArrayRotated[0]);
+      setPositionalArea(scriptReducer.positionalAreasArray[0]);
     }
   };
 
@@ -646,7 +623,7 @@ export default function ScriptingLive({ navigation }) {
         }
       }
     } else {
-      setSwipeColorDict(defaultColors);
+      setSwipeColorDict(userReducer.defaultWheelColors);
     }
   };
 
@@ -673,24 +650,6 @@ export default function ScriptingLive({ navigation }) {
         Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
     );
   };
-  // const addAction = (direction) => {
-  //   // console.log("👍 start add action");
-  //   console.log(direction);
-  //   if (direction === null) return;
-  //   if (actionList?.length > 0) {
-  //     setActionList([...actionList, direction]);
-  //   } else {
-  //     setActionList([direction]);
-  //   }
-  //   setPadVisible(false);
-  //   setTapIsActive(true);
-  //   // console.log("👍 end add action");
-  // };
-  // const addNewActionToScriptReducersActionsArray =(actionPropertiesObj) => {
-  //   console.log("Temp action adder")
-  //       setPadVisible(false);
-  //   setTapIsActive(true);
-  // }
   const addNewActionToScriptReducersActionsArray = (actionPropertiesObj) => {
     // const updateScriptReducerActionsArray = (actionPropertiesObj) => {
 
@@ -741,7 +700,8 @@ export default function ScriptingLive({ navigation }) {
     }
     setPadVisible(false);
     setTapIsActive(true);
-    // console.log("👍 end add action");
+    setSwipePadServeIsActive(false);
+    setSwipePadReceptionIsActive(false);
   };
 
   const handleChangeType = (newType) => {
@@ -779,7 +739,7 @@ export default function ScriptingLive({ navigation }) {
   };
 
   // Score Logic
-  const handleWinButtonPress = () => {
+  const handleWinRallyButtonPress = () => {
     // Rotation advance logic:
     // - if teamOpponentPrevious score is the same as before
     // - if teamOpponentPrevious score = 0 and teamOpponentServed
@@ -787,34 +747,24 @@ export default function ScriptingLive({ navigation }) {
       scriptReducer.pointsTableArray[scriptReducer.pointsTableArray.length - 1]
         ?.scoreTeamOpponent;
 
-    console.log(`previous score: ${teamOpponentPreviousScore}`);
+    // console.log(`previous score: ${teamOpponentPreviousScore}`);
 
     let rotationTemp = rotation;
-    console.log(
-      `prevScore: ${teamOpponentPreviousScore}, newScore: ${scoreTeamAnalyzed}`
-    );
-
-    console.log(
-      `teamOpponentPreviousScore: ${teamOpponentPreviousScore}, scoreTeamOpponent: ${scoreTeamOpponent}, logic: ${
-        teamOpponentPreviousScore != null &&
-        teamOpponentPreviousScore !== scoreTeamOpponent
-      }`
-    );
-    console.log(
-      `opponentServed: ${opponentServed}, scoreTeamAnalyzed: ${scoreTeamAnalyzed}, logic: ${
-        opponentServed && scoreTeamAnalyzed === 0
-      }`
-    );
 
     if (
       (teamOpponentPreviousScore != null &&
         teamOpponentPreviousScore !== scoreTeamOpponent) ||
       (opponentServed && scoreTeamAnalyzed === 0)
     ) {
-      const nextRotationIndex =
-        (scriptReducer.rotationArray.indexOf(rotation) + 1) %
+      // const nextRotationIndex =
+      //   (scriptReducer.rotationArray.indexOf(rotation) + 1) %
+      //   scriptReducer.rotationArray.length;
+      const prevRotationIndex =
+        (scriptReducer.rotationArray.indexOf(rotation) -
+          1 +
+          scriptReducer.rotationArray.length) %
         scriptReducer.rotationArray.length;
-      rotationTemp = scriptReducer.rotationArray[nextRotationIndex];
+      rotationTemp = scriptReducer.rotationArray[prevRotationIndex];
       dispatch(rotatePlayerNamesArray());
     }
     const newScoreTeamAnalyzed = scoreTeamAnalyzed + 1;
@@ -843,6 +793,48 @@ export default function ScriptingLive({ navigation }) {
     // Else if teamAnalyzed serverd "S" was pressed
     console.log(`serveOrReception: ${serveOrReception}`);
     setOpponentServed(serveOrReception == "R");
+    setSwipePadServeIsActive(serveOrReception == "S");
+    setSwipePadReceptionIsActive(serveOrReception == "R");
+  };
+
+  // Determine which component to render
+  const renderSwipePad = () => {
+    if (padVisible) {
+      if (swipePadServeIsActive) {
+        return (
+          <SwipePadServe
+            styleVwMainPosition={styleVwMainPosition}
+            swipeColorDict={swipeColorDict}
+            swipeTextStyleDict={swipeTextStyleDict}
+            numTrianglesMiddle={numTrianglesMiddle}
+            numTrianglesOuter={numTrianglesOuter}
+          />
+        );
+      } else if (swipePadReceptionIsActive) {
+        return (
+          <SwipePadReception
+            styleVwMainPosition={styleVwMainPosition}
+            swipeColorDict={swipeColorDict}
+            swipeTextStyleDict={swipeTextStyleDict}
+            numTrianglesMiddle={numTrianglesMiddle}
+            numTrianglesOuter={numTrianglesOuter}
+          />
+        );
+      }
+      // if (padVisible) {
+      else {
+        return (
+          <SwipePad
+            styleVwMainPosition={styleVwMainPosition}
+            swipeColorDict={swipeColorDict}
+            swipeTextStyleDict={swipeTextStyleDict}
+            numTrianglesMiddle={numTrianglesMiddle}
+            numTrianglesOuter={numTrianglesOuter}
+          />
+        );
+      }
+    }
+    // return null; // Nothing renders if all are false
   };
 
   return orientation == "landscape" ? (
@@ -869,8 +861,10 @@ export default function ScriptingLive({ navigation }) {
         rotation={rotation}
         setQuality={setQuality}
         quality={quality}
-        setPosition={setPosition}
-        position={position}
+        positionalArea={positionalArea}
+        setPositionalArea={setPositionalArea}
+        // setPosition={setPosition}
+        // position={position}
         truncateArrayElements={truncateArrayElements}
         stdTruncatePlayerNameLength={stdTruncatePlayerNameLength}
         setPlayerName={setPlayerName}
@@ -884,7 +878,7 @@ export default function ScriptingLive({ navigation }) {
         handleChangeType={handleChangeType}
         handleChangeSubtype={handleChangeSubtype}
         handleChangeQuality={handleChangeQuality}
-        handleWinButtonPress={handleWinButtonPress}
+        handleWinRallyButtonPress={handleWinRallyButtonPress}
         handlePressedServeOrReception={handlePressedServeOrReception}
         stdLengthOfPositionLines={stdLengthOfPositionLines}
         stdColorOfPositionLines={stdColorOfPositionLines}
@@ -907,23 +901,47 @@ export default function ScriptingLive({ navigation }) {
       style={{ flex: 1, marginTop: 0 }}
       // onLayout={(event) => handleVwScriptingPortraitLiveParent(event)}
     >
-      {/* <View
+      <View
         style={{
           position: "absolute",
-          top: gestureViewCoords.y,
-          height: gestureViewCoords.height,
-          left: gestureViewCoords.x,
-          width: gestureViewCoords.width,
-          borderColor: "black",
-          borderWidth: 1,
+          bottom: 5,
+          left: 3,
+          // top: gestureViewCoords.y,
+          // height: gestureViewCoords.height,
+          // left: gestureViewCoords.x,
+          width: 220,
+          // borderColor: "black",
+          // borderWidth: 1,
           zIndex: 1,
         }}
       >
-        <Text>
-          gestureViewCoords: {Math.round(gestureViewCoords.y)},{" "}
-          {Math.round(gestureViewCoords.height)}
-        </Text>
-      </View> */}
+        <Text>scriptReducer here</Text>
+        {scriptReducer.pointsTableArray?.length > 0 && (
+          // <Text>SR.pointsTableArray: {scriptReducer.pointsTableArray[0]} </Text>
+          // <Text>
+          //   SR.pointsTableArray:{" "}
+          //   {JSON.stringify(scriptReducer.pointsTableArray[0])}{" "}
+          // </Text>
+          <View>
+            <Text>
+              Points ID:{" "}
+              {
+                scriptReducer.pointsTableArray[
+                  scriptReducer.pointsTableArray.length - 1
+                ].pointsId
+              }
+            </Text>
+            <Text>
+              oppServerd:{" "}
+              {scriptReducer.pointsTableArray[
+                scriptReducer.pointsTableArray.length - 1
+              ].opponentServed
+                ? "true"
+                : "false"}
+            </Text>
+          </View>
+        )}
+      </View>
       {/* {process.env.EXPO_PUBLIC_ENVIRONMENT === "workstation" && ( */}
       <View
         style={{
@@ -943,7 +961,7 @@ export default function ScriptingLive({ navigation }) {
               numTrianglesOuter: numTrianglesOuter,
               demoOption: demoOption,
               swipeColorDict: swipeColorDict,
-              defaultColors: defaultColors,
+              // defaultColors: defaultColors,
               swipeTextStyleDict: swipeTextStyleDict,
             });
           }}
@@ -971,8 +989,10 @@ export default function ScriptingLive({ navigation }) {
         rotation={rotation}
         setQuality={setQuality}
         quality={quality}
-        setPosition={setPosition}
-        position={position}
+        // setPosition={setPosition}
+        // position={position}
+        setPositionalArea={setPositionalArea}
+        positionalArea={positionalArea}
         truncateArrayElements={truncateArrayElements}
         stdTruncatePlayerNameLength={stdTruncatePlayerNameLength}
         setPlayerName={setPlayerName}
@@ -987,19 +1007,31 @@ export default function ScriptingLive({ navigation }) {
         handleChangeType={handleChangeType}
         handleChangeSubtype={handleChangeSubtype}
         handleChangeQuality={handleChangeQuality}
-        handleWinButtonPress={handleWinButtonPress}
+        handleWinRallyButtonPress={handleWinRallyButtonPress}
         handlePressedServeOrReception={handlePressedServeOrReception}
         setStdColorOfPositionLines={setStdColorOfPositionLines}
       />
-      {padVisible && (
-        <SwipePad
-          styleVwMainPosition={styleVwMainPosition}
-          swipeColorDict={swipeColorDict}
-          swipeTextStyleDict={swipeTextStyleDict}
-          numTrianglesMiddle={numTrianglesMiddle}
-          numTrianglesOuter={numTrianglesOuter}
-        />
-      )}
+
+      {/* Conditional rendering */}
+      {renderSwipePad()}
+      {/* {padVisible &&
+        (opponentServed ? (
+          <SwipePadReception
+            styleVwMainPosition={styleVwMainPosition}
+            swipeColorDict={swipeColorDict}
+            swipeTextStyleDict={swipeTextStyleDict}
+            numTrianglesMiddle={numTrianglesMiddle}
+            numTrianglesOuter={numTrianglesOuter}
+          />
+        ) : (
+          <SwipePad
+            styleVwMainPosition={styleVwMainPosition}
+            swipeColorDict={swipeColorDict}
+            swipeTextStyleDict={swipeTextStyleDict}
+            numTrianglesMiddle={numTrianglesMiddle}
+            numTrianglesOuter={numTrianglesOuter}
+          />
+        ))} */}
       {/*Top Left Position Lines P4 */}
       <View
         style={{

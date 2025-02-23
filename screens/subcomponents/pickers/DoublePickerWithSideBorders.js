@@ -10,6 +10,8 @@ export default function DoublePickerWithSideBorders({
   onChange02,
   style,
   selectedIsBold,
+  pickerName,
+  pickerName02,
 }) {
   const styleVwVerticalLineLeft = {
     position: "absolute",
@@ -54,6 +56,7 @@ export default function DoublePickerWithSideBorders({
         value={value}
         style={{ ...style, backgroundColor: "transparent" }}
         selectedIsBold={selectedIsBold}
+        pickerName={pickerName}
       />
       <View>
         <Text style={{ color: style.color }}>-</Text>
@@ -64,6 +67,7 @@ export default function DoublePickerWithSideBorders({
         value={value02}
         style={{ ...style, backgroundColor: "transparent" }}
         selectedIsBold={selectedIsBold}
+        pickerName={pickerName02}
       />
     </View>
   );

@@ -115,6 +115,7 @@ export default function ScriptingLandscapeLive(props) {
                 fontSize: 15,
                 width: 50,
               }}
+              pickerName="rotationLandscape"
             />
           </View>
           <View style={styles.vwTeamName}>
@@ -146,6 +147,8 @@ export default function ScriptingLandscapeLive(props) {
                 ...props.stdPickerStyle,
                 backgroundColor: "rgba(74,74,74,0.56)",
               }}
+              pickerName="scoreTeamAnalyzedLandscape"
+              pickerName02="scoreTeamOpponentLandscape"
             />
           </View>
           <View style={styles.vwSetCircles}>
@@ -685,7 +688,7 @@ export default function ScriptingLandscapeLive(props) {
             </View>
             <View style={styles.vwScriptingManagementRightRight}>
               <ButtonKv
-                onPress={() => props.handleWinButtonPress()}
+                onPress={() => props.handleWinRallyButtonPress()}
                 style={{
                   backgroundColor: "#970F9A",
                   color: "white",
@@ -733,9 +736,10 @@ export default function ScriptingLandscapeLive(props) {
           <View style={styles.vwActionDetailsPosition}>
             <SinglePickerWithSideBorders
               arrayElements={[1, 2, 3, 4, 5, 6]}
-              onChange={props.setPosition}
-              value={props.position}
+              onChange={props.setPositionalArea}
+              value={props.positionalArea}
               style={props.stdPickerStyle}
+              pickerName="positionalAreaLandscape"
             />
           </View>
           <View style={styles.vwActionDetailsPlayer}>
@@ -750,6 +754,7 @@ export default function ScriptingLandscapeLive(props) {
               )}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
               selectedIsBold={false}
+              pickerName="playerNameLandscape"
             />
           </View>
           <View style={styles.vwActionDetailsType}>
@@ -763,6 +768,7 @@ export default function ScriptingLandscapeLive(props) {
               }
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
+              pickerName="typeLandscape"
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
@@ -775,6 +781,7 @@ export default function ScriptingLandscapeLive(props) {
                 ]?.subtype || ""
               }
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
+              pickerName="subtypeLandscape"
             />
           </View>
           <View style={styles.vwScriptingManagementLeft}>

@@ -120,6 +120,7 @@ export default function ScriptingPortraitLive(props) {
                 onChange={props.setSetsTeamAnalyzed}
                 value={props.setsTeamAnalyzed}
                 style={props.stdPickerStyle}
+                pickerName={"setsTeamAnalyzedPortrait"}
               />
             </View>
             {/* <View style={{ flex: 1 }} /> */}
@@ -131,6 +132,8 @@ export default function ScriptingPortraitLive(props) {
                 onChange02={props.setScoreTeamOpponent}
                 value02={props.scoreTeamOpponent}
                 style={{ ...props.stdPickerStyle, fontSize: 21 }}
+                pickerName={"scoreTeamAnalyzedPortrait"}
+                pickerName02={"scoreTeamOpponentPortrait"}
               />
             </View>
 
@@ -141,6 +144,7 @@ export default function ScriptingPortraitLive(props) {
                 onChange={props.setSetsTeamOpponent}
                 value={props.setsTeamOpponent}
                 style={props.stdPickerStyle}
+                pickerName={"setsTeamOpponentPortrait"}
               />
             </View>
           </View>
@@ -151,6 +155,7 @@ export default function ScriptingPortraitLive(props) {
               onChange={props.setRotation}
               value={props.rotation}
               style={{ ...props.stdPickerStyle, width: 50 }}
+              pickerName={"rotationPortrait"}
             />
           </View>
         </View>
@@ -191,14 +196,16 @@ export default function ScriptingPortraitLive(props) {
                 ]?.quality || "0"
               }
               style={props.stdPickerStyle}
+              pickerName={"qualityPortrait"}
             />
           </View>
           <View style={styles.vwActionDetailsPosition}>
             <SinglePickerWithSideBorders
               arrayElements={[1, 2, 3, 4, 5, 6]}
-              onChange={props.setPosition}
-              value={props.position}
+              onChange={props.setPositionalArea}
+              value={props.positionalArea}
               style={props.stdPickerStyle}
+              pickerName={"positionalAreaPortrait"}
             />
           </View>
           <View style={styles.vwActionDetailsPlayer}>
@@ -228,6 +235,7 @@ export default function ScriptingPortraitLive(props) {
               }
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
+              pickerName={"typePortrait"}
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
@@ -241,6 +249,7 @@ export default function ScriptingPortraitLive(props) {
               }
               // value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype : ""}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
+              pickerName={"subtypePortrait"}
             />
           </View>
         </View>
@@ -249,12 +258,7 @@ export default function ScriptingPortraitLive(props) {
             <ButtonKv
               onPress={() => {
                 dispatch(deleteScript());
-                // props.setPosition((prev) => prev + 1);
               }}
-              // colorBackground={"#970F9A"}
-              // colorText={"white"}
-              // width={140}
-              // fontSize={20}
               style={{
                 backgroundColor: "#970F9A",
                 color: "white",
@@ -293,7 +297,7 @@ export default function ScriptingPortraitLive(props) {
             <View style={styles.vwScriptingManagementRightRight}>
               <ButtonKv
                 onPress={() => {
-                  props.handleWinButtonPress();
+                  props.handleWinRallyButtonPress();
                 }}
                 style={{
                   backgroundColor: "#970F9A",

@@ -8,20 +8,21 @@ export default function CustomPicker({
   onChange,
   style = {},
   selectedIsBold = true,
+  pickerName = "unnamed",
 }) {
   if (!Array.isArray(arrayElements) || arrayElements.length === 0) {
     throw new Error(
-      "CustomPicker: The 'arrayElements' prop is required and must be a non-empty array."
+      `CustomPicker (${pickerName}): The 'arrayElements' prop is required and must be a non-empty array.`
     );
   }
   if (typeof onChange !== "function") {
     throw new Error(
-      "CustomPicker: The 'onChange' prop is required and must be a function."
+      `CustomPicker (${pickerName}): The 'onChange' prop is required and must be a function.`
     );
   }
   if (value === undefined) {
     throw new Error(
-      `CustomPicker: The 'value' prop is required and must be one of the elements in 'arrayElements'. Received: ${value}.`
+      `CustomPicker (${pickerName}): The 'value' prop is required and must be one of the elements in 'arrayElements'. Received: ${value}.`
     );
   }
   // console.log(arrayElements);

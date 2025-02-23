@@ -3,7 +3,7 @@ import { Polygon, Svg, Circle } from "react-native-svg";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-export default function SwipePad(props) {
+export default function SwipePadReception(props) {
   // console.log(tableSubtypeDummyData);
   // console.log(" SWIPE PAD: are we called?");
   const userReducer = useSelector((state) => state.user);
@@ -244,16 +244,22 @@ export default function SwipePad(props) {
           height={userReducer.circleRadiusOuter * 2}
           width={userReducer.circleRadiusOuter * 2}
         >
-          {trianglesOuter.map((points, index) => (
-            <Polygon
-              key={index}
-              points={points}
-              fill={props.swipeColorDict[1 + props.numTrianglesMiddle + index]} // 50% transparent blue
-              // fill="transparent" // 50% transparent blue
-              // stroke="black" // Stroke color
-              // strokeWidth="1" // Thickness of the stroke
-            />
-          ))}
+          {trianglesOuter.map((points, index) => {
+            if (index >= 2 && index <= 4) {
+              return (
+                <Polygon
+                  key={index}
+                  points={points}
+                  fill={
+                    props.swipeColorDict[1 + props.numTrianglesMiddle + index]
+                  } // 50% transparent blue
+                  // fill="transparent" // 50% transparent blue
+                  // stroke="black" // Stroke color
+                  // strokeWidth="1" // Thickness of the stroke
+                />
+              );
+            }
+          })}
         </Svg>
         {/* ---- Middle Circle ---- */}
         <View style={styleVwMiddleCircle}>
@@ -261,28 +267,25 @@ export default function SwipePad(props) {
             height={userReducer.circleRadiusMiddle * 2}
             width={userReducer.circleRadiusMiddle * 2}
           >
-            {trianglesMiddle.map((points, index) => (
-              <View
-                key={index}
-                style={{
-                  // backgroundColor: "yellow",
-                  width: userReducer.circleRadiusMiddle + 5,
-                  height: userReducer.circleRadiusMiddle + 5,
-                  // borderColor: "gray",
-                  // borderStyle: "dashed",
-                  // borderWidth: 1,
-                }}
-              >
-                <Polygon
-                  key={index}
-                  points={points}
-                  fill={props.swipeColorDict[index + 1]}
-                  // fill="transparent" // 50% transparent blue
-                  // stroke="black" // Stroke color
-                  // strokeWidth="3" // Thickness of the stroke
-                />
-              </View>
-            ))}
+            {trianglesMiddle.map((points, index) => {
+              if (index == 1) {
+                return (
+                  <View
+                    key={index}
+                    style={{
+                      width: userReducer.circleRadiusMiddle + 5,
+                      height: userReducer.circleRadiusMiddle + 5,
+                    }}
+                  >
+                    <Polygon
+                      key={index}
+                      points={points}
+                      fill={props.swipeColorDict[index + 1]}
+                    />
+                  </View>
+                );
+              }
+            })}
           </Svg>
           {/* ---- Inner circle ---- */}
           <Svg
@@ -302,79 +305,64 @@ export default function SwipePad(props) {
         </View>
       </View>
       {/* --- TEXT MIDDLE Circle ---- */}
-      {Array.from({ length: 4 }, (_, index) => (
-        <View
-          key={index}
-          style={{
-            position: "absolute",
-            top: dictTextPositionsMiddle[index + 1].top,
-            left: dictTextPositionsMiddle[index + 1].left,
-            // borderColor: dictTextPositionsMiddle[index + 1].selected
-            //   ? "black"
-            //   : null,
-            // borderWidth: dictTextPositionsMiddle[index + 1].selected ? 1 : null,
-            // borderStyle: dictTextPositionsMiddle[index + 1].selected
-            //   ? "dashed"
-            //   : null,
-          }}
-        >
-          <Text
-            key={index}
-            style={{
-              color: props.swipeTextStyleDict[index + 1].color,
-              fontSize: props.swipeTextStyleDict[index + 1].fontSize,
-              fontWeight: props.swipeTextStyleDict[index + 1].fontWeight,
-              // transform: [{ rotate: "45deg" }],
-            }}
-          >
-            {dictTextPositionsMiddle[index + 1].selected
-              ? scriptReducer.typesArray[index]
-              : null}
-          </Text>
-        </View>
-      ))}
+      {Array.from({ length: 4 }, (_, index) => {
+        if (index == 1) {
+          return (
+            <View
+              key={index}
+              style={{
+                position: "absolute",
+                top: dictTextPositionsMiddle[index + 1].top,
+                left: dictTextPositionsMiddle[index + 1].left,
+              }}
+            >
+              <Text
+                key={index}
+                style={{
+                  color: props.swipeTextStyleDict[index + 1].color,
+                  fontSize: props.swipeTextStyleDict[index + 1].fontSize,
+                  fontWeight: props.swipeTextStyleDict[index + 1].fontWeight,
+                  // transform: [{ rotate: "45deg" }],
+                }}
+              >
+                {dictTextPositionsMiddle[index + 1].selected
+                  ? scriptReducer.typesArray[index]
+                  : null}
+              </Text>
+            </View>
+          );
+        }
+      })}
       {/* --- TEXT Outer Circle ---- */}
-      {Array.from({ length: 12 }, (_, index) => (
-        <View
-          key={index + 4}
-          // onLayout={() => {
-          //   console.log(`index created: ${index}`);
-          //   console.log(dictTextPositionsOuter[index + 5]);
-          // }}
-          style={{
-            position: "absolute",
-
-            top: dictTextPositionsOuter[index + 5].top,
-            // top: 20,
-            left: dictTextPositionsOuter[index + 5].left,
-            justifyContent: "center",
-            alignItems: "center",
-
-            // borderColor: dictTextPositionsOuter[index + 5].selected
-            //   ? "black"
-            //   : null,
-            // borderWidth: dictTextPositionsOuter[index + 5].selected ? 1 : null,
-            // borderStyle: dictTextPositionsOuter[index + 5].selected
-            //   ? "dashed"
-            //   : null,
-          }}
-        >
-          <Text
-            key={index}
-            style={{
-              color: props.swipeTextStyleDict[index + 5].color,
-              fontSize: props.swipeTextStyleDict[index + 5].fontSize,
-              // fontSize: 20,
-              fontWeight: props.swipeTextStyleDict[index + 5].fontWeight,
-              // transform: [{ rotate: "45deg" }],
-            }}
-          >
-            {dictTextPositionsOuter[index + 5].selected
-              ? tableSubtypeDummyData[index]
-              : null}
-          </Text>
-        </View>
-      ))}
+      {Array.from({ length: 12 }, (_, index) => {
+        if (index >= 2 && index <= 4) {
+          return (
+            <View
+              key={index + 4}
+              style={{
+                position: "absolute",
+                top: dictTextPositionsOuter[index + 5].top,
+                left: dictTextPositionsOuter[index + 5].left,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                key={index}
+                style={{
+                  color: props.swipeTextStyleDict[index + 5].color,
+                  fontSize: props.swipeTextStyleDict[index + 5].fontSize,
+                  fontWeight: props.swipeTextStyleDict[index + 5].fontWeight,
+                }}
+              >
+                {dictTextPositionsOuter[index + 5].selected
+                  ? tableSubtypeDummyData[index]
+                  : null}
+              </Text>
+            </View>
+          );
+        }
+      })}
 
       {/* --- TEXT OUter Circle ----- */}
       {/* {Array.from({ length: 12 }, (_, index) => (
