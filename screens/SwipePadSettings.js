@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 
-import SwipePad from "./subcomponents/SwipePad";
+import SwipePad from "./subcomponents/swipePads/SwipePad";
 import { useEffect, useState, useRef } from "react";
 import Slider from "@react-native-community/slider";
 import ButtonKv from "./subcomponents/ButtonKv";

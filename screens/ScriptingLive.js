@@ -15,9 +15,12 @@ import ScriptingPortraitLive from "./subcomponents/ScriptingPortraitLive";
 
 // SwipePad
 import { Gesture } from "react-native-gesture-handler";
-import SwipePad from "./subcomponents/SwipePad";
-import SwipePadReception from "./subcomponents/SwipePadReception";
-import SwipePadServe from "./subcomponents/SwipePadServe";
+// import SwipePad from "./subcomponents/swipePads/SwipePad";
+// import SwipePadReception from "./subcomponents/swipePads/SwipePadReception";
+// import SwipePadServe from "./subcomponents/swipePads/SwipePadServe";
+import SwipePad from "./subcomponents/swipePads/SwipePad";
+import SwipePadReception from "./subcomponents/swipePads/SwipePadReception";
+import SwipePadServe from "./subcomponents/swipePads/SwipePadServe";
 import { useSelector } from "react-redux";
 import {
   newScript,
