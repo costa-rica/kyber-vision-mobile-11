@@ -889,7 +889,8 @@ export default function ScriptingLive({ navigation }) {
         stdWidthOfPoistionLines={stdWidthOfPoistionLines}
         stdStyleOfPositionLines={stdStyleOfPositionLines}
       />
-      {padVisible && (
+      {renderSwipePad()}
+      {/* {padVisible && (
         <SwipePad
           styleVwMainPosition={styleVwMainPosition}
           swipeColorDict={swipeColorDict}
@@ -897,7 +898,7 @@ export default function ScriptingLive({ navigation }) {
           numTrianglesOuter={numTrianglesOuter}
           swipeTextStyleDict={swipeTextStyleDict}
         />
-      )}
+      )} */}
     </View>
   ) : (
     <View

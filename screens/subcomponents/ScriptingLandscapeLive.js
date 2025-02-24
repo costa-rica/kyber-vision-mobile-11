@@ -735,7 +735,8 @@ export default function ScriptingLandscapeLive(props) {
           </View>
           <View style={styles.vwActionDetailsPosition}>
             <SinglePickerWithSideBorders
-              arrayElements={[1, 2, 3, 4, 5, 6]}
+              // arrayElements={[1, 2, 3, 4, 5, 6]}
+              arrayElements={scriptReducer.positionalAreasArray}
               onChange={props.setPositionalArea}
               value={props.positionalArea}
               style={props.stdPickerStyle}
