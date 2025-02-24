@@ -1,19 +1,17 @@
 ![Kyber Vision Mobile Logo](./assets/images/kyberVisionLogo01.png)
 
-#### v 0.9.0
+#### v 0.10.0
 
 ## Description
 
-Vollyball training application
+Vollyball training application. This version has SwipePad implemented in Live Scripting. Works with api.kv08 or 09 (as of 2025-02-24).
 
 ## Changes from pervious version
 
-- Swipe Pad on ScriptingLive is correctly placed on user touch
-- Swipe Pad wheel is outer, middle, and inner radius set in user reducer
+- Implementing Video scripting
 
 ### not all yet implemented
 
-- Make the Top navigation bar smaller
 - design a new Portrait mode scripting with new design - must have space to tap.
 
 ## .env

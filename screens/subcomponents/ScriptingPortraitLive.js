@@ -201,7 +201,7 @@ export default function ScriptingPortraitLive(props) {
           </View>
           <View style={styles.vwActionDetailsPosition}>
             <SinglePickerWithSideBorders
-              arrayElements={[1, 2, 3, 4, 5, 6]}
+              arrayElements={scriptReducer.positionalAreasArray}
               onChange={props.setPositionalArea}
               value={props.positionalArea}
               style={props.stdPickerStyle}
@@ -422,11 +422,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // backgroundColor: "purple",
   },
-  vwVolleyballCourt: {
-    paddingTop: 20,
-    justifyContent: "center",
-    // backgroundColor: "green",
-  },
+  // vwVolleyballCourt: {
+  //   paddingTop: 20,
+  //   justifyContent: "center",
+  //   // backgroundColor: "green",
+  // },
   imgVolleyballCourt: {
     // backgroundColor: "red",
   },

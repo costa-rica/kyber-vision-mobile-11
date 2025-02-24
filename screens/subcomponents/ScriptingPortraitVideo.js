@@ -20,11 +20,61 @@ import {
 } from "react-native-gesture-handler";
 import Timeline from "./Timeline";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function ScriptingPortraitVideo(props) {
+  const scriptReducer = useSelector((state) => state.script);
+  const dispatch = useDispatch();
   useEffect(() => {
     console.log("in ScriptingPortraitVideo useEffect");
   }, [props.scriptReducerActionArray, props.scriptId]);
+
+  /// New Gesture logic
+  const [vwVolleyballCourtCoords, setVwVolleyballCourtCoords] = useState(null);
+  const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
+    console.log(
+      `- 1 handleVwVolleyballCourtAndGestSuperLayout event ${Platform.OS}-`
+    );
+    console.log(event.nativeEvent.layout);
+
+    const { width, height, x, y } = event.nativeEvent.layout;
+
+    setVwVolleyballCourtCoords({ x, y, width, height }); // Store this separately first
+
+    props.setGestureViewCoords((prev) => ({
+      ...prev,
+      x: x,
+      width: width,
+      y: y,
+      height: height,
+    }));
+  };
+
+  useEffect(() => {
+    console.log("Updating gesture view coordinates after parent view layout");
+  }, [vwVolleyballCourtCoords]);
+
+  const handleGestureHandlerRootViewLayout = (event) => {
+    console.log(`- 2 handleGestureHandlerRootViewLayout event ${Platform.OS}-`);
+    console.log(event.nativeEvent.layout);
+
+    const { height, y } = event.nativeEvent.layout;
+
+    props.setGestureViewCoords((prev) => {
+      const new_y = prev.y + y;
+      console.log(`prev.y: ${prev.y}, new_y: ${new_y}`);
+
+      return {
+        ...prev,
+        y: new_y,
+        height: height,
+      };
+    });
+
+    console.log(`setGestureViewCoords have been set`);
+  };
+
+  /// END New Gesture Logic
 
   return (
     <View style={styles.container}>
@@ -44,7 +94,7 @@ export default function ScriptingPortraitVideo(props) {
         </TouchableOpacity>
       </View>
       <View style={styles.containerTop}>
-        <Text>Live Scripting</Text>
+        <Text>Video Scripting</Text>
         <View style={styles.vwTitle}>
           <Text style={styles.txtTitleAdmin}>AUC vs Arles</Text>
         </View>
@@ -102,37 +152,50 @@ export default function ScriptingPortraitVideo(props) {
             />
           </View>
         </View>
-        <View style={styles.vwGestureAndVideo}>
-          <VideoView
-            style={styles.vwVideo}
-            player={props.player}
-            // nativeControls={false}
-          />
+        <View
+          style={[styles.vwVideoAndGestSuper, {}]}
+          onLayout={(event) => handleVwVolleyballCourtAndGestSuperLayout(event)}
+        >
+          <GestureHandlerRootView
+            onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
+            style={{}} //This is key to make sure the flex properties will trickle down to <Image>
+          >
+            <GestureDetector gesture={props.combinedGestures}>
+              {/* <View style={styles.vwGestureAndVideo}> */}
+              <VideoView
+                style={styles.vwVideo}
+                player={props.player}
+                nativeControls={false}
+              />
+              {/* </View> */}
+            </GestureDetector>
+          </GestureHandlerRootView>
         </View>
-        {/* <View style={styles.vwVollyballCourt}>
-          <Image
-            source={require("../../assets/images/imgVollyballCourt.png")}
-            alt="imgVollyballCourt"
-            resizeMode="contain"
-          />
-
-        </View> */}
       </View>
       <View style={styles.containerBottom}>
         <View style={styles.vwBlackLineDivider} />
         <View style={styles.vwActionDetails}>
           <View style={styles.vwActionDetailsQuality}>
             <SinglePickerWithSideBorders
-              arrayElements={[-2, -1, 0, 1, 2]}
-              onChange={props.setQuality}
-              value={props.quality}
+              arrayElements={scriptReducer.qualityArray}
+              onChange={props.handleChangeQuality}
+              value={
+                scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ]?.quality || "0"
+              }
               style={props.stdPickerStyle}
-              pickerName="qualityPortrait"
+              pickerName={"qualityPortrait"}
+              // arrayElements={[-2, -1, 0, 1, 2]}
+              // onChange={props.setQuality}
+              // value={props.quality}
+              // style={props.stdPickerStyle}
+              // pickerName="qualityPortrait"
             />
           </View>
           <View style={styles.vwActionDetailsPosition}>
             <SinglePickerWithSideBorders
-              arrayElements={[1, 2, 3, 4, 5, 6]}
+              arrayElements={scriptReducer.positionalAreasArray}
               onChange={props.setPositionalArea}
               value={props.positionalArea}
               style={props.stdPickerStyle}
@@ -141,7 +204,10 @@ export default function ScriptingPortraitVideo(props) {
           </View>
           <View style={styles.vwActionDetailsPlayer}>
             <SinglePickerWithSideBorders
-              arrayElements={props.truncateArrayElements(props.table02data, 4)}
+              arrayElements={props.truncateArrayElements(
+                scriptReducer.playerNamesArrayRotated,
+                4
+              )}
               onChange={props.setPlayerName}
               value={props.playerName}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
@@ -151,21 +217,41 @@ export default function ScriptingPortraitVideo(props) {
           </View>
           <View style={styles.vwActionDetailsType}>
             <SinglePickerWithSideBorders
-              arrayElements={props.table03data}
-              onChange={props.setType}
-              value={props.type}
+              arrayElements={scriptReducer.typesArray}
+              onChange={props.handleChangeType}
+              // value={props.type}
+              value={
+                scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ]?.type || "Bloc"
+              }
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
-              pickerName="typePortrait"
+              pickerName={"typePortrait"}
+              // onChange={props.setType}
+              // value={props.type}
+              // style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
+              // selectedIsBold={false}
+              // pickerName="typePortrait"
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
             <SinglePickerWithSideBorders
-              arrayElements={props.truncateArrayElements(props.table04data, 4)}
-              onChange={props.setSubtype}
-              value={props.subtype}
+              arrayElements={scriptReducer.subtypesArray}
+              onChange={props.handleChangeSubtype}
+              value={
+                scriptReducer.actionsArray[
+                  scriptReducer.actionsArray.length - 1
+                ]?.subtype || ""
+              }
+              // value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype : ""}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
-              pickerName="subtypePortrait"
+              pickerName={"subtypePortrait"}
+              // arrayElements={props.truncateArrayElements(props.table04data, 4)}
+              // onChange={props.setSubtype}
+              // value={props.subtype}
+              // style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
+              // pickerName="subtypePortrait"
             />
           </View>
         </View>
@@ -193,7 +279,7 @@ export default function ScriptingPortraitVideo(props) {
           <View style={styles.vwScriptingManagementRight}>
             <View style={styles.vwScriptingManagementRightLeft}>
               <ButtonKv
-                onPress={() => console.log("presssed S")}
+                onPress={() => props.handlePressedServeOrReception("S")}
                 style={{
                   backgroundColor: "#310732",
                   color: "white",
@@ -204,7 +290,7 @@ export default function ScriptingPortraitVideo(props) {
                 S
               </ButtonKv>
               <ButtonKv
-                onPress={() => console.log("presssed R")}
+                onPress={() => props.handlePressedServeOrReception("R")}
                 style={{
                   backgroundColor: "#310732",
                   color: "white",
@@ -217,7 +303,7 @@ export default function ScriptingPortraitVideo(props) {
             </View>
             <View style={styles.vwScriptingManagementRightRight}>
               <ButtonKv
-                onPress={() => console.log("presssed W")}
+                onPress={() => props.handleWinRallyButtonPress()}
                 style={{
                   backgroundColor: "#970F9A",
                   color: "white",
@@ -228,7 +314,7 @@ export default function ScriptingPortraitVideo(props) {
                 W
               </ButtonKv>
               <ButtonKv
-                onPress={() => console.log("presssed L")}
+                onPress={() => props.setScoreTeamOpponent((prev) => prev + 1)}
                 style={{
                   backgroundColor: "#970F9A",
                   color: "white",
@@ -322,16 +408,34 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
-  vwVollyballCourt: {
-    flex: 1,
-    paddingTop: 20,
-    justifyContent: "center",
-  },
-  vwGestureAndVideo: {
+
+  // ----- New Gesture Video ---
+
+  vwVideoAndGestSuper: {
+    // flex: 1,
+    // flexDirection: "row",
+    // justifyContent: "center",
+    // alignItems: "center",
     // backgroundColor: "purple",
     width: "100%",
     height: 250, // Ensure fixed height for VideoView
   },
+  // vwVolleyballCourt: {
+  //   paddingTop: 20,
+  //   justifyContent: "center",
+  //   // backgroundColor: "green",
+  // },
+  // --- End New Gesture Video ---
+  // vwVollyballCourt: {
+  //   flex: 1,
+  //   paddingTop: 20,
+  //   justifyContent: "center",
+  // },
+  // vwGestureAndVideo: {
+  //   // backgroundColor: "purple",
+  //   width: "100%",
+  //   height: 250, // Ensure fixed height for VideoView
+  // },
   vwVideo: {
     width: "100%",
     height: "100%", // Matches parent height
