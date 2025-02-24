@@ -905,7 +905,7 @@ export default function ScriptingLive({ navigation }) {
       style={{ flex: 1, marginTop: 0 }}
       // onLayout={(event) => handleVwScriptingPortraitLiveParent(event)}
     >
-      <View
+      {/* <View
         style={{
           position: "absolute",
           bottom: 5,
@@ -945,7 +945,7 @@ export default function ScriptingLive({ navigation }) {
             </Text>
           </View>
         )}
-      </View>
+      </View> */}
       {/* {process.env.EXPO_PUBLIC_ENVIRONMENT === "workstation" && ( */}
       <View
         style={{
