@@ -30,7 +30,7 @@ const initialState = {
   qualityArray: ["=", "-", "0", "+", "#"],
   rotationArray: ["P1", "P2", "P3", "P4", "P5", "P6"],
   positionalAreasArray: Array.from({ length: 6 }, (_, i) => i + 1),
-  playerNamesArray: ["Lea", "Odeyssa", "Yoann", "Johanne", "Ted", "Sarah"],
+  playerNamesArray: ["Léa", "Odeyssa", "Yoann", "Johanne", "Ted", "Sarah"],
   playerNamesArrayRotated: [], // Initialized empty, will be set in reducer
   pointsArray: Array.from({ length: 50 }, (_, i) => i),
   setOptionsArray: Array.from({ length: 4 }, (_, i) => i),

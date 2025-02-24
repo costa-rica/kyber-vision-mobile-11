@@ -14,7 +14,7 @@ const ButtonKv = ({ onPress, style, children }) => {
     color: "white",
     fontWeight: "",
     padding: 5,
-    justifyContentBool: false,
+    // justifyContent: false,
   };
   // Merge provided style with default styles
   const mergedStyle = { ...defaultStyles, ...style };
@@ -50,7 +50,7 @@ const ButtonKv = ({ onPress, style, children }) => {
     borderRadius: mergedStyle.borderRadius,
     width: mergedStyle.width,
     height: mergedStyle.height,
-    justifyContent: mergedStyle.justifyContentBool ? "center" : null,
+    justifyContent: mergedStyle.justifyContent,
     alignItems: "center",
   };
   const styleText = {

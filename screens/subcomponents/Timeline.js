@@ -12,7 +12,13 @@ import {
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
-export default function Timeline(props) {
+// export default function Timeline(props) {
+export default function Timeline({
+  videoProgress,
+  setCurrentTimeManager,
+  timelineWidth = Dimensions.get("window").width,
+  player,
+}) {
   // const userReducer = useSelector((state) => state.user.value);
 
   const scriptReducer = useSelector((state) => state.script);
@@ -47,51 +53,48 @@ export default function Timeline(props) {
   });
 
   const handleTimelineNewPosition = (newProgress) => {
-    // const newTime =
-    //   props.startTime + newProgress * (props.endTime - props.startTime);
-    const newTime = newProgress * props.player.duration;
-    props.setCurrentTimeManager(newTime);
+    const newTime = newProgress * player.duration;
+    setCurrentTimeManager(newTime);
   };
 
   const combinedTimelineGesture = Gesture.Race(
     gestureTapTimeline,
     gestureSwipeTimeline
   );
-  // console.log(`props.progress: ${props.progress}`);
   return (
     <GestureDetector gesture={combinedTimelineGesture}>
       <View
-        style={[styles.vwTimeline, { width: props.timelineWidth }]}
+        style={[styles.vwTimeline, { width: timelineWidth }]}
         onLayout={calculateTimelineLength}
       >
         <View
           style={[
             styles.vwTimelineProgress,
-            { width: `${props.progress * 100}%` },
+            { width: `${videoProgress * 100}%` },
           ]}
         />
-        <View
+        {/* ---- Timeline progress circle ---- */}
+        {/* <View
           style={[
             styles.vwTimelineProgressCircle,
-            { left: `${props.progress * 100}%` },
+            { left: `${videoProgress * 100}%` },
           ]}
-        />
-        {scriptReducer.actionsArray.map((elem, index) => {
+        /> */}
+        {/* ---- Markers for actions ---- */}
+        {/* {scriptReducer.actionsArray.map((elem, index) => {
           return (
             <View
               key={index} // Adding a unique key here based on the index
               style={[
                 styles.vwActionMarker,
                 {
-                  left:
-                    (elem?.timeStamp / props.player.duration) *
-                    props.timelineWidth,
+                  left: (elem?.timeStamp / player.duration) * timelineWidth,
                 },
               ]}
             />
           );
           // }
-        })}
+        })} */}
       </View>
     </GestureDetector>
   );
@@ -99,16 +102,16 @@ export default function Timeline(props) {
 const styles = StyleSheet.create({
   vwTimeline: {
     height: 15,
-    backgroundColor: "#FFF",
-    borderRadius: 5,
-    borderColor: "rgba(100,100,100,.9)",
-    borderWidth: 2,
+    backgroundColor: "#170418",
+    // borderRadius: 5,
+    // borderColor: "rgba(100,100,100,.9)",
+    // borderWidth: 2,
     overflow: "visible",
     position: "relative",
   },
   vwTimelineProgress: {
     height: "100%",
-    backgroundColor: "#C3C3C3",
+    backgroundColor: "#8D0B90",
     // backgroundColor: "red",
     // backgroundColor: "rgba(100,100,100,.4)",
   },

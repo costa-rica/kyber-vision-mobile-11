@@ -21,6 +21,7 @@ import {
 import Timeline from "./Timeline";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import ButtonKvImage from "./ButtonKvImage";
 
 export default function ScriptingPortraitVideo(props) {
   const scriptReducer = useSelector((state) => state.script);
@@ -75,7 +76,9 @@ export default function ScriptingPortraitVideo(props) {
   };
 
   /// END New Gesture Logic
-
+  const pressedAButton = (message = "Pressed a button") => {
+    Alert.alert(`${message} `);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.vwBtnBackArrow}>
@@ -171,6 +174,108 @@ export default function ScriptingPortraitVideo(props) {
             </GestureDetector>
           </GestureHandlerRootView>
         </View>
+        {/* --- END vwVideoAndGestSuper ---*/}
+        <View style={{ width: Dimensions.get("window").width }}>
+          <GestureHandlerRootView style={styles.gestureViewTimeline}>
+            <Timeline
+              videoProgress={props.progress}
+              setCurrentTimeManager={props.setCurrentTimeManager}
+              player={props.player}
+            />
+          </GestureHandlerRootView>
+        </View>
+        <View style={styles.vwVideoControls}>
+          <View style={styles.vwVideoControlsLeft}>
+            <ButtonKv
+              onPress={() => pressedAButton("Manage video speed")}
+              style={{
+                padding: 0,
+                backgroundColor: "#806181",
+                justifyContent: "center",
+                width: 70,
+              }}
+            >
+              x 1.0
+            </ButtonKv>
+          </View>
+          <View style={styles.vwVideoControlsRight}>
+            <ButtonKv
+              onPress={() =>
+                props.setCurrentTimeManager(props.player.currentTime - 5)
+              }
+              style={{
+                padding: 0,
+                backgroundColor: "#806181",
+                justifyContent: "center",
+                width: 50,
+              }}
+            >
+              -5
+            </ButtonKv>
+            <ButtonKv
+              onPress={() =>
+                props.setCurrentTimeManager(props.player.currentTime - 1)
+              }
+              style={{
+                padding: 0,
+                backgroundColor: "#806181",
+                justifyContent: "center",
+                width: 50,
+              }}
+            >
+              -1
+            </ButtonKv>
+            <ButtonKvImage
+              onPress={() => {
+                console.log("rotate screen to landscape");
+                // correctOrientationFromStart();
+                props.player.playing
+                  ? props.player.pause()
+                  : props.player.play();
+              }}
+              style={{ padding: 0 }}
+            >
+              <View style={styles.vwBtnPausePlay}>
+                <Image
+                  source={
+                    props.player.playing
+                      ? require("../../assets/images/btnPause.png")
+                      : require("../../assets/images/btnPlay.png")
+                  }
+                  alt="logo"
+                  resizeMode="contain"
+                />
+              </View>
+            </ButtonKvImage>
+            <ButtonKv
+              onPress={() => {
+                pressedAButton("forward 5 seconds");
+                props.setCurrentTimeManager(props.player.currentTime + 5);
+              }}
+              style={{
+                padding: 0,
+                backgroundColor: "#806181",
+                justifyContent: "center",
+                width: 50,
+              }}
+            >
+              +5
+            </ButtonKv>
+            <ButtonKv
+              onPress={() =>
+                props.setCurrentTimeManager(props.player.currentTime + 10)
+              }
+              style={{
+                padding: 0,
+                backgroundColor: "#806181",
+                justifyContent: "center",
+                width: 50,
+              }}
+            >
+              +10
+            </ButtonKv>
+          </View>
+        </View>
       </View>
       <View style={styles.containerBottom}>
         <View style={styles.vwBlackLineDivider} />
@@ -186,11 +291,6 @@ export default function ScriptingPortraitVideo(props) {
               }
               style={props.stdPickerStyle}
               pickerName={"qualityPortrait"}
-              // arrayElements={[-2, -1, 0, 1, 2]}
-              // onChange={props.setQuality}
-              // value={props.quality}
-              // style={props.stdPickerStyle}
-              // pickerName="qualityPortrait"
             />
           </View>
           <View style={styles.vwActionDetailsPosition}>
@@ -228,11 +328,6 @@ export default function ScriptingPortraitVideo(props) {
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
               pickerName={"typePortrait"}
-              // onChange={props.setType}
-              // value={props.type}
-              // style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
-              // selectedIsBold={false}
-              // pickerName="typePortrait"
             />
           </View>
           <View style={styles.vwActionDetailsSubtype}>
@@ -244,14 +339,8 @@ export default function ScriptingPortraitVideo(props) {
                   scriptReducer.actionsArray.length - 1
                 ]?.subtype || ""
               }
-              // value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype : ""}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
               pickerName={"subtypePortrait"}
-              // arrayElements={props.truncateArrayElements(props.table04data, 4)}
-              // onChange={props.setSubtype}
-              // value={props.subtype}
-              // style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
-              // pickerName="subtypePortrait"
             />
           </View>
         </View>
@@ -260,7 +349,7 @@ export default function ScriptingPortraitVideo(props) {
             <ButtonKv
               onPress={() => {
                 Alert.alert("start");
-                props.setPosition((prev) => prev + 1);
+                // props.setPosition((prev) => prev + 1);
               }}
               // colorBackground={"#970F9A"}
               // colorText={"white"}
@@ -361,9 +450,6 @@ const styles = StyleSheet.create({
     borderColor: "lightgray",
   },
   imgBtnBackArrow: {
-    // width: "100%",
-    // height: "100%",
-    // borderRadius: 35, // Match circle's border radius
     width: "100%",
     height: "100%",
     borderRadius: 17, // Match circle's border radius
@@ -381,10 +467,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   vwScore: {
-    // flex: 1,
     width: Dimensions.get("window").width * 0.9,
     flexDirection: "row",
-    // backgroundColor: "rgba(0, 0, 0, 0.3)",
     justifyContent: "space-between",
     margin: 10,
     borderRadius: 15,
@@ -416,31 +500,43 @@ const styles = StyleSheet.create({
     // flexDirection: "row",
     // justifyContent: "center",
     // alignItems: "center",
-    // backgroundColor: "purple",
+    backgroundColor: "purple",
     width: "100%",
-    height: 250, // Ensure fixed height for VideoView
+    height: 220, // Ensure fixed height for VideoView
   },
-  // vwVolleyballCourt: {
-  //   paddingTop: 20,
-  //   justifyContent: "center",
-  //   // backgroundColor: "green",
-  // },
-  // --- End New Gesture Video ---
-  // vwVollyballCourt: {
-  //   flex: 1,
-  //   paddingTop: 20,
-  //   justifyContent: "center",
-  // },
-  // vwGestureAndVideo: {
-  //   // backgroundColor: "purple",
-  //   width: "100%",
-  //   height: 250, // Ensure fixed height for VideoView
-  // },
+
   vwVideo: {
     width: "100%",
     height: "100%", // Matches parent height
   },
 
+  // --- Timeline ---
+  gestureViewTimeline: {
+    alignItems: "center",
+  },
+
+  // --- Video Controls ---
+  vwVideoControls: {
+    // flex: 1,
+    width: "100%",
+    padding: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  vwBtnPausePlay: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#806181",
+    borderRadius: 35,
+    width: 60,
+    height: 40,
+    // padding: 5,
+  },
+  vwVideoControlsLeft: {},
+  vwVideoControlsRight: {
+    flexDirection: "row",
+    gap: 5,
+  },
   // -------- BOTTOM --------
 
   containerBottom: {

@@ -869,7 +869,8 @@ export default function Scripting({ navigation, route }) {
 
     const newActionObj = {
       dateScripted: new Date().toISOString(), // Convert to ISO string
-      timeStamp: new Date().toISOString(),
+      // timeStamp: new Date().toISOString(),
+      timeStamp: player.currentTime,
       type: actionPropertiesObj.type
         ? actionPropertiesObj.type
         : "missing type",

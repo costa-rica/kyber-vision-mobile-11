@@ -3,9 +3,21 @@ import { Animated, Pressable } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 
-const ButtonKvImage = ({ onPress, color = "transparent", children }) => {
+// const ButtonKvImage = ({ onPress, color = "transparent", children }) => {
+const ButtonKvImage = ({ onPress, style, children }) => {
+  // Define default styles
+  const defaultStyles = {
+    color: "transparent",
+    backgroundColor: currentColor,
+    padding: 5,
+    borderRadius: 35,
+    // width: width,
+    justifyContent: "center",
+    alignItems: "center",
+  };
+  const mergedStyle = { ...defaultStyles, ...style };
   const scaleValue = useRef(new Animated.Value(1)).current;
-  const [currentColor, setCurrentColor] = useState(color);
+  const [currentColor, setCurrentColor] = useState(mergedStyle.color);
 
   const handlePressIn = () => {
     setCurrentColor("gray"); // Change color on press
@@ -16,7 +28,7 @@ const ButtonKvImage = ({ onPress, color = "transparent", children }) => {
   };
 
   const handlePressOut = () => {
-    setCurrentColor(color); // Revert color when press is released
+    setCurrentColor(mergedStyle.color); // Revert color when press is released
     Animated.spring(scaleValue, {
       toValue: 1,
       friction: 3,
@@ -30,14 +42,14 @@ const ButtonKvImage = ({ onPress, color = "transparent", children }) => {
     }
   };
 
-  const styleView = {
-    backgroundColor: currentColor,
-    padding: 5,
-    borderRadius: 35,
-    // width: width,
-    justifyContent: "center",
-    alignItems: "center",
-  };
+  // const styleView = {
+  //   backgroundColor: currentColor,
+  //   padding: 5,
+  //   borderRadius: 35,
+  //   // width: width,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // };
 
   return (
     <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
@@ -45,7 +57,7 @@ const ButtonKvImage = ({ onPress, color = "transparent", children }) => {
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         // style={{ alignItems: "center", justifyContent: "center" }}
-        style={styleView}
+        style={mergedStyle}
       >
         {/* <FontAwesomeIcon icon={faX} size={size} color={currentColor} />  */}
         {children}
