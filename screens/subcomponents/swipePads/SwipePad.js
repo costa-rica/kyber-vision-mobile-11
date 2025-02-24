@@ -367,27 +367,10 @@ export default function SwipePad(props) {
       {Array.from({ length: 12 }, (_, index) => (
         <View
           key={index + 4}
-          // onLayout={() => {
-          //   console.log(`index created: ${index}`);
-          //   console.log(dictTextPositionsOuter[index + 5]);
-          // }}
           style={{
             position: "absolute",
-
             top: dictTextPositionsOuter[index + 5].top,
-            // top: 20,
             left: dictTextPositionsOuter[index + 5].left,
-
-            // justifyContent: "center",
-            // alignItems: "center",
-
-            // borderColor: dictTextPositionsOuter[index + 5].selected
-            //   ? "black"
-            //   : null,
-            // borderWidth: dictTextPositionsOuter[index + 5].selected ? 1 : null,
-            // borderStyle: dictTextPositionsOuter[index + 5].selected
-            //   ? "dashed"
-            //   : null,
           }}
         >
           <Text

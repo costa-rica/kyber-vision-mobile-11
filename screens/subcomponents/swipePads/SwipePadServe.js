@@ -139,29 +139,31 @@ export default function SwipePadServe(props) {
     // zIndex: 3,
   };
 
-  const estimatedWidthOfText = 10;
-  const estimatedHeightOfText = 10;
+  const estimatedWidthOfTextMiddle = 35;
+  const estimatedHeightOfTextMiddle = 20;
+  const estimatedWidthOfTextOuter = 10;
+  const estimatedHeightOfTextOuter = 10;
 
   const dictTextPositionsMiddle = {
     1: {
       // Right (Bloc)
-      top: userReducer.circleRadiusOuter - estimatedHeightOfText,
+      top: userReducer.circleRadiusOuter - estimatedHeightOfTextMiddle / 2,
       left: userReducer.circleRadiusOuter + userReducer.circleRadiusInner,
       selected: true,
     },
     2: {
       // Bottom (Def)
       top: userReducer.circleRadiusOuter + userReducer.circleRadiusInner,
-      left: userReducer.circleRadiusOuter - estimatedWidthOfText / 2,
+      left: userReducer.circleRadiusOuter - estimatedWidthOfTextMiddle / 2,
       selected: true,
     },
     3: {
       // Left (Set)
-      top: userReducer.circleRadiusOuter - estimatedHeightOfText,
+      top: userReducer.circleRadiusOuter - estimatedHeightOfTextMiddle / 2,
       left:
         userReducer.circleRadiusOuter -
         userReducer.circleRadiusInner -
-        estimatedWidthOfText,
+        estimatedWidthOfTextMiddle,
       selected: true,
     },
     4: {
@@ -169,8 +171,8 @@ export default function SwipePadServe(props) {
       top:
         userReducer.circleRadiusOuter -
         userReducer.circleRadiusInner -
-        estimatedHeightOfText,
-      left: userReducer.circleRadiusOuter - estimatedWidthOfText / 2,
+        estimatedHeightOfTextMiddle,
+      left: userReducer.circleRadiusOuter - estimatedWidthOfTextMiddle / 2,
       selected: true,
     },
   };
@@ -181,55 +183,84 @@ export default function SwipePadServe(props) {
 
   const dictTextPositionsOuter = {
     ...dictTextPositionsOuterPlaceholder,
+    5: {
+      // Bottom-Right (B2)
+      top: userReducer.circleRadiusOuter - estimatedHeightOfTextOuter,
+      left: userReducer.circleRadiusOuter * 2 + estimatedWidthOfTextOuter,
+      selected: true,
+    },
+    6: {
+      // Bottom-Right (B1)
+      top: userReducer.circleRadiusOuter * 1.5,
+      left: userReducer.circleRadiusOuter * 2 - estimatedWidthOfTextOuter,
+      selected: true,
+    },
+    7: {
+      // Bottom-Right (BC)
+      top: userReducer.circleRadiusOuter * 2 - estimatedHeightOfTextOuter,
+      left: userReducer.circleRadiusOuter * 1.5,
+      selected: true,
+    },
     8: {
-      // Bottom-Center (Freeball)
-      top:
-        userReducer.circleRadiusOuter * 2 -
-        (userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle),
-      left: userReducer.circleRadiusOuter - estimatedWidthOfText,
+      // Bottom-Center (FB)
+      // top:
+      //   userReducer.circleRadiusOuter * 2 -
+      //   (userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle),
+      top: userReducer.circleRadiusOuter * 2,
+      left: userReducer.circleRadiusOuter - estimatedWidthOfTextOuter,
+      selected: true,
+    },
+    9: {
+      // Bottom-Left (AC)
+      top: userReducer.circleRadiusOuter * 2 - estimatedHeightOfTextOuter,
+      left: userReducer.circleRadiusOuter * 0.3,
+      selected: true,
+    },
+    10: {
+      // Left-Bottom (NS)
+      top: userReducer.circleRadiusOuter * 1.5,
+      left: -estimatedWidthOfTextOuter,
       selected: true,
     },
     11: {
-      // Right-Center (NP)
-      top: userReducer.circleRadiusOuter - estimatedHeightOfText / 2,
-      left:
-        userReducer.circleRadiusOuter -
-        userReducer.circleRadiusMiddle -
-        estimatedWidthOfText * 1.5,
+      // Right-Center (Q)
+      top: userReducer.circleRadiusOuter - estimatedHeightOfTextOuter,
+      left: -estimatedWidthOfTextOuter * 2,
+      selected: true,
+    },
+    12: {
+      // Left-Top (Hi)
+      top: userReducer.circleRadiusOuter * 0.3,
+      left: -estimatedWidthOfTextOuter,
       selected: true,
     },
     13: {
       // Top-Left (Tip)
-      top:
-        userReducer.circleRadiusOuter -
-        userReducer.circleRadiusMiddle / 1.1 -
-        estimatedHeightOfText,
+      top: -estimatedHeightOfTextOuter,
       // top: 20,
-      left:
-        userReducer.circleRadiusOuter - userReducer.circleRadiusMiddle / 1.6,
+      left: userReducer.circleRadiusOuter * 0.3,
       selected: true,
     },
 
     14: {
-      // Top-Center (Power)
-      top:
-        userReducer.circleRadiusOuter -
-        userReducer.circleRadiusMiddle -
-        estimatedHeightOfText,
-      left: userReducer.circleRadiusOuter - estimatedWidthOfText,
+      // Top-Center (Pwr)
+      top: -estimatedHeightOfTextOuter * 2,
+      left: userReducer.circleRadiusOuter - estimatedWidthOfTextOuter,
       selected: true,
     },
     15: {
       // Top-Right (Roll)
-      top:
-        userReducer.circleRadiusOuter -
-        userReducer.circleRadiusMiddle / 1.1 -
-        estimatedHeightOfText,
+      top: -estimatedHeightOfTextOuter,
       // top: 20,
-      left:
-        userReducer.circleRadiusOuter +
-        userReducer.circleRadiusMiddle / 1.8 -
-        estimatedWidthOfText,
+      left: userReducer.circleRadiusOuter * 1.5,
+      selected: true,
+    },
+    16: {
+      // Top-Right (Roll)
+      top: userReducer.circleRadiusOuter * 0.3,
+      // top: 20,
+      // left: userReducer.circleRadiusOuter * 1.5,
+      left: userReducer.circleRadiusOuter * 2 - estimatedWidthOfTextOuter,
       selected: true,
     },
   };
@@ -311,15 +342,22 @@ export default function SwipePadServe(props) {
                 position: "absolute",
                 top: dictTextPositionsMiddle[index + 1].top,
                 left: dictTextPositionsMiddle[index + 1].left,
+                justifyContent: "center",
+                alignItems: "center",
+                width: estimatedWidthOfTextMiddle,
               }}
             >
               <Text
                 key={index}
                 style={{
-                  color: props.swipeTextStyleDict[index + 1].color,
-                  fontSize: props.swipeTextStyleDict[index + 1].fontSize,
-                  fontWeight: props.swipeTextStyleDict[index + 1].fontWeight,
-                  // transform: [{ rotate: "45deg" }],
+                  color:
+                    userReducer.swipePadTextStyleMiddleCircle[index + 1].color,
+                  fontSize:
+                    userReducer.swipePadTextStyleMiddleCircle[index + 1]
+                      .fontSize,
+                  fontWeight:
+                    userReducer.swipePadTextStyleMiddleCircle[index + 1]
+                      .fontWeight,
                 }}
               >
                 {dictTextPositionsMiddle[index + 1].selected
@@ -340,16 +378,19 @@ export default function SwipePadServe(props) {
                 position: "absolute",
                 top: dictTextPositionsOuter[index + 5].top,
                 left: dictTextPositionsOuter[index + 5].left,
-                justifyContent: "center",
-                alignItems: "center",
               }}
             >
               <Text
                 key={index}
                 style={{
-                  color: props.swipeTextStyleDict[index + 5].color,
-                  fontSize: props.swipeTextStyleDict[index + 5].fontSize,
-                  fontWeight: props.swipeTextStyleDict[index + 5].fontWeight,
+                  color:
+                    userReducer.swipePadTextStyleOuterCircle[index + 1].color,
+                  fontSize:
+                    userReducer.swipePadTextStyleOuterCircle[index + 1]
+                      .fontSize,
+                  fontWeight:
+                    userReducer.swipePadTextStyleOuterCircle[index + 1]
+                      .fontWeight,
                 }}
               >
                 {dictTextPositionsOuter[index + 5].selected
