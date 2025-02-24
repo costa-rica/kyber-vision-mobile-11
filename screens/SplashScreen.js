@@ -66,7 +66,7 @@ export default function SplashScreen({ navigation }) {
         </View>
       </View>
       <Text style={{ position: "absolute", bottom: 0, right: 0 }}>
-        Version 0.9.0
+        Version 0.10.0
       </Text>
     </TemplateView>
   );
