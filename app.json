@@ -29,14 +29,14 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "4cf94a18-97c5-4929-984b-7ab881b46446"
+        "projectId": "a4b956e5-22c4-40bf-a3a3-a19e0e8ae396"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/4cf94a18-97c5-4929-984b-7ab881b46446"
+      "url": "https://u.expo.dev/a4b956e5-22c4-40bf-a3a3-a19e0e8ae396"
     },
     "owner": "costa-rica"
   }

@@ -500,9 +500,9 @@ const styles = StyleSheet.create({
     // flexDirection: "row",
     // justifyContent: "center",
     // alignItems: "center",
-    backgroundColor: "purple",
+    // backgroundColor: "purple",
     width: "100%",
-    height: 220, // Ensure fixed height for VideoView
+    height: 240, // Ensure fixed height for VideoView
   },
 
   vwVideo: {

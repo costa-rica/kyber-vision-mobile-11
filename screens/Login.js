@@ -41,10 +41,9 @@ export default function Login({ navigation }) {
       "Login ---> API URL:",
       `${process.env.EXPO_PUBLIC_API_URL}/users/login`
     );
-    console.log("- handleClickLogin asdfa 👀");
 
     const bodyObj = { email, password };
-    console.log(`email: ${email}, ${password}`);
+    // console.log(`email: ${email}, ${password}`);
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
       {
