@@ -5,20 +5,19 @@ import SplashScreen from "./screens/SplashScreen";
 import Login from "./screens/Login";
 import Home from "./screens/Home";
 import Register from "./screens/Register";
-
 import ScriptingMatchSelection from "./screens/ScritptingMatchSelection";
 import Scripting from "./screens/Scripting";
 import Admin from "./screens/Admin";
 import ScriptingLive from "./screens/ScriptingLive";
-
 import SwipePadSettings from "./screens/SwipePadSettings";
+import PlayerSelection from "./screens/PlayerSelection";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
 import script from "./reducers/script";
 import { useEffect, useState } from "react";
-import * as ScreenOrientation from "expo-screen-orientation";
+// import * as ScreenOrientation from "expo-screen-orientation";
 import * as Font from "expo-font";
 
 const store = configureStore({
@@ -67,6 +66,7 @@ export default function App() {
               name="SwipePadSettings"
               component={SwipePadSettings}
             />
+            <Stack.Screen name="PlayerSelection" component={PlayerSelection} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>

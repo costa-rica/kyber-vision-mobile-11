@@ -16,13 +16,8 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { loginUser, reducerSetScreenDimensions } from "../reducers/user";
 import { useSelector } from "react-redux";
 import TemplateView from "./subcomponents/TemplateView";
-import ButtonKvImage from "./subcomponents/ButtonKvImage";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faRotate } from "@fortawesome/free-solid-svg-icons";
-import * as ScreenOrientation from "expo-screen-orientation";
 
 export default function Home({ navigation }) {
   const dispatch = useDispatch();
@@ -51,52 +46,59 @@ export default function Home({ navigation }) {
           <View style={styles.containerMiddleTop}>
             <View style={styles.vwButtons}>
               <TouchableOpacity
-                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
-                onPress={() => navigation.navigate("ScriptingMatchSelection")}
+                style={[styles.touchOpButton, { backgroundColor: "#E1B5D5" }]}
+                // onPress={() => navigation.navigate("ScriptingMatchSelection")}
+                onPress={() => navigation.navigate("PlayerSelection")}
               >
                 <Text style={styles.txtButton}>Scripting</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
-                onPress={() => Alert.alert("Video Review")}
+                style={[styles.touchOpButton, { backgroundColor: "#E1B5D5" }]}
+                onPress={() => Alert.alert("Player Review")}
               >
-                <Text style={styles.txtButton}>Video Review</Text>
+                <Text style={styles.txtButton}>Player Review</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                style={[styles.touchOpButton, { backgroundColor: "#D9D9D9" }]}
                 onPress={() => Alert.alert("Upload")}
+                disabled={true}
               >
                 <Text style={styles.txtButton}>Upload</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                style={[styles.touchOpButton, { backgroundColor: "#D9D9D9" }]}
                 onPress={() => Alert.alert("Sync")}
+                disabled={true}
               >
                 <Text style={styles.txtButton}>Sync</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.vwButtons}>
               <TouchableOpacity
-                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                style={[styles.touchOpButton, { backgroundColor: "#D9D9D9" }]}
                 onPress={() => Alert.alert("Analysis")}
+                disabled={true}
               >
                 <Text style={styles.txtButton}>Analysis</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                style={[styles.touchOpButton, { backgroundColor: "#D9D9D9" }]}
                 onPress={() => Alert.alert("System Review")}
+                disabled={true}
               >
                 <Text style={styles.txtButton}>System Review</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                style={[styles.touchOpButton, { backgroundColor: "#D9D9D9" }]}
                 onPress={() => Alert.alert("Setup")}
+                disabled={true}
               >
                 <Text style={styles.txtButton}>Setup</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.touchOpButton, { backgroundColor: "#A3A3A3" }]}
+                style={[styles.touchOpButton, { backgroundColor: "#D9D9D9" }]}
                 onPress={() => Alert.alert("Admin")}
+                disabled={true}
               >
                 <Text style={styles.txtButton}>Admin</Text>
               </TouchableOpacity>

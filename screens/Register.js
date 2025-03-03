@@ -86,58 +86,6 @@ export default function Register({ navigation }) {
     }
   };
 
-  // const handleClickRegister = async () => {
-  //   if (password != passwordRepeat) {
-  //     setMessage("Passwords do not match");
-  //     return;
-  //   }
-
-  //   console.log(
-  //     "Register ---> API URL:",
-  //     `${process.env.EXPO_PUBLIC_API_URL}/users/register`
-  //   );
-  //   console.log("- handleClickRegister  👀");
-
-  //   const bodyObj = { email, password, username };
-  //   console.log(`email: ${email}, ${password}`);
-  //   const response = await fetch(
-  //     `${process.env.EXPO_PUBLIC_API_URL}/users/register`,
-  //     {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(bodyObj),
-  //     }
-  //   );
-
-  //   console.log("Received response:", response.status);
-
-  //   let resJson = null;
-  //   const contentType = response.headers.get("Content-Type");
-
-  //   if (contentType?.includes("application/json")) {
-  //     resJson = await response.json();
-  //   }
-
-  //   if (response.ok) {
-  //     console.log(`response ok`);
-  //     resJson.email = email;
-  //     dispatch(
-  //       loginUser({
-  //         email: resJson.email,
-  //         token: resJson.token,
-  //       })
-  //     );
-  //     console.log("after dispatch");
-  //     navigation.navigate("Home");
-  //     setMessage("Successfully register");
-  //   } else {
-  //     const errorMessage =
-  //       resJson?.error || `There was a server error: ${response.status}`;
-  //     setMessage("This user already exists");
-  //     alert(errorMessage);
-  //   }
-  // };
-
   const handlePasswordMatching = (text) => {
     setPassword(text);
     if (text !== passwordRepeat) {

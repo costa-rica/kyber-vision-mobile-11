@@ -6,6 +6,7 @@ const initialState = {
   actionsArray: [],
   pointsTableArray: [],
   scriptingPlayerCount: null,
+  scriptingForPlayerName: null, // <-- player name
   // /// - testing
   // objToModify: null,
   // testPayloadTime: null,
