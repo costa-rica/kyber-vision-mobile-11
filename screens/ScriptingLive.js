@@ -911,6 +911,13 @@ export default function ScriptingLive({ navigation }) {
     }
 
     dispatch(deleteScript());
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+      alert(resJson.message);
+    }
   };
 
   return orientation == "landscape" ? (

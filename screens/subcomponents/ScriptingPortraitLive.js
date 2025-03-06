@@ -271,9 +271,11 @@ export default function ScriptingPortraitLive(props) {
                 color: "white",
                 width: 140,
                 fontSize: 20,
+                height: 80,
+                justifyContent: "center",
               }}
             >
-              Finished
+              Send {scriptReducer.actionsArray.length} actions
             </ButtonKv>
           </View>
           <View style={styles.vwScriptingManagementRight}>

@@ -788,12 +788,19 @@ export default function ScriptingLandscapeLive(props) {
           <View style={styles.vwScriptingManagementLeft}>
             <ButtonKv
               onPress={() => {
-                dispatch(deleteScript());
+                props.sendScript();
+                // dispatch(deleteScript());
                 // props.setStdColorOfPositionLines("transparent");
               }}
-              style={{ backgroundColor: "#970F9A", width: 100, fontSize: 25 }}
+              style={{
+                backgroundColor: "#970F9A",
+                width: 230,
+                fontSize: 25,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              Start
+              Send {scriptReducer.actionsArray.length} actions
             </ButtonKv>
           </View>
         </View>
