@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView, Platform } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+// import { useSelector } from "react-redux";
 
 export default function CustomPicker({
   arrayElements,
@@ -10,6 +11,15 @@ export default function CustomPicker({
   selectedIsBold = true,
   pickerName = "unnamed",
 }) {
+  // const scriptReducer = useSelector((state) => state.script);
+  // if (pickerName === "playerNameLandscape") {
+  //   console.log(
+  //     "CustomPicker: scriptReducer.scriptingForPlayerObject?.firstName",
+  //     scriptReducer.scriptingForPlayerObject?.firstName,
+  //     "arrayElements",
+  //     arrayElements
+  //   );
+  // }
   if (!Array.isArray(arrayElements) || arrayElements.length === 0) {
     throw new Error(
       `CustomPicker (${pickerName}): The 'arrayElements' prop is required and must be a non-empty array.`

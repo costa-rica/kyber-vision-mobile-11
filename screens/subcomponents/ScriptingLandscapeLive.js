@@ -745,9 +745,9 @@ export default function ScriptingLandscapeLive(props) {
           </View>
           <View style={styles.vwActionDetailsPlayer}>
             <SinglePickerWithSideBorders
-              arrayElements={props.truncateArrayElements(
-                scriptReducer.playerNamesArrayRotated
-              )}
+              arrayElements={props.truncateArrayElements([
+                scriptReducer.scriptingForPlayerObject?.firstName,
+              ])}
               onChange={props.setPlayerName}
               value={props.playerName.substring(
                 0,

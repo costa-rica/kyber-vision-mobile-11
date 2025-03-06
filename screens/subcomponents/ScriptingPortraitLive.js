@@ -34,11 +34,15 @@ export default function ScriptingPortraitLive(props) {
   const scriptReducer = useSelector((state) => state.script);
   const dispatch = useDispatch();
   const [vwVolleyballCourtCoords, setVwVolleyballCourtCoords] = useState(null);
+
+  // console.log(
+  //   `scriptReducer.playerNamesArrayRotated: ${scriptReducer.playerNamesArrayRotated}`
+  // );
   const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
-    console.log(
-      `- 1 handleVwVolleyballCourtAndGestSuperLayout event ${Platform.OS}-`
-    );
-    console.log(event.nativeEvent.layout);
+    // console.log(
+    //   `- 1 handleVwVolleyballCourtAndGestSuperLayout event ${Platform.OS}-`
+    // );
+    // console.log(event.nativeEvent.layout);
 
     const { width, height, x, y } = event.nativeEvent.layout;
 
@@ -57,9 +61,10 @@ export default function ScriptingPortraitLive(props) {
     console.log("Updating gesture view coordinates after parent view layout");
   }, [vwVolleyballCourtCoords]);
 
+  // Coordinates to know where the gesture view limits are
   const handleGestureHandlerRootViewLayout = (event) => {
-    console.log(`- 2 handleGestureHandlerRootViewLayout event ${Platform.OS}-`);
-    console.log(event.nativeEvent.layout);
+    // console.log(`- 2 handleGestureHandlerRootViewLayout event ${Platform.OS}-`);
+    // console.log(event.nativeEvent.layout);
 
     const { height, y } = event.nativeEvent.layout;
 
@@ -212,7 +217,8 @@ export default function ScriptingPortraitLive(props) {
             <SinglePickerWithSideBorders
               // arrayElements={scriptReducer.playerNamesArrayRotated}
               arrayElements={props.truncateArrayElements(
-                scriptReducer.playerNamesArrayRotated
+                // scriptReducer.playerNamesArrayRotated
+                [scriptReducer.scriptingForPlayerObject?.firstName]
               )}
               onChange={props.setPlayerName}
               value={props.playerName.substring(

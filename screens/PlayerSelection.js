@@ -13,27 +13,31 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import TemplateView from "./subcomponents/TemplateView";
-import ButtonKvImage from "./subcomponents/ButtonKvImage";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import { setScriptingForPlayerObject } from "../reducers/script";
 
 export default function PlayerSelection({ navigation }) {
   const dispatch = useDispatch();
   const userReducer = useSelector((state) => state.user);
   const [playerListTop, setPlayerListTop] = useState([]);
-  const [playerListBottom, setPlayerListBottom] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState(null);
 
   useEffect(() => {
     fetchPlayerListApiCall();
   }, []);
 
   const fetchPlayerListApiCall = async () => {
-    console.log(`API URL: ${process.env.EXPO_PUBLIC_API_URL}/admin-db/Player`);
+    console.log(`API URL: ${process.env.EXPO_PUBLIC_API_URL}/players/team/1`);
 
     try {
+      // const response = await fetch(
+      //   `${process.env.EXPO_PUBLIC_API_URL}/admin-db/table/Player`
+      // );
       const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/admin-db/Player`
+        `${process.env.EXPO_PUBLIC_API_URL}/players/team/1`,
+        {
+          headers: { Authorization: `Bearer ${userReducer.token}` },
+        }
       );
       if (response.status !== 200) {
         console.log(`There was a server error: ${response.status}`);
@@ -41,9 +45,10 @@ export default function PlayerSelection({ navigation }) {
       }
 
       const resJson = await response.json();
-
+      // console.log(resJson);
+      setSelectedTeam(resJson.team);
       const tempPlayerList = [];
-      for (const elem of resJson.data) {
+      for (const elem of resJson.players) {
         tempPlayerList.push(elem);
       }
 
@@ -51,6 +56,11 @@ export default function PlayerSelection({ navigation }) {
     } catch (error) {
       console.error("Error fetching videos:", error);
     }
+  };
+
+  const pressSelect = () => {
+    dispatch(setScriptingForPlayerObject(selectedPlayer));
+    navigation.navigate("ScriptingLive");
   };
 
   const PlayerRow = ({ player, onSelect }) => {
@@ -65,7 +75,7 @@ export default function PlayerSelection({ navigation }) {
             { fontSize: player === selectedPlayer ? 20 : 16 },
           ]}
         >
-          {player.id}/ {player.firstName} {player.lastName}
+          {player.shirtNumber}/ {player.firstName} {player.lastName}
         </Text>
       </TouchableOpacity>
     );
@@ -100,7 +110,7 @@ export default function PlayerSelection({ navigation }) {
                 <Text
                   style={{ color: "#970F9A", fontSize: 16, paddingBottom: 5 }}
                 >
-                  Team Name
+                  {selectedTeam?.teamName}
                 </Text>
               </View>
               <View
@@ -119,29 +129,30 @@ export default function PlayerSelection({ navigation }) {
               renderItem={({ item }) => (
                 <PlayerRow player={item} onSelect={setSelectedPlayer} />
               )}
-              // style={styles.flatList}
             />
           </View>
         </View>
         <View style={styles.vwTeamBottom}>
-          <Text>Team Bottom</Text>
+          {/* <Text>Team Bottom</Text> */}
         </View>
         <View style={styles.vwSelection}>
-          <Text>Selected player</Text>
+          {/* <Text>Selected player</Text> */}
           <View style={styles.vwSelectedPlayerGroup}>
             <View style={styles.vwSelectedPlayerGroupTop}>
               <Text style={styles.txtSelectedPlayerTeamName}>Team Name </Text>
             </View>
             <View style={styles.vwSelectedPlayerGroupBottom}>
               <View style={styles.vwSelectedPlayerShirtNumber}>
-                <Text style={styles.txtShirtNumber}>{selectedPlayer.id}</Text>
+                <Text style={styles.txtShirtNumber}>
+                  {selectedPlayer?.shirtNumber}
+                </Text>
               </View>
               <View style={styles.vwSelectedPlayerName}>
                 <Text style={styles.txtSelectedPlayerName}>
-                  {selectedPlayer.firstName}
+                  {selectedPlayer?.firstName}
                 </Text>
                 <Text style={styles.txtSelectedPlayerName}>
-                  {selectedPlayer.lastName}
+                  {selectedPlayer?.lastName}
                 </Text>
               </View>
             </View>
@@ -155,7 +166,10 @@ export default function PlayerSelection({ navigation }) {
             styles.touchOpButton,
             { backgroundColor: "#970F9A", fontSize: 35 },
           ]}
-          onPress={() => Alert.alert("Select")}
+          onPress={() => {
+            // Alert.alert("Select");
+            pressSelect();
+          }}
         >
           <Text style={styles.txtButton}>Select</Text>
         </TouchableOpacity>
@@ -192,26 +206,26 @@ const styles = StyleSheet.create({
     // overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 2, // Adjust thickness as needed
-    borderColor: "gray", // Change color as desired
-    borderStyle: "dashed",
+    // borderWidth: 2, // Adjust thickness as needed
+    // borderColor: "gray", // Change color as desired
+    // borderStyle: "dashed",
   },
   vwTeamBottom: {
     // backgroundColor: "white",
     height: 200,
     width: "100%",
-    borderWidth: 2, // Adjust thickness as needed
-    borderColor: "gray", // Change color as desired
-    borderStyle: "dashed",
+    // borderWidth: 2, // Adjust thickness as needed
+    // borderColor: "gray", // Change color as desired
+    // borderStyle: "dashed",
   },
   vwSelection: {
     flex: 1,
     // backgroundColor: "white",
     // height: 200,
     width: "100%",
-    borderWidth: 2, // Adjust thickness as needed
-    borderColor: "gray", // Change color as desired
-    borderStyle: "dashed",
+    // borderWidth: 2, // Adjust thickness as needed
+    // borderColor: "gray", // Change color as desired
+    // borderStyle: "dashed",
   },
   vwTeamNameGroup: {
     width: Dimensions.get("window").width * 0.85,
@@ -301,9 +315,9 @@ const styles = StyleSheet.create({
   },
   // ----- BOTTOM Container -----
   containerBottom: {
-    borderWidth: 2, // Adjust thickness as needed
-    borderColor: "gray", // Change color as desired
-    borderStyle: "dashed",
+    // borderWidth: 2, // Adjust thickness as needed
+    // borderColor: "gray", // Change color as desired
+    // borderStyle: "dashed",
     // height: "15%",
     display: "flex",
     alignItems: "center",

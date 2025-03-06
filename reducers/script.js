@@ -6,7 +6,7 @@ const initialState = {
   actionsArray: [],
   pointsTableArray: [],
   scriptingPlayerCount: null,
-  scriptingForPlayerName: null, // <-- player name
+  scriptingForPlayerObject: null, // <-- player name
   // /// - testing
   // objToModify: null,
   // testPayloadTime: null,
@@ -190,6 +190,9 @@ export const scriptSlice = createSlice({
       // This action can be dispatched at app startup to ensure correct initialization
       state.playerNamesArrayRotated = [...state.playerNamesArray];
     },
+    setScriptingForPlayerObject: (state, action) => {
+      state.scriptingForPlayerObject = action.payload;
+    },
   },
 });
 
@@ -204,5 +207,6 @@ export const {
   updatePointsTableArray,
   rotatePlayerNamesArray,
   initializePlayerNamesArrayRotated,
+  setScriptingForPlayerObject,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

@@ -7,8 +7,8 @@ const initialState = {
   portraitWidth: null,
   profile: null,
   video: {}, //list received from API GET /videos
-  circleRadiusOuter: 90,
-  circleRadiusMiddle: 60,
+  circleRadiusOuter: 30,
+  circleRadiusMiddle: 30,
   circleRadiusInner: 30,
   scriptPositionGuides: true,
   defaultWheelColors: {
