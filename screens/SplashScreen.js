@@ -57,12 +57,12 @@ export default function SplashScreen({ navigation }) {
           >
             <Text style={styles.txtButton}>Register</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.touchOpButton, { backgroundColor: "#310732" }]}
             onPress={() => console.log("Tuto Mode")}
           >
             <Text style={styles.txtButton}>Tuto Mode</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
       <Text style={{ position: "absolute", bottom: 0, right: 0 }}>

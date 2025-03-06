@@ -691,7 +691,7 @@ export default function ScriptingLive({ navigation }) {
     // console.log(`triggered addNewActionToScriptReducersActionsArrayNoWheel -`);
     const newActionObj = {
       dateScripted: new Date().toISOString(), // Convert to ISO string
-      timeStamp: new Date().toISOString(),
+      timestamp: new Date().toISOString(),
       type: actionPropertiesObj.type
         ? actionPropertiesObj.type
         : "missing type",
