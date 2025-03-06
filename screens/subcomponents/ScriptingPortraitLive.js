@@ -263,7 +263,8 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwScriptingManagementLeft}>
             <ButtonKv
               onPress={() => {
-                dispatch(deleteScript());
+                // dispatch(deleteScript());
+                props.sendScript();
               }}
               style={{
                 backgroundColor: "#970F9A",
@@ -272,7 +273,7 @@ export default function ScriptingPortraitLive(props) {
                 fontSize: 20,
               }}
             >
-              Start
+              Finished
             </ButtonKv>
           </View>
           <View style={styles.vwScriptingManagementRight}>

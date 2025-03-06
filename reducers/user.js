@@ -10,7 +10,7 @@ const initialState = {
   circleRadiusOuter: 30,
   circleRadiusMiddle: 30,
   circleRadiusInner: 30,
-  scriptPositionGuides: true,
+  scriptPositionGuides: false,
   defaultWheelColors: {
     1: "rgba(230, 144, 64, 1)", // right
     2: "rgba(147, 191, 81, 1)", // bottom

@@ -6,15 +6,16 @@ const initialState = {
   actionsArray: [],
   pointsTableArray: [],
   scriptingPlayerCount: null,
-  scriptingForPlayerObject: null, // <-- player name
+  scriptingForPlayerObject: null, // <-- player object (id, firstName, lastName, shirtNumber)
   // /// - testing
   // objToModify: null,
   // testPayloadTime: null,
   // testPayloadQuailty: null,
   // newObj: null,
   // --- These are meant to be hardcoded and available throughout the app --- NO MODIFY in code
-  typesArray: ["Bl", "Def", "Set", "Att"],
+  typesArray: [" ", "Bl", "Def", "Set", "Att"],
   subtypesArray: [
+    " ",
     "B2",
     "B1",
     "BC",

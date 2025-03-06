@@ -100,7 +100,7 @@ export default function ScriptingLive({ navigation }) {
   });
 
   const checkOrientation = async () => {
-    console.log("in checkOrientation");
+    // console.log("in checkOrientation");
     const orientation = await ScreenOrientation.getOrientationAsync();
     // console.log(`orientation is ${orientation}`);
     if (
@@ -113,9 +113,9 @@ export default function ScriptingLive({ navigation }) {
     }
   };
   const handleOrientationChange = async (o) => {
-    console.log(
-      `o.orientationInfo.orientation: ${o.orientationInfo.orientation}`
-    );
+    // console.log(
+    //   `o.orientationInfo.orientation: ${o.orientationInfo.orientation}`
+    // );
     setOrientation(o.orientationInfo.orientation);
     if (
       o.orientationInfo.orientation == 4 ||
@@ -336,10 +336,17 @@ export default function ScriptingLive({ navigation }) {
       });
       // determineTapPlayer(x, y);
 
-      // ----- Record action here ---------------------------------------------
-
+      // // ----- Record action here ---------------------------------------------
+      setCurrentActionType(scriptReducer.typesArray[0]);
+      setCurrentActionSubtype(" ");
+      addNewActionToScriptReducersActionsArrayNoWheel({
+        type: currentActionType,
+        subtype: currentActionSubtype,
+      });
+      // console.log("----- Do we get here ????");
       setTapIsActive(false);
       handleSwipeColorChange("center");
+      console.log("gestureTapBegin: Working (end of function)");
       // }
     }
   });
@@ -366,6 +373,12 @@ export default function ScriptingLive({ navigation }) {
       }
     });
 
+  const gestureSwipeOnEnd = Gesture.Pan() // <-- just for SwipePadWhiteCenter
+    // .maxDuration(10000)
+    .onEnd((event) => {
+      setPadVisible(false);
+      setTapIsActive(true);
+    });
   // const gestureSwipeOnChange = Gesture.Pan().onChange(
   //   (event) => {
   //     // console.log("👍 start gestureSwipeOnChange");
@@ -446,8 +459,8 @@ export default function ScriptingLive({ navigation }) {
   // Combine swipe and tap gestures
   const combinedGestures = Gesture.Simultaneous(
     gestureTapBegin,
-    gestureTapOnEnd
-    // gestureSwipeOnEnd,
+    gestureTapOnEnd,
+    gestureSwipeOnEnd
     // gestureSwipeOnChange
     // gestureLongPress
   );
@@ -665,15 +678,17 @@ export default function ScriptingLive({ navigation }) {
 
     return { x: centeredX, y: centeredY };
   };
-  const calculateDistanceFromCenter = (swipePosX, swipePosY) => {
-    return Math.sqrt(
-      Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
-        Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
-    );
-  };
-  const addNewActionToScriptReducersActionsArray = (actionPropertiesObj) => {
-    // const updateScriptReducerActionsArray = (actionPropertiesObj) => {
-
+  // const calculateDistanceFromCenter = (swipePosX, swipePosY) => {
+  //   return Math.sqrt(
+  //     Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
+  //       Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
+  //   );
+  // };
+  // const addNewActionToScriptReducersActionsArray = (actionPropertiesObj) => {
+  const addNewActionToScriptReducersActionsArrayNoWheel = (
+    actionPropertiesObj
+  ) => {
+    // console.log(`triggered addNewActionToScriptReducersActionsArrayNoWheel -`);
     const newActionObj = {
       dateScripted: new Date().toISOString(), // Convert to ISO string
       timeStamp: new Date().toISOString(),
@@ -684,9 +699,10 @@ export default function ScriptingLive({ navigation }) {
         ? actionPropertiesObj.subtype
         : " missing tap - sub",
       quality: actionPropertiesObj.quality ? actionPropertiesObj.quality : 0,
-      playerId: actionPropertiesObj.playerId
-        ? actionPropertiesObj.playerId
-        : "Player 1",
+      // playerId: actionPropertiesObj.playerId
+      //   ? actionPropertiesObj.playerId
+      //   : "Player 1",
+      playerId: scriptReducer.scriptingForPlayerObject.id,
       scriptId: actionPropertiesObj.scriptId
         ? actionPropertiesObj.scriptId
         : scriptReducer.scriptId,
@@ -699,14 +715,14 @@ export default function ScriptingLive({ navigation }) {
       // newAction: true,
     };
 
-    // console.log(`adding new action with timeStamp = ${newActionObj.timeStamp}`);
-    // updateScriptReducerActionsArray(newActionObj);
-
     // create new array with
     let newScriptReducerActionArray = [
       ...scriptReducer.actionsArray,
       newActionObj,
     ];
+
+    console.log(`newActionObj: ${JSON.stringify(newActionObj)}`);
+
     // sort
     newScriptReducerActionArray.sort((a, b) => a.timeStamp - b.timeStamp);
     dispatch(
@@ -719,10 +735,14 @@ export default function ScriptingLive({ navigation }) {
     } else {
       setScriptReducerActionArray([newActionObj]);
     }
-    setPadVisible(false);
-    setTapIsActive(true);
+
+    //setPadVisible(false);
+    //setTapIsActive(true);
     setSwipePadServeIsActive(false);
     setSwipePadReceptionIsActive(false);
+    console.log(
+      "addNewActionToScriptReducersActionsArrayNoWheel: Working (end of function)"
+    );
   };
 
   const handleChangeType = (newType) => {
@@ -867,6 +887,32 @@ export default function ScriptingLive({ navigation }) {
     // return null; // Nothing renders if all are false
   };
 
+  const sendScript = async () => {
+    console.log("send script");
+    console.log(JSON.stringify(scriptReducer.actionsArray));
+
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/scripts/receive-actions-array`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify({
+          matchId: 1,
+          actionsArray: scriptReducer.actionsArray,
+        }),
+      }
+    );
+    if (response.status !== 200) {
+      console.log(`There was a server error: ${response.status}`);
+      return;
+    }
+
+    dispatch(deleteScript());
+  };
+
   return orientation == "landscape" ? (
     // ------ LANDSCAPE ---------
     <View style={{ flex: 1 }}>
@@ -915,6 +961,7 @@ export default function ScriptingLive({ navigation }) {
         setStdColorOfPositionLines={setStdColorOfPositionLines}
         stdWidthOfPoistionLines={stdWidthOfPoistionLines}
         stdStyleOfPositionLines={stdStyleOfPositionLines}
+        sendScript={sendScript}
       />
       {renderSwipePad()}
       {/* {padVisible && (
@@ -999,6 +1046,7 @@ export default function ScriptingLive({ navigation }) {
         handleWinRallyButtonPress={handleWinRallyButtonPress}
         handlePressedServeOrReception={handlePressedServeOrReception}
         setStdColorOfPositionLines={setStdColorOfPositionLines}
+        sendScript={sendScript}
       />
 
       {/* Conditional rendering */}
