@@ -13,9 +13,8 @@ const initialState = {
   // testPayloadQuailty: null,
   // newObj: null,
   // --- These are meant to be hardcoded and available throughout the app --- NO MODIFY in code
-  typesArray: [" ", "Bl", "Def", "Set", "Att"],
+  typesArray: ["Bl", "Def", "Set", "Att", "tap-default"],
   subtypesArray: [
-    " ",
     "B2",
     "B1",
     "BC",
@@ -28,6 +27,7 @@ const initialState = {
     "Pwr",
     "Rol",
     "B3",
+    "tap-default",
   ],
   qualityArray: ["=", "-", "0", "+", "#"],
   rotationArray: ["P1", "P2", "P3", "P4", "P5", "P6"],

@@ -9,6 +9,7 @@ import ScriptingMatchSelection from "./screens/ScritptingMatchSelection";
 import Scripting from "./screens/Scripting";
 import Admin from "./screens/Admin";
 import ScriptingLive from "./screens/ScriptingLive";
+import ScriptingLive02 from "./screens/ScriptingLive02";
 import SwipePadSettings from "./screens/SwipePadSettings";
 import PlayerSelection from "./screens/PlayerSelection";
 
@@ -67,6 +68,7 @@ export default function App() {
               component={SwipePadSettings}
             />
             <Stack.Screen name="PlayerSelection" component={PlayerSelection} />
+            <Stack.Screen name="ScriptingLive02" component={ScriptingLive02} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>

@@ -337,19 +337,36 @@ export default function ScriptingLive({ navigation }) {
       // determineTapPlayer(x, y);
 
       // // ----- Record action here ---------------------------------------------
-      setCurrentActionType(scriptReducer.typesArray[0]);
-      setCurrentActionSubtype(" ");
+      setCurrentActionType("tap-default");
+      setCurrentActionSubtype("tap-default");
+      // setCurrentActionType(scriptReducer.typesArray[0]);
+      // setCurrentActionSubtype(" ");
+
       addNewActionToScriptReducersActionsArrayNoWheel({
         type: currentActionType,
         subtype: currentActionSubtype,
       });
-      // console.log("----- Do we get here ????");
-      setTapIsActive(false);
+      console.log("----- Do we get here ????");
+
       handleSwipeColorChange("center");
       console.log("gestureTapBegin: Working (end of function)");
       // }
     }
   });
+
+  // // Trigger the function after the state has updated
+  // useEffect(() => {
+  //   if (currentActionType && currentActionSubtype) {
+  //     console.log("adding action ------");
+  //     addNewActionToScriptReducersActionsArrayNoWheel({
+  //       type: currentActionType,
+  //       subtype: currentActionSubtype,
+  //     });
+  //     // setTapIsActive(false);
+  //     setPadVisible(false);
+  //     setTapIsActive(true);
+  //   }
+  // }, [currentActionType, currentActionSubtype]);
 
   const gestureTapOnEnd = Gesture.Tap()
     .maxDuration(10000) // <-- basically if user keeps hold for more than 10 seconds the wheel will just stay there.
@@ -684,6 +701,7 @@ export default function ScriptingLive({ navigation }) {
   //       Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
   //   );
   // };
+
   // const addNewActionToScriptReducersActionsArray = (actionPropertiesObj) => {
   const addNewActionToScriptReducersActionsArrayNoWheel = (
     actionPropertiesObj
@@ -692,16 +710,9 @@ export default function ScriptingLive({ navigation }) {
     const newActionObj = {
       dateScripted: new Date().toISOString(), // Convert to ISO string
       timestamp: new Date().toISOString(),
-      type: actionPropertiesObj.type
-        ? actionPropertiesObj.type
-        : "missing type",
-      subtype: actionPropertiesObj.subtype
-        ? actionPropertiesObj.subtype
-        : " missing tap - sub",
+      type: actionPropertiesObj.type ? actionPropertiesObj.type : " ",
+      subtype: actionPropertiesObj.subtype ? actionPropertiesObj.subtype : " ",
       quality: actionPropertiesObj.quality ? actionPropertiesObj.quality : 0,
-      // playerId: actionPropertiesObj.playerId
-      //   ? actionPropertiesObj.playerId
-      //   : "Player 1",
       playerId: scriptReducer.scriptingForPlayerObject.id,
       scriptId: actionPropertiesObj.scriptId
         ? actionPropertiesObj.scriptId
@@ -709,10 +720,6 @@ export default function ScriptingLive({ navigation }) {
       newAction: actionPropertiesObj.newAction
         ? actionPropertiesObj.newAction
         : true,
-      // quality: 0,
-      // playerId: "Player 1",
-      // scriptId: scriptReducer.scriptId,
-      // newAction: true,
     };
 
     // create new array with
@@ -889,7 +896,8 @@ export default function ScriptingLive({ navigation }) {
 
   const sendScript = async () => {
     console.log("send script");
-    console.log(JSON.stringify(scriptReducer.actionsArray));
+    // console.log(JSON.stringify(scriptReducer.actionsArray));
+    console.log(JSON.stringify(tempActionsArray));
 
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/scripts/receive-actions-array`,
@@ -901,7 +909,8 @@ export default function ScriptingLive({ navigation }) {
         },
         body: JSON.stringify({
           matchId: 1,
-          actionsArray: scriptReducer.actionsArray,
+          // actionsArray: scriptReducer.actionsArray,
+          actionsArray: tempActionsArray,
         }),
       }
     );

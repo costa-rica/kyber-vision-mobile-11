@@ -59,8 +59,13 @@ export default function PlayerSelection({ navigation }) {
   };
 
   const pressSelect = () => {
-    dispatch(setScriptingForPlayerObject(selectedPlayer));
-    navigation.navigate("ScriptingLive");
+    if (selectedPlayer) {
+      dispatch(setScriptingForPlayerObject(selectedPlayer));
+      // navigation.navigate("ScriptingLive");
+      navigation.navigate("ScriptingLive02");
+    } else {
+      alert("Must select a player");
+    }
   };
 
   const PlayerRow = ({ player, onSelect }) => {
