@@ -62,7 +62,7 @@ export default function PlayerSelection({ navigation }) {
     if (selectedPlayer) {
       dispatch(setScriptingForPlayerObject(selectedPlayer));
       // navigation.navigate("ScriptingLive");
-      navigation.navigate("ScriptingLive02");
+      navigation.navigate("ScriptingLive03");
     } else {
       alert("Must select a player");
     }
