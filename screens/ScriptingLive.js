@@ -906,7 +906,8 @@ export default function ScriptingLive({ navigation }) {
       }
     );
     if (response.status !== 200) {
-      console.log(`There was a server error: ${response.status}`);
+      // console.log(`There was a server error: ${response.status}`);
+      alert(`There was a server error: ${response.status}`);
       return;
     }
 
