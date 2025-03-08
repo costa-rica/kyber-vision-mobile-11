@@ -16,17 +16,17 @@ import ButtonKv from "./ButtonKv";
 import {
   GestureHandlerRootView,
   GestureDetector,
-  Gesture,
+  // Gesture,
 } from "react-native-gesture-handler";
 
-import {
-  newScript,
-  deleteScript,
-  replaceScriptActionArray,
-  updateQualityPropertyInObjectOfActionsArray,
-  updateTypePropertyInObjectOfActionsArray,
-  updateSubtypePropertyInObjectOfActionsArray,
-} from "../../reducers/script";
+// import {
+//   newScript,
+//   deleteScript,
+//   replaceScriptActionArray,
+//   updateQualityPropertyInObjectOfActionsArray,
+//   updateTypePropertyInObjectOfActionsArray,
+//   updateSubtypePropertyInObjectOfActionsArray,
+// } from "../../reducers/script";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
@@ -112,7 +112,9 @@ export default function ScriptingPortraitLive(props) {
           style={styles.vwTitle}
           // onLayout={(event) => handleVwTitleLayout(event)}
         >
-          <Text style={styles.txtTitleAdmin}>AUC vs Arles</Text>
+          <Text style={styles.txtTitleAdmin}>
+            {scriptReducer.scriptingTeamObject.teamName}
+          </Text>
         </View>
         <View style={styles.vwScore}>
           <View style={styles.vwScoreSubGroup}>
@@ -157,8 +159,10 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwScorePoistionalFormation}>
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.rotationArray}
-              onChange={props.setRotation}
-              value={props.rotation}
+              // onChange={props.setRotation}
+              onChange={props.setCurrentActionRotation}
+              // value={props.rotation}
+              value={props.currentActionRotation}
               style={{ ...props.stdPickerStyle, width: 50 }}
               pickerName={"rotationPortrait"}
             />
@@ -195,11 +199,12 @@ export default function ScriptingPortraitLive(props) {
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.qualityArray}
               onChange={props.handleChangeQuality}
-              value={
-                scriptReducer.actionsArray[
-                  scriptReducer.actionsArray.length - 1
-                ]?.quality || "0"
-              }
+              // value={
+              //   scriptReducer.actionsArray[
+              //     scriptReducer.actionsArray.length - 1
+              //   ]?.quality || "0"
+              // }
+              value={props.currentActionQuality}
               style={props.stdPickerStyle}
               pickerName={"qualityPortrait"}
             />
@@ -207,8 +212,10 @@ export default function ScriptingPortraitLive(props) {
           <View style={styles.vwActionDetailsPosition}>
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.positionalAreasArray}
-              onChange={props.setPositionalArea}
-              value={props.positionalArea}
+              // onChange={props.setPositionalArea}
+              onChange={props.setCurrentActionPositionalArea}
+              // value={props.positionalArea}
+              value={props.currentActionPositionalArea}
               style={props.stdPickerStyle}
               pickerName={"positionalAreaPortrait"}
             />
@@ -220,11 +227,16 @@ export default function ScriptingPortraitLive(props) {
                 // scriptReducer.playerNamesArrayRotated
                 [scriptReducer.scriptingForPlayerObject?.firstName]
               )}
-              onChange={props.setPlayerName}
-              value={props.playerName.substring(
+              // onChange={props.setPlayerName}
+              onChange={props.setCurrentActionPlayerName}
+              value={props.currentActionPlayerName.substring(
                 0,
                 props.stdTruncatePlayerNameLength
               )}
+              // value={props.playerName.substring(
+              //   0,
+              //   props.stdTruncatePlayerNameLength
+              // )}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
               selectedIsBold={false}
             />
@@ -233,12 +245,12 @@ export default function ScriptingPortraitLive(props) {
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.typesArray}
               onChange={props.handleChangeType}
-              // value={props.type}
-              value={
-                scriptReducer.actionsArray[
-                  scriptReducer.actionsArray.length - 1
-                ]?.type || "Bloc"
-              }
+              value={props.currentActionType}
+              // value={
+              //   scriptReducer.actionsArray[
+              //     scriptReducer.actionsArray.length - 1
+              //   ]?.type || "Bloc"
+              // }
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
               pickerName={"typePortrait"}
@@ -248,11 +260,12 @@ export default function ScriptingPortraitLive(props) {
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.subtypesArray}
               onChange={props.handleChangeSubtype}
-              value={
-                scriptReducer.actionsArray[
-                  scriptReducer.actionsArray.length - 1
-                ]?.subtype || ""
-              }
+              value={props.currentActionSubtype}
+              // value={
+              //   scriptReducer.actionsArray[
+              //     scriptReducer.actionsArray.length - 1
+              //   ]?.subtype || ""
+              // }
               // value={scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype ? scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1].subtype : ""}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
               pickerName={"subtypePortrait"}

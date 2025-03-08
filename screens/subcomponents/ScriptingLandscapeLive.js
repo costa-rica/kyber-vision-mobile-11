@@ -107,8 +107,10 @@ export default function ScriptingLandscapeLive(props) {
           <View style={styles.vwPositionCapsule}>
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.rotationArray}
-              onChange={props.setRotation}
-              value={props.rotation}
+              // onChange={props.setRotation}
+              onChange={props.setCurrentActionRotation}
+              // value={props.rotation}
+              value={props.currentActionRotation}
               style={{
                 ...props.stdPickerStyle,
                 itemHeight: 30,
@@ -119,7 +121,9 @@ export default function ScriptingLandscapeLive(props) {
             />
           </View>
           <View style={styles.vwTeamName}>
-            <Text style={styles.txtTeamName}>Aix'Otic</Text>
+            <Text style={styles.txtTeamName}>
+              {scriptReducer.scriptingTeamObject.teamName}
+            </Text>
           </View>
           <View style={styles.vwSetCircles}>
             {Array.from({ length: 3 }).map((_, index) => (
@@ -724,21 +728,26 @@ export default function ScriptingLandscapeLive(props) {
           <View style={styles.vwActionDetailsQuality}>
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.qualityArray}
-              onChange={props.handleChangeQuality}
-              value={
-                scriptReducer.actionsArray[
-                  scriptReducer.actionsArray.length - 1
-                ]?.quality || "0"
-              }
+              // onChange={props.handleChangeQuality}
+              onChange={props.setCurrentActionQuality}
+              // value={
+              //   scriptReducer.actionsArray[
+              //     scriptReducer.actionsArray.length - 1
+              //   ]?.quality || "0"
+              // }
+              value={props.currentActionQuality}
               style={props.stdPickerStyle}
+              pickerName="qualityLandscape"
             />
           </View>
           <View style={styles.vwActionDetailsPosition}>
             <SinglePickerWithSideBorders
               // arrayElements={[1, 2, 3, 4, 5, 6]}
               arrayElements={scriptReducer.positionalAreasArray}
-              onChange={props.setPositionalArea}
-              value={props.positionalArea}
+              // onChange={props.setPositionalArea}
+              onChange={props.setCurrentActionPositionalArea}
+              // value={props.positionalArea}
+              value={props.currentActionPositionalArea}
               style={props.stdPickerStyle}
               pickerName="positionalAreaLandscape"
             />
@@ -748,11 +757,13 @@ export default function ScriptingLandscapeLive(props) {
               arrayElements={props.truncateArrayElements([
                 scriptReducer.scriptingForPlayerObject?.firstName,
               ])}
-              onChange={props.setPlayerName}
-              value={props.playerName.substring(
-                0,
-                props.stdTruncatePlayerNameLength
-              )}
+              // onChange={props.setPlayerName}
+              onChange={props.setCurrentActionPlayerName}
+              // value={props.playerName.substring(
+              //   0,
+              //   props.stdTruncatePlayerNameLength
+              // )}
+              value={props.currentActionPlayerName}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 18 }}
               selectedIsBold={false}
               pickerName="playerNameLandscape"
@@ -761,12 +772,14 @@ export default function ScriptingLandscapeLive(props) {
           <View style={styles.vwActionDetailsType}>
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.typesArray}
+              // onChange={props.handleChangeType}
               onChange={props.handleChangeType}
-              value={
-                scriptReducer.actionsArray[
-                  scriptReducer.actionsArray.length - 1
-                ]?.type || "Bloc"
-              }
+              // value={
+              //   scriptReducer.actionsArray[
+              //     scriptReducer.actionsArray.length - 1
+              //   ]?.type || "Bloc"
+              // }
+              value={props.currentActionType}
               style={{ ...props.stdPickerStyle, width: 50, fontSize: 20 }}
               selectedIsBold={false}
               pickerName="typeLandscape"
@@ -775,12 +788,14 @@ export default function ScriptingLandscapeLive(props) {
           <View style={styles.vwActionDetailsSubtype}>
             <SinglePickerWithSideBorders
               arrayElements={scriptReducer.subtypesArray}
+              // onChange={props.handleChangeSubtype}
               onChange={props.handleChangeSubtype}
-              value={
-                scriptReducer.actionsArray[
-                  scriptReducer.actionsArray.length - 1
-                ]?.subtype || ""
-              }
+              // value={
+              //   scriptReducer.actionsArray[
+              //     scriptReducer.actionsArray.length - 1
+              //   ]?.subtype || ""
+              // }
+              value={props.currentActionSubtype}
               style={{ ...props.stdPickerStyle, width: 60, fontSize: 15 }}
               pickerName="subtypeLandscape"
             />

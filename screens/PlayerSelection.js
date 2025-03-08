@@ -13,7 +13,10 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import TemplateView from "./subcomponents/TemplateView";
-import { setScriptingForPlayerObject } from "../reducers/script";
+import {
+  setScriptingForPlayerObject,
+  setScriptingTeamObject,
+} from "../reducers/script";
 
 export default function PlayerSelection({ navigation }) {
   const dispatch = useDispatch();
@@ -47,6 +50,7 @@ export default function PlayerSelection({ navigation }) {
       const resJson = await response.json();
       // console.log(resJson);
       setSelectedTeam(resJson.team);
+      dispatch(setScriptingTeamObject(resJson.team));
       const tempPlayerList = [];
       for (const elem of resJson.players) {
         tempPlayerList.push(elem);
@@ -61,8 +65,8 @@ export default function PlayerSelection({ navigation }) {
   const pressSelect = () => {
     if (selectedPlayer) {
       dispatch(setScriptingForPlayerObject(selectedPlayer));
-      // navigation.navigate("ScriptingLive");
-      navigation.navigate("ScriptingLive03");
+      navigation.navigate("ScriptingLive");
+      // navigation.navigate("ScriptingLive03");
     } else {
       alert("Must select a player");
     }

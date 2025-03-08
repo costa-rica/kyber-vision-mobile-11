@@ -1,19 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  scriptId: null,
-  tokenWithUserId: null,
+  // scriptId: null,
+  // tokenWithUserId: null,
   actionsArray: [],
   pointsTableArray: [],
   scriptingPlayerCount: null,
   scriptingForPlayerObject: null, // <-- player object (id, firstName, lastName, shirtNumber)
+  scriptingTeamObject: null, // <-- team object (id, name)
   // /// - testing
   // objToModify: null,
   // testPayloadTime: null,
   // testPayloadQuailty: null,
   // newObj: null,
   // --- These are meant to be hardcoded and available throughout the app --- NO MODIFY in code
-  typesArray: ["Bl", "Def", "Set", "Att", "tap-default"],
+  typesArray: ["Bl", "Def", "Set", "Att", "tap"],
   subtypesArray: [
     "B2",
     "B1",
@@ -27,7 +28,7 @@ const initialState = {
     "Pwr",
     "Rol",
     "B3",
-    "tap-default",
+    "tap",
   ],
   qualityArray: ["=", "-", "0", "+", "#"],
   rotationArray: ["P1", "P2", "P3", "P4", "P5", "P6"],
@@ -70,9 +71,10 @@ export const scriptSlice = createSlice({
       state.tokenWithUserId = action.payload.userId;
       console.log("END newScript (in script reduer)");
     },
-    deleteScript: (state) => {
-      state.scriptId = null;
-      state.tokenWithUserId = null;
+    // deleteScript: (state) => {
+    emptyActionsArray: (state) => {
+      // state.scriptId = null;
+      // state.tokenWithUserId = null;
       state.actionsArray = [];
     },
     replaceScriptActionArray: (state, action) => {
@@ -84,11 +86,11 @@ export const scriptSlice = createSlice({
     },
 
     updateQualityPropertyInObjectOfActionsArray: (state, action) => {
-      const { timeStamp, quality } = action.payload;
+      const { timestamp, quality } = action.payload;
 
       // Find the index of the object to update
       const index = state.actionsArray.findIndex(
-        (obj) => obj.timeStamp === timeStamp
+        (obj) => obj.timestamp === timestamp
       );
       if (index !== -1) {
         // Create a new object with the updated quality
@@ -103,16 +105,16 @@ export const scriptSlice = createSlice({
 
         // Sort the array by timeStamp
         state.actionsArray = updatedArray.sort(
-          (a, b) => a.timeStamp - b.timeStamp
+          (a, b) => a.timestamp - b.timestamp
         );
       }
     },
     updateTypePropertyInObjectOfActionsArray: (state, action) => {
-      const { timeStamp, type } = action.payload;
+      const { timestamp, type } = action.payload;
 
       // Find the index of the object to update
       const index = state.actionsArray.findIndex(
-        (obj) => obj.timeStamp === timeStamp
+        (obj) => obj.timestamp === timestamp
       );
       if (index !== -1) {
         // Create a new object with the updated quality
@@ -127,16 +129,16 @@ export const scriptSlice = createSlice({
 
         // Sort the array by timeStamp
         state.actionsArray = updatedArray.sort(
-          (a, b) => a.timeStamp - b.timeStamp
+          (a, b) => a.timestamp - b.timestamp
         );
       }
     },
     updateSubtypePropertyInObjectOfActionsArray: (state, action) => {
-      const { timeStamp, subtype } = action.payload;
+      const { timestamp, subtype } = action.payload;
 
       // Find the index of the object to update
       const index = state.actionsArray.findIndex(
-        (obj) => obj.timeStamp === timeStamp
+        (obj) => obj.timestamp === timestamp
       );
       if (index !== -1) {
         // Create a new object with the updated quality
@@ -151,7 +153,7 @@ export const scriptSlice = createSlice({
 
         // Sort the array by timeStamp
         state.actionsArray = updatedArray.sort(
-          (a, b) => a.timeStamp - b.timeStamp
+          (a, b) => a.timestamp - b.timestamp
         );
       }
     },
@@ -171,21 +173,6 @@ export const scriptSlice = createSlice({
         ];
       }
     },
-    // rotatePlayerNamesArray: (state) => {
-    //   if (state.playerNamesArrayRotated.length === 0) {
-    //     // Initialize if not already set
-    //     state.playerNamesArrayRotated = [...state.playerNamesArray];
-    //   }
-    //   if (state.playerNamesArrayRotated.length > 1) {
-    //     // Rotate array elements
-    //     state.playerNamesArrayRotated = [
-    //       state.playerNamesArrayRotated[
-    //         state.playerNamesArrayRotated.length - 1
-    //       ],
-    //       ...state.playerNamesArrayRotated.slice(0, -1),
-    //     ];
-    //   }
-    // },
     initializePlayerNamesArrayRotated: (state) => {
       console.log("--- >  initializePlayerNamesArrayRotated");
       // This action can be dispatched at app startup to ensure correct initialization
@@ -194,12 +181,16 @@ export const scriptSlice = createSlice({
     setScriptingForPlayerObject: (state, action) => {
       state.scriptingForPlayerObject = action.payload;
     },
+    setScriptingTeamObject: (state, action) => {
+      state.scriptingTeamObject = action.payload;
+    },
   },
 });
 
 export const {
   newScript,
-  deleteScript,
+  // deleteScript,
+  emptyActionsArray,
   replaceScriptActionArray,
   updateScriptingPlayerCount,
   updateQualityPropertyInObjectOfActionsArray,
@@ -209,5 +200,6 @@ export const {
   rotatePlayerNamesArray,
   initializePlayerNamesArrayRotated,
   setScriptingForPlayerObject,
+  setScriptingTeamObject,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

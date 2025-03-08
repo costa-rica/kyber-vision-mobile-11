@@ -13,6 +13,9 @@ import {
   StatusBar,
   SafeAreaView,
   Platform,
+  BackHandler,
+  // NativeModules,
+  // AppState,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -37,7 +40,7 @@ export default function Home({ navigation }) {
             />
           </View>
           <View style={styles.vwWelcome}>
-            <Text style={styles.txtWelcome}>Welcome to TribeName</Text>
+            <Text style={styles.txtWelcome}>Welcome</Text>
           </View>
         </View>
         {/* -------- MIDDLE ----- */}
@@ -110,13 +113,24 @@ export default function Home({ navigation }) {
               styles.touchOpButton,
               { backgroundColor: "#970F9A", fontSize: 35 },
             ]}
-            onPress={() => Alert.alert("Exit")}
+            onPress={() => {
+              // Alert.alert("Exit")
+              if (Platform.OS === "android") {
+                BackHandler.exitApp(); // Closes the app on Android
+              } else {
+                Alert.alert(
+                  "", // 👈 Empty title to remove "Alert"
+                  "Press the Home button or swipe up to exit the app.",
+                  [{ text: "OK" }]
+                );
+              }
+            }}
           >
-            <Text style={styles.txtButton}>Exit</Text>
+            <Text style={styles.txtButton}>Close app</Text>
           </TouchableOpacity>
         </View>
         {/* -------- BOTTOM ----- */}
-        <View style={styles.containerBottom}>
+        {/* <View style={styles.containerBottom}>
           <View style={styles.vwBottomBand}>
             <TouchableOpacity
               style={styles.touchOpCircleTeamIcon}
@@ -135,7 +149,7 @@ export default function Home({ navigation }) {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
       </View>
     </TemplateView>
   );

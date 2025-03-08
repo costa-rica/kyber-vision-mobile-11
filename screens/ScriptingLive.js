@@ -25,7 +25,8 @@ import SwipePadWhiteCircle from "./subcomponents/swipePads/SwipePadWhiteCircle";
 import { useSelector } from "react-redux";
 import {
   newScript,
-  deleteScript,
+  // deleteScript,
+  emptyActionsArray,
   replaceScriptActionArray,
   updateQualityPropertyInObjectOfActionsArray,
   updateTypePropertyInObjectOfActionsArray,
@@ -70,18 +71,28 @@ export default function ScriptingLive({ navigation }) {
   const [scoreTeamOpponent, setScoreTeamOpponent] = useState(0);
   const [setsTeamOpponent, setSetsTeamOpponent] = useState(0);
   // Belongs to positional formation SinglePickerWithSideBorders
-  const [rotation, setRotation] = useState(scriptReducer.rotationArray[0]);
-  const [quality, setQuality] = useState(scriptReducer.qualityArray[2]);
-  // const [position, setPosition] = useState(1);
-  const [positionalArea, setPositionalArea] = useState(
-    scriptReducer.positionalAreasArray[0]
+  // const [rotation, setRotation] = useState(scriptReducer.rotationArray[0]);
+  const [currentActionRotation, setCurrentActionRotation] = useState(
+    scriptReducer.rotationArray[0]
   );
-  const [playerName, setPlayerName] = useState(
-    // scriptReducer.playerNamesArrayRotated[0]
+  // const [quality, setQuality] = useState(scriptReducer.qualityArray[2]);
+  const [currentActionQuality, setCurrentActionQuality] = useState(
+    scriptReducer.qualityArray[2]
+  );
+  // const [position, setPosition] = useState(1);
+  // const [positionalArea, setPositionalArea] = useState(
+  //   scriptReducer.positionalAreasArray[0]
+  // );
+  const [currentActionPositionalArea, setCurrentActionPositionalArea] =
+    useState(scriptReducer.positionalAreasArray[0]);
+  // const [playerName, setPlayerName] = useState(
+  //   scriptReducer.scriptingForPlayerObject?.firstName
+  // );
+  const [currentActionPlayerName, setCurrentActionPlayerName] = useState(
     scriptReducer.scriptingForPlayerObject?.firstName
   );
-  const [type, setType] = useState(scriptReducer.typesArray[0]);
-  const [subtype, setSubtype] = useState(scriptReducer.subtypesArray[0]);
+  // const [type, setType] = useState(scriptReducer.typesArray[0]);
+  // const [subtype, setSubtype] = useState(scriptReducer.subtypesArray[0]);
 
   // orientation
   const [orientation, setOrientation] = useState("portrait");
@@ -133,7 +144,7 @@ export default function ScriptingLive({ navigation }) {
     }
   };
 
-  useEffect(() => {}, [positionalArea]);
+  useEffect(() => {}, [currentActionPositionalArea]);
   // --- Dynamic styles ---
   const stdTruncatePlayerNameLength = 4;
   const truncateArrayElements = (
@@ -184,8 +195,12 @@ export default function ScriptingLive({ navigation }) {
     padPosCenterY: 0,
   });
   const [tapIsActive, setTapIsActive] = useState(true);
-  const [currentActionType, setCurrentActionType] = useState(null);
-  const [currentActionSubtype, setCurrentActionSubtype] = useState(null);
+  const [currentActionType, setCurrentActionType] = useState(
+    scriptReducer.typesArray[scriptReducer.typesArray.length - 1]
+  );
+  const [currentActionSubtype, setCurrentActionSubtype] = useState(
+    scriptReducer.subtypesArray[scriptReducer.subtypesArray.length - 1]
+  );
   // const [actionList, setActionList] = useState([]);
   const [opponentServed, setOpponentServed] = useState(
     scriptReducer.pointsTableArray[scriptReducer.pointsTableArray.length - 1]
@@ -337,15 +352,16 @@ export default function ScriptingLive({ navigation }) {
       // determineTapPlayer(x, y);
 
       // // ----- Record action here ---------------------------------------------
-      setCurrentActionType("tap-default");
-      setCurrentActionSubtype("tap-default");
+      setCurrentActionType(
+        scriptReducer.typesArray[scriptReducer.typesArray.length - 1]
+      );
+      setCurrentActionSubtype(
+        scriptReducer.subtypesArray[scriptReducer.subtypesArray.length - 1]
+      );
       // setCurrentActionType(scriptReducer.typesArray[0]);
       // setCurrentActionSubtype(" ");
 
-      addNewActionToScriptReducersActionsArrayNoWheel({
-        type: currentActionType,
-        subtype: currentActionSubtype,
-      });
+      addNewActionToScriptReducersActionsArrayNoWheel();
       console.log("----- Do we get here ????");
 
       handleSwipeColorChange("center");
@@ -703,23 +719,21 @@ export default function ScriptingLive({ navigation }) {
   // };
 
   // const addNewActionToScriptReducersActionsArray = (actionPropertiesObj) => {
-  const addNewActionToScriptReducersActionsArrayNoWheel = (
-    actionPropertiesObj
-  ) => {
+  const addNewActionToScriptReducersActionsArrayNoWheel = () => {
     // console.log(`triggered addNewActionToScriptReducersActionsArrayNoWheel -`);
     const newActionObj = {
       dateScripted: new Date().toISOString(), // Convert to ISO string
       timestamp: new Date().toISOString(),
-      type: actionPropertiesObj.type ? actionPropertiesObj.type : " ",
-      subtype: actionPropertiesObj.subtype ? actionPropertiesObj.subtype : " ",
-      quality: actionPropertiesObj.quality ? actionPropertiesObj.quality : 0,
+      type: scriptReducer.typesArray[scriptReducer.typesArray.length - 1],
+      subtype:
+        scriptReducer.subtypesArray[scriptReducer.subtypesArray.length - 1],
+      quality: scriptReducer.qualityArray[2],
       playerId: scriptReducer.scriptingForPlayerObject.id,
-      scriptId: actionPropertiesObj.scriptId
-        ? actionPropertiesObj.scriptId
-        : scriptReducer.scriptId,
-      newAction: actionPropertiesObj.newAction
-        ? actionPropertiesObj.newAction
-        : true,
+      setNumber: 0,
+      scoreTeamAnalyzed: 0,
+      scoreTeamOpponent: 0,
+      rotation: scriptReducer.rotationArray[0],
+      opponentServed: false,
     };
 
     // create new array with
@@ -755,35 +769,38 @@ export default function ScriptingLive({ navigation }) {
   const handleChangeType = (newType) => {
     const currentActionTimestamp =
       scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]
-        ?.timeStamp;
+        ?.timestamp;
     dispatch(
       updateTypePropertyInObjectOfActionsArray({
-        timeStamp: currentActionTimestamp,
+        timestamp: currentActionTimestamp,
         type: newType,
       })
     );
+    setCurrentActionType(newType);
   };
   const handleChangeSubtype = (newSubtype) => {
     const currentActionTimestamp =
       scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]
-        ?.timeStamp;
+        ?.timestamp;
     dispatch(
       updateSubtypePropertyInObjectOfActionsArray({
-        timeStamp: currentActionTimestamp,
+        timestamp: currentActionTimestamp,
         subtype: newSubtype,
       })
     );
+    setCurrentActionSubtype(newSubtype);
   };
   const handleChangeQuality = (newQuality) => {
     const currentActionTimestamp =
       scriptReducer.actionsArray[scriptReducer.actionsArray.length - 1]
-        ?.timeStamp;
+        ?.timestamp;
     dispatch(
       updateQualityPropertyInObjectOfActionsArray({
-        timeStamp: currentActionTimestamp,
+        timestamp: currentActionTimestamp,
         quality: newQuality,
       })
     );
+    setCurrentActionQuality(newQuality);
   };
 
   // Score Logic
@@ -797,7 +814,7 @@ export default function ScriptingLive({ navigation }) {
 
     // console.log(`previous score: ${teamOpponentPreviousScore}`);
 
-    let rotationTemp = rotation;
+    let rotationTemp = currentActionRotation;
 
     if (
       (teamOpponentPreviousScore != null &&
@@ -808,7 +825,7 @@ export default function ScriptingLive({ navigation }) {
       //   (scriptReducer.rotationArray.indexOf(rotation) + 1) %
       //   scriptReducer.rotationArray.length;
       const prevRotationIndex =
-        (scriptReducer.rotationArray.indexOf(rotation) -
+        (scriptReducer.rotationArray.indexOf(currentActionRotation) -
           1 +
           scriptReducer.rotationArray.length) %
         scriptReducer.rotationArray.length;
@@ -831,7 +848,7 @@ export default function ScriptingLive({ navigation }) {
       ...scriptReducer.pointsTableArray,
       pointsTableArrayElemObj,
     ];
-    setRotation(rotationTemp);
+    setCurrentActionRotation(rotationTemp);
     setScoreTeamAnalyzed(newScoreTeamAnalyzed);
     dispatch(updatePointsTableArray({ pointsTableArray }));
   };
@@ -896,8 +913,8 @@ export default function ScriptingLive({ navigation }) {
 
   const sendScript = async () => {
     console.log("send script");
-    // console.log(JSON.stringify(scriptReducer.actionsArray));
-    console.log(JSON.stringify(tempActionsArray));
+    console.log(JSON.stringify(scriptReducer.actionsArray));
+    // console.log(JSON.stringify(tempActionsArray));
 
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/scripts/receive-actions-array`,
@@ -909,8 +926,8 @@ export default function ScriptingLive({ navigation }) {
         },
         body: JSON.stringify({
           matchId: 1,
-          // actionsArray: scriptReducer.actionsArray,
-          actionsArray: tempActionsArray,
+          actionsArray: scriptReducer.actionsArray,
+          // actionsArray: tempActionsArray,
         }),
       }
     );
@@ -920,7 +937,7 @@ export default function ScriptingLive({ navigation }) {
       return;
     }
 
-    dispatch(deleteScript());
+    dispatch(emptyActionsArray());
     let resJson = null;
     const contentType = response.headers.get("Content-Type");
 
@@ -950,22 +967,18 @@ export default function ScriptingLive({ navigation }) {
         scoreTeamOpponent={scoreTeamOpponent}
         setsTeamOpponent={setsTeamOpponent}
         stdPickerStyle={stdPickerStyleLandscape}
-        setRotation={setRotation}
-        rotation={rotation}
-        setQuality={setQuality}
-        quality={quality}
-        positionalArea={positionalArea}
-        setPositionalArea={setPositionalArea}
-        // setPosition={setPosition}
-        // position={position}
+        setCurrentActionRotation={setCurrentActionRotation}
+        currentActionRotation={currentActionRotation}
+        setCurrentActionQuality={setCurrentActionQuality}
+        currentActionQuality={currentActionQuality}
+        currentActionPositionalArea={currentActionPositionalArea}
+        setCurrentActionPositionalArea={setCurrentActionPositionalArea}
         truncateArrayElements={truncateArrayElements}
         stdTruncatePlayerNameLength={stdTruncatePlayerNameLength}
-        setPlayerName={setPlayerName}
-        playerName={playerName}
-        setType={setType}
-        type={type}
-        setSubtype={setSubtype}
-        subtype={subtype}
+        setCurrentActionPlayerName={setCurrentActionPlayerName}
+        currentActionPlayerName={currentActionPlayerName}
+        currentActionType={currentActionType}
+        currentActionSubtype={currentActionSubtype}
         combinedGestures={combinedGestures}
         setGestureViewCoords={setGestureViewCoords}
         handleChangeType={handleChangeType}
@@ -1038,22 +1051,24 @@ export default function ScriptingLive({ navigation }) {
         scoreTeamOpponent={scoreTeamOpponent}
         setSetsTeamOpponent={setSetsTeamOpponent}
         setsTeamOpponent={setsTeamOpponent}
-        setRotation={setRotation}
-        rotation={rotation}
-        setQuality={setQuality}
-        quality={quality}
+        setCurrentActionRotation={setCurrentActionRotation}
+        currentActionRotation={currentActionRotation}
+        setCurrentActionQuality={setCurrentActionQuality}
+        currentActionQuality={currentActionQuality}
         // setPosition={setPosition}
         // position={position}
-        setPositionalArea={setPositionalArea}
-        positionalArea={positionalArea}
+        setCurrentActionPositionalArea={setCurrentActionPositionalArea}
+        currentActionPositionalArea={currentActionPositionalArea}
         truncateArrayElements={truncateArrayElements}
         stdTruncatePlayerNameLength={stdTruncatePlayerNameLength}
-        setPlayerName={setPlayerName}
-        playerName={playerName}
-        setType={setType}
-        type={type}
-        setSubtype={setSubtype}
-        subtype={subtype}
+        setCurrentActionPlayerName={setCurrentActionPlayerName}
+        currentActionPlayerName={currentActionPlayerName}
+        currentActionType={currentActionType}
+        currentActionSubtype={currentActionSubtype}
+        // setType={setType}
+        // type={type}
+        // setSubtype={setSubtype}
+        // subtype={subtype}
         combinedGestures={combinedGestures}
         setGestureViewCoords={setGestureViewCoords}
         gestureViewCoords={gestureViewCoords}

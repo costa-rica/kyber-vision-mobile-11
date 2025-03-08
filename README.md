@@ -10,9 +10,21 @@ Vollyball training application. This version has SwipePad implemented in Live Sc
 
 - Implementing Video scripting
 
-### not all yet implemented
+### ScriptingLive: action capture logic
 
-- design a new Portrait mode scripting with new design - must have space to tap.
+Process found in ScriptingLive03.js - use actionArray from scriptReducer
+
+1. useState for currentAction is set to the scriptReducer.typesArray[position_of_desired_default_value].
+2. onTap triggers addActionToActionsArray:
+
+   1. setCurrentActionType is set to the default value: scriptReducer.typesArray[position_of_desired_default_value].
+   2. newActionObj is created with the default value: scriptReducer.subtypesArray[position_of_desired_default_value].
+
+3. handleChangeType:
+   1. condition for if actionArray.length > 0
+   2. find last action in action array
+   3. replace the type i.e. lastAction = { ...lastAction, type: newType }
+   4. set currentActionType to newType .i.e setCurrentActionType(newType)
 
 ## .env
 
