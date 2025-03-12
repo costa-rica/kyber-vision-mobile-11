@@ -7,6 +7,7 @@ const initialState = {
   portraitWidth: null,
   profile: null,
   video: {}, //list received from API GET /videos
+  // videosDownloadedStatusObj: {},
   circleRadiusOuter: 30,
   circleRadiusMiddle: 30,
   circleRadiusInner: 30,
@@ -99,6 +100,15 @@ export const userSlice = createSlice({
       console.log("switchPositionGuides");
       state.scriptPositionGuides = !state.scriptPositionGuides;
     },
+    // setVideosDownloadedStatusObj: (state, action) => {
+    //   const videoDownloadFileName = action.payload.videoDownloadFileName;
+    //   const videoIsDownloaded = action.payload.videoIsDownloaded;
+    //   let updatedObj = {
+    //     ...state.videosDownloadedStatusObj,
+    //     [videoDownloadFileName]: videoIsDownloaded,
+    //   };
+    //   state.videosDownloadedStatusObj = updatedObj;
+    // },
   },
 });
 
@@ -108,6 +118,7 @@ export const {
   reducerSetScreenDimensions,
   reducerSetUserSwipePadWheel,
   switchPositionGuides,
+  // setVideosDownloadedStatusObj,
 } = userSlice.actions;
 export default userSlice.reducer;
 

@@ -57,7 +57,8 @@ export default function Home({ navigation }) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.touchOpButton, { backgroundColor: "#E1B5D5" }]}
-                onPress={() => Alert.alert("Player Review")}
+                onPress={() => navigation.navigate("ReviewMatchSelection")}
+                // onPress={() => navigation.navigate("ReviewVideo")}
               >
                 <Text style={styles.txtButton}>Player Review</Text>
               </TouchableOpacity>

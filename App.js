@@ -13,17 +13,21 @@ import ScriptingLive02 from "./screens/ScriptingLive02";
 import ScriptingLive03 from "./screens/ScriptingLive03";
 import SwipePadSettings from "./screens/SwipePadSettings";
 import PlayerSelection from "./screens/PlayerSelection";
+import ReviewMatchSelection from "./screens/ReviewMatchSelection";
+import ReviewVideo from "./screens/ReviewVideo";
+import ReviewVideoLandscape from "./screens/subcomponents/ReviewVideoLandscape";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
 import script from "./reducers/script";
+import review from "./reducers/review";
 import { useEffect, useState } from "react";
 // import * as ScreenOrientation from "expo-screen-orientation";
 import * as Font from "expo-font";
 
 const store = configureStore({
-  reducer: { user, script },
+  reducer: { user, script, review },
 });
 
 export default function App() {
@@ -71,6 +75,15 @@ export default function App() {
             <Stack.Screen name="PlayerSelection" component={PlayerSelection} />
             <Stack.Screen name="ScriptingLive02" component={ScriptingLive02} />
             <Stack.Screen name="ScriptingLive03" component={ScriptingLive03} />
+            <Stack.Screen
+              name="ReviewMatchSelection"
+              component={ReviewMatchSelection}
+            />
+            <Stack.Screen name="ReviewVideo" component={ReviewVideo} />
+            <Stack.Screen
+              name="ReviewVideoLandscape"
+              component={ReviewVideoLandscape}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>
