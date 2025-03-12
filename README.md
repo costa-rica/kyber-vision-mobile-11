@@ -1,14 +1,14 @@
 ![Kyber Vision Mobile Logo](./assets/images/kyberVisionLogo01.png)
 
-#### v 0.10.0
+#### v 0.11.0
 
 ## Description
 
-Vollyball training application. This version has SwipePad implemented in Live Scripting. Works with api.kv08 or 09 (as of 2025-02-24).
+Vollyball training application.
 
 ## Changes from pervious version
 
-- Implementing Video scripting
+- Implementing Video Review
 
 ### ScriptingLive: action capture logic
 
@@ -29,9 +29,9 @@ Process found in ScriptingLive03.js - use actionArray from scriptReducer
 ## .env
 
 ```
-EXPO_PUBLIC_API_URL=https://api.kv08.dashanddata.com
+EXPO_PUBLIC_API_URL=https://api.kv11.dashanddata.com
 EXPO_PUBLIC_API_URL_WORKSTATION=http://192.168.1.193:3000
-EXPO_PUBLIC_API_URL_SERVER=https://api.kv08.dashanddata.com
+EXPO_PUBLIC_API_URL_SERVER=https://api.kv11.dashanddata.com
 EXPO_PUBLIC_ENVIRONMENT=workstation
 ```
 
