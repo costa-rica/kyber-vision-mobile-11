@@ -24,9 +24,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-video"
-    ],
+    "plugins": ["expo-video"],
     "extra": {
       "eas": {
         "projectId": "a4b956e5-22c4-40bf-a3a3-a19e0e8ae396"

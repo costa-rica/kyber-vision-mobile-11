@@ -27,7 +27,10 @@ import {
   deleteScript,
   initializePlayerNamesArrayRotated,
 } from "../reducers/script";
-import ButtonKv from "./subcomponents/ButtonKv";
+import {
+  updateReviewActionsArray,
+  updateReviewActionsArrayUniquePlayersNamesAndObjects,
+} from "../reducers/review";
 
 export default function ReviewMatchSelection({ navigation }) {
   const [currentYear, setCurrentYear] = useState(null); // State for the currently visible year
@@ -37,12 +40,16 @@ export default function ReviewMatchSelection({ navigation }) {
   const [downloadProgress, setDownloadProgress] = useState(0); // For download progress indication
   const dispatch = useDispatch();
   const userReducer = useSelector((state) => state.user);
+  const reviewReducer = useSelector((state) => state.review);
 
   useEffect(() => {
     fetchVideoListApiCall();
     dispatch(initializePlayerNamesArrayRotated());
   }, []);
   useEffect(() => {}, [userReducer.videosDownloadedStatusObj]);
+  useEffect(() => {
+    checkForExistingVideos();
+  }, [videosList]);
 
   const fetchVideoListApiCall = async () => {
     console.log(`API URL: ${process.env.EXPO_PUBLIC_API_URL}/videos`);
@@ -113,18 +120,32 @@ export default function ReviewMatchSelection({ navigation }) {
     }
   };
 
-  const pressBtnVideo = async (elem) => {
-    console.log("pressed pressBtnVideo");
+  const checkForExistingVideos = async () => {
+    if (!videosList.length) return;
 
+    try {
+      const statuses = {};
+      for (const video of videosList) {
+        const fileUri = `${FileSystem.documentDirectory}${video.filename}`;
+        const fileInfo = await FileSystem.getInfoAsync(fileUri);
+        statuses[video.filename] = fileInfo.exists;
+      }
+
+      setDownloadStatuses(statuses);
+    } catch (error) {
+      console.error("Error checking existing videos:", error);
+    }
+  };
+  const pressBtnVideo = async (elem) => {
+    // 1. get video details in the userReducer
     dispatch(
       storeVideoDetailsInRedux({
         video: elem,
         // videoSetTimesArray: elem.setTimeStamps,
       })
     );
-    // console.log(`hwat is downloadStatuses[elem.filename]`);
-    // console.log(elem.filename);
-    // console.log(downloadStatuses[elem.filename]);
+
+    // 2. check if the video is already downloaded
     if (!downloadStatuses[elem.filename]) {
       console.log("1 -> triggering download video");
       setIsDownloadModalVisible(true); // Show modal
@@ -141,7 +162,10 @@ export default function ReviewMatchSelection({ navigation }) {
         setIsDownloadModalVisible(false);
       }
     }
-    // await downloadVideoScripts(elem);
+    // 3. Get the actions for the match
+    await fetchActionsForMatch(elem.match.id);
+
+    // 4. Go to ReviewVideo screen
     console.log("go to ReviewVideo screen ...");
     navigation.navigate("ReviewVideo", {
       matchName: elem.matchName,
@@ -220,6 +244,58 @@ export default function ReviewMatchSelection({ navigation }) {
       } else {
         console.log("no script assigned to video");
       }
+    }
+  };
+
+  // fetch Actions for Match
+  const fetchActionsForMatch = async (matchId) => {
+    console.log("in fetchActionsForMatch for matchId: ", matchId);
+    try {
+      console.log(`Fetching actions for match: ${matchId}`);
+      console.log(
+        `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`
+      );
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userReducer.token}`,
+          },
+        }
+      );
+      if (response.status !== 200) {
+        console.log(`There was a server error: ${response.status}`);
+        return;
+      }
+      let resJson = null;
+      const contentType = response.headers.get("Content-Type");
+
+      if (contentType?.includes("application/json")) {
+        resJson = await response.json();
+      }
+      // console.log(resJson);
+      let tempCleanActionsArray = [];
+      for (const elem of resJson.actionsArray) {
+        console.log(elem.id);
+        tempCleanActionsArray.push({
+          actionTableId: elem.id,
+          timestamp: elem.timestampFromStartOfVideo,
+          type: elem.type,
+          subtype: elem.subtype,
+          quality: elem.quality,
+        });
+      }
+      dispatch(updateReviewActionsArray(tempCleanActionsArray));
+      dispatch(
+        updateReviewActionsArrayUniquePlayersNamesAndObjects({
+          playerNamesArray: resJson.playerNamesArray,
+          playerDbObjectsArray: resJson.playerDbObjectsArray,
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching actions for match:", error);
     }
   };
 
@@ -331,30 +407,6 @@ export default function ReviewMatchSelection({ navigation }) {
             <Text style={styles.txtContainerMiddleTop}>Match videos :</Text>
 
             {/* <Text>{JSON.stringify(userReducer.videosDownloadedStatusObj)}</Text> */}
-            {/* <View style={styles.vwCapsuleTeam}>
-              <View style={styles.vwTeamAndIcon}>
-                <Text style={styles.txtSelectTeam}>AUC Depart’ F</Text>
-
-                <View style={styles.vwImgCloudIcon}>
-                  <Image
-                    style={styles.imgCloudIcon}
-                    source={require("../assets/images/cloudIcon.png")}
-                    alt="logo"
-                    resizeMode="contain"
-                  />
-                </View>
-              </View>
-              <TouchableOpacity
-                onPress={() => console.log("- pressed downArrow")}
-              >
-                <Image
-                  style={styles.imgBtnDownArrow}
-                  source={require("../assets/images/btnDownArrow.png")}
-                  alt="logo"
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View> */}
           </View>
           {/* -------- containerMiddleBottom: Table / FlatList ------ */}
           <View style={styles.containerMiddleBottom}>
@@ -369,24 +421,10 @@ export default function ReviewMatchSelection({ navigation }) {
             onViewableItemsChanged={onViewableItemsChanged.current}
             viewabilityConfig={viewabilityConfig.current}
           />
-          {/* <View style={styles.vwLiveRowSuper}>
-            <ButtonKv
-              // colorBackground={"#970F9A"}
-              // colorText={"white"}
-              // fontSize={48}
-              width={Dimensions.get("window").width * 0.95}
-              style={{
-                width: Dimensions.get("window").width * 0.95,
-                fontSize: 48,
-                color: "white",
-                backgroundColor: "#970F9A",
-                height: 70,
-              }}
-              onPress={() => navigation.navigate("ScriptingLive")}
-            >
-              Live
-            </ButtonKv>
-          </View> */}
+          <View>
+            {/* <Text>{JSON.stringify(videosList)}</Text> */}
+            <Text>{JSON.stringify(downloadStatuses)}</Text>
+          </View>
         </View>
       </View>
     </TemplateView>
@@ -515,23 +553,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  // vwLiveRow: {
-  //   backgroundColor: "#970F9A",
-  //   marginTop: 10,
-  //   borderRadius: 35,
-  //   flexDirection: "row",
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  //   width: "95%",
-  //   padding: 10,
-  // },
-  // txtLive: {
-  //   fontSize: 48,
-  //   color: "white",
-  //   // textAlign: "center",
-  //   fontFamily: "ApfelGrotezk",
-  //   // backgroundColor: "green",
-  // },
 
   // Modal styles Download
   modalDownloadBackdrop: {

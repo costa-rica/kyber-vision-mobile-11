@@ -23,6 +23,7 @@ import {
   Gesture,
 } from "react-native-gesture-handler";
 import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
+import ReviewVideoPortrait from "./subcomponents/ReviewVideoPortrait";
 
 export default function ReviewVideo({ navigation, route }) {
   // Video progress state
@@ -30,36 +31,76 @@ export default function ReviewVideo({ navigation, route }) {
   // orientation
   const [orientation, setOrientation] = useState("portrait");
 
-  // // Dynamic Styles
-  // const containerDynamic = {
-  //   width:
-  //     orientation == "landscape"
-  //       ? userReducer.portraitHeight
-  //       : userReducer.portraitWidth,
-  //   // width: 200,
-  //   height:
-  //     orientation == "landscape"
-  //       ? userReducer.portraitWidth
-  //       : userReducer.portraitHeight,
-  //   flexDirection: orientation == "landscape" ? "row" : "column",
-  // };
+  // for TESTing -> allows to change orientation
+  useEffect(() => {
+    ScreenOrientation.unlockAsync();
+    checkOrientation();
+    const subscriptionScreenOrientation =
+      ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
 
+    return () => {
+      subscriptionScreenOrientation.remove();
+      ScreenOrientation.lockAsync();
+    };
+  });
+  const checkOrientation = async () => {
+    // console.log("in checkOrientation");
+    const orientation = await ScreenOrientation.getOrientationAsync();
+    // console.log(`orientation is ${orientation}`);
+    if (
+      o.orientationInfo.orientation == 4 ||
+      o.orientationInfo.orientation == 3
+    ) {
+      setOrientation("landscape");
+    } else {
+      setOrientation("portrait");
+    }
+  };
+  const handleOrientationChange = async (o) => {
+    // console.log(
+    //   `o.orientationInfo.orientation: ${o.orientationInfo.orientation}`
+    // );
+    setOrientation(o.orientationInfo.orientation);
+    if (
+      o.orientationInfo.orientation == 4 ||
+      o.orientationInfo.orientation == 3
+    ) {
+      setOrientation("landscape");
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+      );
+    } else {
+      setOrientation("portrait");
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP
+      );
+    }
+  };
+  // // for PRODUCTION -> forces to landscape
   // useEffect(() => {
-  //   // setStartTime(userReducer.video.setTimeStampsArray[currentSet]);
-  //   // setEndTime(userReducer.video.setTimeStampsArray[currentSet + 1]);
+  //   const lockToLandscape = async () => {
+  //     await ScreenOrientation.lockAsync(
+  //       ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
+  //     );
+  //     setOrientation("landscape");
+  //   };
 
-  //   // if (Platform.OS === "android") {
-  //   ScreenOrientation.unlockAsync();
-  //   checkOrientation();
-  //   const subscriptionScreenOrientation =
-  //     ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+  //   lockToLandscape(); // Force landscape mode when component mounts
 
   //   return () => {
-  //     subscriptionScreenOrientation.remove();
-  //     ScreenOrientation.lockAsync();
+  //     ScreenOrientation.lockAsync(
+  //       ScreenOrientation.OrientationLock.PORTRAIT_UP
+  //     ); // Reset to portrait when leaving
   //   };
-  //   // }
-  // });
+  // }, []);
+
+  const handleBackPress = async () => {
+    await ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.PORTRAIT_UP
+    ); // Force back to portrait
+    setOrientation("portrait");
+    navigation.goBack();
+  };
 
   useEffect(() => {
     return () => {
@@ -77,12 +118,6 @@ export default function ReviewVideo({ navigation, route }) {
     player.play();
   });
 
-  // useEffect(() => {
-  //   fetch("http://192.168.1.128:3000/videos/stream/5")
-  //     .then((res) => console.log("Response OK:", res.ok))
-  //     .catch((err) => console.log("Fetch error:", err));
-  // }, []);
-
   // Seek video
   const setCurrentTimeManager = (timeToSet) => {
     player.currentTime = timeToSet;
@@ -92,15 +127,34 @@ export default function ReviewVideo({ navigation, route }) {
     setProgress(player.currentTime / player.duration);
   });
 
-  return (
+  return orientation == "portrait" ? (
+    <ReviewVideoPortrait
+      navigation={navigation}
+      route={route}
+      progress={progress}
+      player={player}
+      setCurrentTimeManager={setCurrentTimeManager}
+      handleBackPress={handleBackPress}
+    />
+  ) : (
     <ReviewVideoLandscape
       navigation={navigation}
       route={route}
       progress={progress}
       player={player}
       setCurrentTimeManager={setCurrentTimeManager}
+      handleBackPress={handleBackPress}
     />
   );
+  // return (
+  //   <ReviewVideoPortrait
+  //     navigation={navigation}
+  //     route={route}
+  //     progress={progress}
+  //     player={player}
+  //     setCurrentTimeManager={setCurrentTimeManager}
+  //   />
+  // );
 }
 
 const styles = StyleSheet.create({
