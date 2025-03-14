@@ -74,14 +74,20 @@ export default function ReviewVideoPortrait(
       </View>
       <View style={styles.containerBottom}>
         <Text>Actions</Text>
-        {reviewReducer.reviewActionsArray.map((action, index) => (
-          <Text key={index}>
-            {action.timestamp} :{action.type}
-          </Text>
-        ))}
-        {reviewReducer.reviewActionsArrayUniqueListOfPlayerNames &&
-          reviewReducer.reviewActionsArrayUniqueListOfPlayerNames.map(
-            (playerName, index) => <Text key={index}>{playerName}</Text>
+        {reviewReducer.reviewReducerActionsArray.map((action, index) => {
+          if (action.isDisplayed) {
+            return (
+              <Text key={index}>
+                {action.timestamp} :{action.type}
+              </Text>
+            );
+          }
+        })}
+        {reviewReducer.reviewReducerListOfPlayerDbObjects &&
+          reviewReducer.reviewReducerListOfPlayerDbObjects.map(
+            (playerDbObject, index) => (
+              <Text key={index}>{playerDbObject.firstName}</Text>
+            )
           )}
       </View>
     </View>

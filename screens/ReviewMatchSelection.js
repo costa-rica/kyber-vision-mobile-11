@@ -28,8 +28,8 @@ import {
   initializePlayerNamesArrayRotated,
 } from "../reducers/script";
 import {
-  updateReviewActionsArray,
-  updateReviewActionsArrayUniquePlayersNamesAndObjects,
+  createReviewActionsArray,
+  createReviewActionsArrayUniquePlayersNamesAndObjects,
 } from "../reducers/review";
 
 export default function ReviewMatchSelection({ navigation }) {
@@ -223,29 +223,29 @@ export default function ReviewMatchSelection({ navigation }) {
     }
   };
 
-  const downloadVideoScripts = async (elem) => {
-    const videoScriptsUrl = `${process.env.EXPO_PUBLIC_API_URL}/scripts/${elem.id}`;
-    const response = await fetch(videoScriptsUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userReducer.token}`, // Add token to Authorization header
-      },
-    });
-    if (response.status == 200) {
-      dispatch(deleteScript());
-      const resJson = await response.json();
-      console.log(resJson);
-      const scriptId = resJson?.script?._id;
-      if (scriptId) {
-        resJson.actionsArray.map((elem, index) => {
-          dispatch(appendAction({ scriptId, action: elem }));
-        });
-      } else {
-        console.log("no script assigned to video");
-      }
-    }
-  };
+  // const downloadVideoScripts = async (elem) => {
+  //   const videoScriptsUrl = `${process.env.EXPO_PUBLIC_API_URL}/scripts/${elem.id}`;
+  //   const response = await fetch(videoScriptsUrl, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${userReducer.token}`, // Add token to Authorization header
+  //     },
+  //   });
+  //   if (response.status == 200) {
+  //     dispatch(deleteScript());
+  //     const resJson = await response.json();
+  //     console.log(resJson);
+  //     const scriptId = resJson?.script?._id;
+  //     if (scriptId) {
+  //       resJson.actionsArray.map((elem, index) => {
+  //         dispatch(appendAction({ scriptId, action: elem }));
+  //       });
+  //     } else {
+  //       console.log("no script assigned to video");
+  //     }
+  //   }
+  // };
 
   // fetch Actions for Match
   const fetchActionsForMatch = async (matchId) => {
@@ -280,18 +280,34 @@ export default function ReviewMatchSelection({ navigation }) {
       for (const elem of resJson.actionsArray) {
         console.log(elem.id);
         tempCleanActionsArray.push({
-          actionTableId: elem.id,
+          actionsTableId: elem.id,
+          actionsArrayId: elem.actionsArrayId,
+          playerId: elem.playerId,
           timestamp: elem.timestampFromStartOfVideo,
           type: elem.type,
           subtype: elem.subtype,
           quality: elem.quality,
+          isDisplayed: true,
+          isFavorite: false,
         });
       }
-      dispatch(updateReviewActionsArray(tempCleanActionsArray));
+
+      dispatch(createReviewActionsArray(tempCleanActionsArray));
+
+      let tempPlayerDbObjectsArray = [];
+      console.log(
+        `playerDbObjectsArray: ${JSON.stringify(resJson.playerDbObjectsArray)}`
+      );
+      for (const elem of resJson.playerDbObjectsArray) {
+        tempPlayerDbObjectsArray.push({
+          ...elem,
+          isDisplayed: true,
+        });
+      }
       dispatch(
-        updateReviewActionsArrayUniquePlayersNamesAndObjects({
-          playerNamesArray: resJson.playerNamesArray,
-          playerDbObjectsArray: resJson.playerDbObjectsArray,
+        createReviewActionsArrayUniquePlayersNamesAndObjects({
+          // playerNamesArray: resJson.playerNamesArray,
+          playerDbObjectsArray: tempPlayerDbObjectsArray,
         })
       );
     } catch (error) {

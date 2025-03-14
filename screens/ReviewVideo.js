@@ -24,8 +24,12 @@ import {
 } from "react-native-gesture-handler";
 import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
 import ReviewVideoPortrait from "./subcomponents/ReviewVideoPortrait";
+// import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { updateIsDisplayedForPlayerObject } from "../reducers/review";
 
 export default function ReviewVideo({ navigation, route }) {
+  const dispatch = useDispatch();
   // Video progress state
   const [progress, setProgress] = useState(0);
   // orientation
@@ -127,6 +131,13 @@ export default function ReviewVideo({ navigation, route }) {
     setProgress(player.currentTime / player.duration);
   });
 
+  // Filtering actions
+  const filterActions = (parameterName, object) => {
+    if (parameterName === "player") {
+      dispatch(updateIsDisplayedForPlayerObject(object));
+    }
+  };
+
   return orientation == "portrait" ? (
     <ReviewVideoPortrait
       navigation={navigation}
@@ -135,6 +146,7 @@ export default function ReviewVideo({ navigation, route }) {
       player={player}
       setCurrentTimeManager={setCurrentTimeManager}
       handleBackPress={handleBackPress}
+      filterActions={filterActions}
     />
   ) : (
     <ReviewVideoLandscape
@@ -144,6 +156,7 @@ export default function ReviewVideo({ navigation, route }) {
       player={player}
       setCurrentTimeManager={setCurrentTimeManager}
       handleBackPress={handleBackPress}
+      filterActions={filterActions}
     />
   );
   // return (

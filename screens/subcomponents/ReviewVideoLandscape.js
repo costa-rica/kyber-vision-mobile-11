@@ -8,10 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  appendReviewFilterArrayPlayerDbObjects,
-  removeReviewFilterArrayPlayerDbObjects,
-} from "../../reducers/review";
+import { updateIsDisplayedForPlayerObject } from "../../reducers/review";
 import { useVideoPlayer, VideoView } from "expo-video";
 // import SwitchKv from "./SwitchKv";
 import SwitchKvWhite from "./SwitchKvWhite";
@@ -30,7 +27,7 @@ export default function ReviewVideoLandscape(props) {
     height: Dimensions.get("window").height,
     width: "100%",
   };
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [isFavoritesOnly, setIsFavoritesOnly] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -39,27 +36,32 @@ export default function ReviewVideoLandscape(props) {
           <Text style={styles.txtPlayersTitle}>Players</Text>
           <View style={styles.vwPlayersSelectedAndDropDown}>
             <View style={styles.vwPlayersSelected}>
-              {reviewReducer.reviewFilterArrayPlayerDbObjects.map(
-                (playerDbObject) => (
-                  <TouchableOpacity
-                    key={playerDbObject.id}
-                    onPress={() =>
-                      dispatch(
-                        removeReviewFilterArrayPlayerDbObjects(playerDbObject)
-                      )
-                    }
-                    style={styles.touchOpSelectPlayer}
-                  >
-                    <Text style={styles.txtPlayer}>
-                      {playerDbObject.firstName.substring(0, 3)}
-                    </Text>
-                    <Image
-                      source={require("../../assets/images/whiteX.png")}
-                      resizeMode="contain"
-                      style={styles.imgWhiteX}
-                    />
-                  </TouchableOpacity>
-                )
+              {reviewReducer.reviewReducerListOfPlayerDbObjects.map(
+                (playerDbObject) => {
+                  if (playerDbObject.isDisplayed) {
+                    return (
+                      <TouchableOpacity
+                        key={playerDbObject.id}
+                        onPress={
+                          () => props.filterActions("player", playerDbObject)
+                          // dispatch(
+                          //   removeReviewFilterArrayPlayerDbObjects(playerDbObject)
+                          // )
+                        }
+                        style={styles.touchOpSelectPlayer}
+                      >
+                        <Text style={styles.txtPlayer}>
+                          {playerDbObject.firstName.substring(0, 3)}
+                        </Text>
+                        <Image
+                          source={require("../../assets/images/whiteX.png")}
+                          resizeMode="contain"
+                          style={styles.imgWhiteX}
+                        />
+                      </TouchableOpacity>
+                    );
+                  }
+                }
               )}
             </View>
             <View style={styles.vwPlayersDropDownArrow}>
@@ -84,7 +86,10 @@ export default function ReviewVideoLandscape(props) {
         <View style={styles.vwFavoritesSwitchAndTitle}>
           <Text style={styles.txtFavoritesTitle}>Favorites Only</Text>
           <View style={styles.vwFavoritesSwitch}>
-            <SwitchKvWhite state={favoritesOnly} setState={setFavoritesOnly} />
+            <SwitchKvWhite
+              state={isFavoritesOnly}
+              setState={setIsFavoritesOnly}
+            />
           </View>
         </View>
       </View>
@@ -135,17 +140,21 @@ export default function ReviewVideoLandscape(props) {
         </ButtonKvImage>
 
         <View style={styles.vwActions}>
-          {reviewReducer.reviewActionsArray.map((action, index) => (
-            <TouchableOpacity
-              style={styles.touchOpAction}
-              key={index}
-              onPress={() => {
-                props.setCurrentTimeManager(action.timestamp);
-              }}
-            >
-              <Text style={styles.txtAction}>{index} </Text>
-            </TouchableOpacity>
-          ))}
+          {reviewReducer.reviewReducerActionsArray.map((action, index) => {
+            if (action.isDisplayed) {
+              return (
+                <TouchableOpacity
+                  style={styles.touchOpAction}
+                  key={index}
+                  onPress={() => {
+                    props.setCurrentTimeManager(action.timestamp - 0.75);
+                  }}
+                >
+                  <Text style={styles.txtAction}>{action.actionsArrayId} </Text>
+                </TouchableOpacity>
+              );
+            }
+          })}
         </View>
       </View>
       {/* Timeline */}
@@ -160,20 +169,22 @@ export default function ReviewVideoLandscape(props) {
       </View>
       {isDropdownVisible && (
         <View style={styles.vwPlayersOptions}>
-          {reviewReducer.reviewActionsArrayUniqueListOfPlayerDbObjects.map(
-            (playerDbObject) => (
-              <TouchableOpacity
-                key={playerDbObject.id}
-                onPress={() =>
-                  dispatch(
-                    appendReviewFilterArrayPlayerDbObjects(playerDbObject)
-                  )
-                }
-                style={styles.touchOpSelectPlayer}
-              >
-                <Text>{playerDbObject.firstName.substring(0, 3)}</Text>
-              </TouchableOpacity>
-            )
+          {reviewReducer.reviewReducerListOfPlayerDbObjects.map(
+            (playerDbObject) => {
+              if (!playerDbObject.isDisplayed) {
+                return (
+                  <TouchableOpacity
+                    key={playerDbObject.id}
+                    onPress={() =>
+                      dispatch(updateIsDisplayedForPlayerObject(playerDbObject))
+                    }
+                    style={styles.touchOpSelectPlayer}
+                  >
+                    <Text>{playerDbObject.firstName.substring(0, 3)}</Text>
+                  </TouchableOpacity>
+                );
+              }
+            }
           )}
         </View>
       )}
