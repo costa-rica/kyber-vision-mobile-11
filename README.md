@@ -102,3 +102,13 @@ const player = useVideoPlayer(videoSource, (player) => {
   player.timeUpdateEventInterval = 1; //< --- this is what you're missing
 });
 ```
+
+## Font
+
+source: https://www.collletttivo.it/typefaces/apfel-grotezk
+
+- Apfel Grotezk Brukt (weird)
+- Apfel Grotezk Regular
+- Apfel Grotezk Mittel (SemiBold)
+- Apfel Grotezk Fett (Bold)
+- Apfel Grotezk Satt (SuperBold)

@@ -81,7 +81,11 @@ export default function PlayerSelection({ navigation }) {
         <Text
           style={[
             styles.playerText,
-            { fontSize: player === selectedPlayer ? 20 : 16 },
+            {
+              fontFamily:
+                player === selectedPlayer ? "ApfelGrotezkBold" : "ApfelGrotezk",
+              fontSize: player === selectedPlayer ? 18 : 16,
+            },
           ]}
         >
           {player.shirtNumber}/ {player.firstName} {player.lastName}
@@ -119,7 +123,7 @@ export default function PlayerSelection({ navigation }) {
                 <Text
                   style={{ color: "#970F9A", fontSize: 16, paddingBottom: 5 }}
                 >
-                  {selectedTeam?.teamName}
+                  {selectedTeam?.teamName} Players
                 </Text>
               </View>
               <View
@@ -148,7 +152,9 @@ export default function PlayerSelection({ navigation }) {
           {/* <Text>Selected player</Text> */}
           <View style={styles.vwSelectedPlayerGroup}>
             <View style={styles.vwSelectedPlayerGroupTop}>
-              <Text style={styles.txtSelectedPlayerTeamName}>Team Name </Text>
+              <Text style={styles.txtSelectedPlayerTeamName}>
+                {selectedTeam?.teamName}{" "}
+              </Text>
             </View>
             <View style={styles.vwSelectedPlayerGroupBottom}>
               <View style={styles.vwSelectedPlayerShirtNumber}>
@@ -273,6 +279,7 @@ const styles = StyleSheet.create({
   },
   playerText: {
     fontSize: 16,
+    fontFamily: "ApfelGrotezk",
   },
   vwSelectedPlayerGroup: {
     borderColor: "#970F9A",
@@ -289,7 +296,8 @@ const styles = StyleSheet.create({
   txtSelectedPlayerTeamName: {
     color: "#970F9A",
     fontSize: 30,
-    fontWeight: "bold",
+    // fontWeight: "bold",
+    fontFamily: "ApfelGrotezkBold",
   },
   vwSelectedPlayerGroupBottom: {
     flexDirection: "row",
@@ -303,12 +311,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     // padding: 5,
     width: "15%",
-    height: 40,
+    height: 50,
   },
   txtShirtNumber: {
     color: "white",
     fontSize: 30,
-    fontWeight: "bold",
+    // fontWeight: "bold",
+    fontFamily: "ApfelGrotezkBold",
   },
   vwSelectedPlayerName: {
     backgroundColor: "#E1B5D5",
@@ -319,8 +328,9 @@ const styles = StyleSheet.create({
   },
   txtSelectedPlayerName: {
     color: "#970F9A",
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 20,
+    // fontWeight: "bold",
+    fontFamily: "ApfelGrotezkBold",
   },
   // ----- BOTTOM Container -----
   containerBottom: {

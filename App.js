@@ -37,6 +37,9 @@ export default function App() {
     async function loadFonts() {
       await Font.loadAsync({
         ApfelGrotezk: require("./assets/fonts/ApfelGrotezk-Regular.otf"),
+        ApfelGrotezkSemiBold: require("./assets/fonts/ApfelGrotezk-Mittel.otf"),
+        ApfelGrotezkBold: require("./assets/fonts/ApfelGrotezk-Fett.otf"),
+        ApfelGrotezkSuperBold: require("./assets/fonts/ApfelGrotezk-Satt.otf"),
         Caveat: require("./assets/fonts/Caveat-VariableFont_wght.ttf"),
       });
       setFontsLoaded(true);

@@ -100,7 +100,8 @@ const styles = StyleSheet.create({
   txtWelcome: {
     color: "#8D0B90",
     fontSize: 50,
-    fontFamily: "ApfelGrotezk",
+    // fontFamily: "Caveat",
+    fontFamily: "ApfelGrotezkSemiBold",
     // backgroundColor: "red",
     textAlign: "center",
   },
@@ -123,11 +124,11 @@ const styles = StyleSheet.create({
     padding: 5,
     display: "flex",
     alignItems: "center",
-    padding: 25,
+    padding: 15,
   },
   txtButton: {
     color: "white",
-    fontSize: 30,
+    fontSize: 40,
     fontFamily: "ApfelGrotezk",
   },
 });
