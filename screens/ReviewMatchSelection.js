@@ -275,10 +275,10 @@ export default function ReviewMatchSelection({ navigation }) {
       if (contentType?.includes("application/json")) {
         resJson = await response.json();
       }
-      // console.log(resJson);
+      console.log(resJson);
       let tempCleanActionsArray = [];
       for (const elem of resJson.actionsArray) {
-        console.log(elem.id);
+        // console.log(elem.id);
         tempCleanActionsArray.push({
           actionsTableId: elem.id,
           actionsArrayId: elem.actionsArrayId,
