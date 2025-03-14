@@ -275,7 +275,7 @@ export default function ReviewMatchSelection({ navigation }) {
       if (contentType?.includes("application/json")) {
         resJson = await response.json();
       }
-      console.log(resJson);
+      // console.log(resJson);
       let tempCleanActionsArray = [];
       for (const elem of resJson.actionsArray) {
         // console.log(elem.id);
@@ -289,6 +289,7 @@ export default function ReviewMatchSelection({ navigation }) {
           quality: elem.quality,
           isDisplayed: true,
           isFavorite: false,
+          isPlaying: false,
         });
       }
 

@@ -26,7 +26,10 @@ import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
 import ReviewVideoPortrait from "./subcomponents/ReviewVideoPortrait";
 // import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { updateIsDisplayedForPlayerObject } from "../reducers/review";
+import {
+  updateReviewReducerIsDisplayedForPlayerObject,
+  updateReviewReducerIsPlayingforActionsArray,
+} from "../reducers/review";
 
 export default function ReviewVideo({ navigation, route }) {
   const dispatch = useDispatch();
@@ -129,12 +132,13 @@ export default function ReviewVideo({ navigation, route }) {
 
   useEventListener(player, "timeUpdate", () => {
     setProgress(player.currentTime / player.duration);
+    dispatch(updateReviewReducerIsPlayingforActionsArray(player.currentTime));
   });
 
   // Filtering actions
   const filterActions = (parameterName, object) => {
     if (parameterName === "player") {
-      dispatch(updateIsDisplayedForPlayerObject(object));
+      dispatch(updateReviewReducerIsDisplayedForPlayerObject(object));
     }
   };
 

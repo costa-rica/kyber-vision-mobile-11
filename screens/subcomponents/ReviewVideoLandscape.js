@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -9,7 +9,11 @@ import {
   FlatList,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { updateIsDisplayedForPlayerObject } from "../../reducers/review";
+import {
+  updateReviewReducerIsDisplayedForPlayerObject,
+  toggleReviewReducerActionIsFavorite,
+  filterReviewReducerActionsArrayOnIsFavorite,
+} from "../../reducers/review";
 import { useVideoPlayer, VideoView } from "expo-video";
 // import SwitchKv from "./SwitchKv";
 import SwitchKvWhite from "./SwitchKvWhite";
@@ -30,17 +34,62 @@ export default function ReviewVideoLandscape(props) {
   };
   const [isFavoritesOnly, setIsFavoritesOnly] = useState(false);
 
+  useEffect(() => {
+    dispatch(filterReviewReducerActionsArrayOnIsFavorite(isFavoritesOnly));
+  }, [isFavoritesOnly]);
+
   // 🔹 Function to render each action in the FlatList
   const renderActionItem = ({ item }) => {
     if (!item.isDisplayed) return null;
-
+    if (!item.isPlaying) {
+      return (
+        <TouchableOpacity
+          style={styles.touchOpAction}
+          onPress={() => props.setCurrentTimeManager(item.timestamp - 0.75)}
+        >
+          {item.isFavorite && (
+            <Image
+              source={require("../../assets/images/reviewVideoFavoriteStarYellowInterior.png")}
+              resizeMode="contain"
+              style={styles.imgIsFavorite}
+            />
+          )}
+          <Text style={styles.txtAction}>{item.actionsArrayId} </Text>
+        </TouchableOpacity>
+      );
+    }
     return (
-      <TouchableOpacity
-        style={styles.touchOpAction}
-        onPress={() => props.setCurrentTimeManager(item.timestamp - 0.75)}
-      >
-        <Text style={styles.txtAction}>{item.actionsArrayId} </Text>
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity
+          style={styles.touchOpBtnFavorite}
+          onPress={() =>
+            // dispatch(toggleReviewReducerActionIsFavorite(item.actionTableId))
+            dispatch(toggleReviewReducerActionIsFavorite(item.actionsTableId))
+          }
+        >
+          <Image
+            source={require("../../assets/images/btnReviewVideoFavoriteStar.png")}
+            resizeMode="contain"
+            style={styles.imgBtnFavorite}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.touchOpAction,
+            { borderWidth: 3, borderColor: "white", borderRadius: 12 },
+          ]}
+          onPress={() => props.setCurrentTimeManager(item.timestamp - 0.75)}
+        >
+          {item.isFavorite && (
+            <Image
+              source={require("../../assets/images/reviewVideoFavoriteStarYellowInterior.png")}
+              resizeMode="contain"
+              style={styles.imgIsFavorite}
+            />
+          )}
+          <Text style={[styles.txtAction]}>{item.actionsArrayId} </Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -57,11 +106,8 @@ export default function ReviewVideoLandscape(props) {
                     return (
                       <TouchableOpacity
                         key={playerDbObject.id}
-                        onPress={
-                          () => props.filterActions("player", playerDbObject)
-                          // dispatch(
-                          //   removeReviewFilterArrayPlayerDbObjects(playerDbObject)
-                          // )
+                        onPress={() =>
+                          props.filterActions("player", playerDbObject)
                         }
                         style={styles.touchOpSelectPlayer}
                       >
@@ -71,8 +117,13 @@ export default function ReviewVideoLandscape(props) {
                         <Image
                           source={require("../../assets/images/whiteX.png")}
                           resizeMode="contain"
-                          style={styles.imgWhiteX}
+                          style={{
+                            width: 15,
+                            height: 15,
+                            paddingLeft: 5,
+                          }}
                         />
+                        {/* <Text style={styles.txtPlayerX}> x</Text> */}
                       </TouchableOpacity>
                     );
                   }
@@ -104,6 +155,7 @@ export default function ReviewVideoLandscape(props) {
             <SwitchKvWhite
               state={isFavoritesOnly}
               setState={setIsFavoritesOnly}
+              // setState={()=>}
             />
           </View>
         </View>
@@ -163,25 +215,17 @@ export default function ReviewVideoLandscape(props) {
             horizontal={true}
             contentContainerStyle={styles.vwActions}
           />
-          {/* {reviewReducer.reviewReducerActionsArray.map((action, index) => {
-            if (action.isDisplayed) {
-              return (
-                <TouchableOpacity
-                  style={styles.touchOpAction}
-                  key={index}
-                  onPress={() => {
-                    props.setCurrentTimeManager(action.timestamp - 0.75);
-                  }}
-                >
-                  <Text style={styles.txtAction}>{action.actionsArrayId} </Text>
-                </TouchableOpacity>
-              );
-            }
-          })} */}
         </View>
       </View>
       {/* Timeline */}
-      <View style={{ width: Dimensions.get("window").width }}>
+      <View
+        style={{
+          width: Dimensions.get("window").width,
+          height: 15,
+          // justifyContent: "center",
+          zIndex: 2,
+        }}
+      >
         <GestureHandlerRootView style={styles.gestureViewTimeline}>
           <Timeline
             videoProgress={props.progress}
@@ -199,7 +243,11 @@ export default function ReviewVideoLandscape(props) {
                   <TouchableOpacity
                     key={playerDbObject.id}
                     onPress={() =>
-                      dispatch(updateIsDisplayedForPlayerObject(playerDbObject))
+                      dispatch(
+                        updateReviewReducerIsDisplayedForPlayerObject(
+                          playerDbObject
+                        )
+                      )
                     }
                     style={styles.touchOpSelectPlayer}
                   >
@@ -291,14 +339,25 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
     flexDirection: "row",
-    // justifyContent: "center",
+    justifyContent: "center",
     alignItems: "center",
   },
   txtPlayer: {
     color: "white",
-    fontWeight: "bold",
-    // fontFamily: "ApfelGrotezk",
+    // fontWeight: "bold",
+    fontFamily: "ApfelGrotezk",
   },
+  // txtPlayerX: {
+  //   color: "white",
+  //   // fontWeight: "bold",
+  //   fontSize: 20,
+  //   fontFamily: "ApfelGrotezkBold",
+  //   backgroundColor: "purple",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   alignSelf: "center",
+  //   textAlign: "center",
+  // },
 
   // --- middle right: share ---
   containerMiddleRight: {
@@ -339,7 +398,7 @@ const styles = StyleSheet.create({
   // -- BOTTOM ---
   containerBottom: {
     position: "absolute",
-    bottom: 10,
+    bottom: 15,
     width: "100%",
     // backgroundColor: "rgba(74,74,74,.74)",
     zIndex: 1,
@@ -347,6 +406,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 5,
     // padding: 5,
+    // justifyContent: "center",
+    alignItems: "flex-end",
   },
   vwBtnPausePlay: {
     justifyContent: "center",
@@ -355,17 +416,21 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     width: 60,
     height: 40,
-    // padding: 5,
+    paddingBottom: 20,
+  },
+  vwActionsSuper: {
+    top: -10,
   },
   vwActions: {
     flexDirection: "row",
-    // backgroundColor: "green",
     gap: 5,
+    paddingTop: 35,
+    // backgroundColor: "green",
   },
   txtAction: {
     color: "white",
     fontWeight: "bold",
-    // fontFamily: "ApfelGrotezk",
+    fontFamily: "ApfelGrotezkBold",
     fontSize: 20,
   },
   touchOpAction: {
@@ -374,12 +439,33 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(110,110,110,1)",
     justifyContent: "center",
     alignItems: "center",
-    padding: 5,
-    width: 40,
+    padding: 2,
+    width: 45,
   },
+  imgIsFavorite: {
+    position: "absolute",
+    top: -15,
+    width: 20,
+    height: 20,
+    zIndex: 20,
+  },
+  touchOpBtnFavorite: {
+    position: "absolute",
+    top: -35,
+    left: 5,
+    // width: 20,
+    // height: 20,
+    // justifyContent: "center",
+    // alignItems: "center",
+  },
+  // imgBtnFavorite: {
+  //   width: 20,
+  //   height: 20,
+  // },
   // --- Timeline ---
   gestureViewTimeline: {
     alignItems: "center",
     height: 10,
+    zIndex: 2,
   },
 });
