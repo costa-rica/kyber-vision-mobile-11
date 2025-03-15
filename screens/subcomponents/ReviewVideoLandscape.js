@@ -13,6 +13,7 @@ import {
   filterReviewReducerActionsArrayOnPlayer,
   toggleReviewReducerActionIsFavorite,
   filterReviewReducerActionsArrayOnIsFavorite,
+  filterReviewReducerActionsArrayShowAll,
 } from "../../reducers/review";
 import { useVideoPlayer, VideoView } from "expo-video";
 // import SwitchKv from "./SwitchKv";
@@ -32,11 +33,13 @@ export default function ReviewVideoLandscape(props) {
     height: Dimensions.get("window").height,
     width: "100%",
   };
-  const [isFavoritesOnly, setIsFavoritesOnly] = useState(false);
+  const [isFavoritesOnly, setIsFavoritesOnly] = useState(
+    reviewReducer.isFavoriteToggle
+  );
 
-  // useEffect(() => {
-  //   dispatch(filterReviewReducerActionsArrayOnIsFavorite());
-  // }, [isFavoritesOnly]);
+  useEffect(() => {
+    setIsFavoritesOnly(reviewReducer.isFavoriteToggle);
+  }, [reviewReducer.isFavoriteToggle]);
 
   // 🔹 Function to render each action in the FlatList
   const renderActionItem = ({ item }) => {
@@ -157,8 +160,8 @@ export default function ReviewVideoLandscape(props) {
             <SwitchKvWhite
               state={isFavoritesOnly}
               onPressCustom={() => {
-                setIsFavoritesOnly((previousState) => !previousState);
                 dispatch(filterReviewReducerActionsArrayOnIsFavorite());
+                // setIsFavoritesOnly(reviewReducer.isFavoriteToggle);
               }}
               // setState={setIsFavoritesOnly}
               // setState={()=>}
@@ -190,28 +193,40 @@ export default function ReviewVideoLandscape(props) {
         />
       </View>
       <View style={styles.containerBottom}>
-        <ButtonKvImage
-          onPress={() => {
-            console.log("rotate screen to landscape");
-            // correctOrientationFromStart();
-            props.player.playing ? props.player.pause() : props.player.play();
-          }}
-          style={{ padding: 0 }}
-        >
-          <View style={styles.vwBtnPausePlay}>
-            <Image
-              source={
-                props.player.playing
-                  ? require("../../assets/images/btnPause.png")
-                  : require("../../assets/images/btnPlay.png")
-              }
-              alt="logo"
-              resizeMode="contain"
-              style={{ width: 20, height: 20 }}
-            />
-          </View>
-        </ButtonKvImage>
+        <View style={styles.vwContainerBottomLeft}>
+          <ButtonKvImage
+            onPress={() => {
+              console.log("rotate screen to landscape");
+              // correctOrientationFromStart();
+              props.player.playing ? props.player.pause() : props.player.play();
+            }}
+            style={{ padding: 0 }}
+          >
+            <View style={styles.vwBtnPausePlay}>
+              <Image
+                source={
+                  props.player.playing
+                    ? require("../../assets/images/btnPause.png")
+                    : require("../../assets/images/btnPlay.png")
+                }
+                alt="logo"
+                resizeMode="contain"
+                style={{ width: 20, height: 20 }}
+              />
+            </View>
+          </ButtonKvImage>
 
+          <ButtonKvImage
+            onPress={() => {
+              dispatch(filterReviewReducerActionsArrayShowAll());
+            }}
+            style={styles.vwBtnShowAll}
+          >
+            {/* <View style={styles.vwBtnShowAll}> */}
+            <Text style={styles.txtShowAll}>tout lire</Text>
+            {/* </View> */}
+          </ButtonKvImage>
+        </View>
         <View style={styles.vwActionsSuper}>
           {/* 🔹 FlatList for Actions */}
           <FlatList
@@ -410,26 +425,47 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 5,
     // padding: 5,
-    // justifyContent: "center",
+    justifyContent: "space-between",
+    // alignItems: "flex-end",
+    height: 80,
+  },
+  vwContainerBottomLeft: {
+    flexDirection: "row",
+    gap: 10,
     alignItems: "flex-end",
+    width: Dimensions.get("window").width * 0.15,
+    backgroundColor: "green",
   },
   vwBtnPausePlay: {
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "transparent",
     borderRadius: 35,
-    width: 60,
+    // width: 50,
     height: 40,
+    paddingLeft: 20,
     paddingBottom: 20,
+  },
+  vwBtnShowAll: {
+    padding: 0,
+    paddingBottom: 20,
+  },
+  txtShowAll: {
+    color: "white",
+    fontFamily: "ApfelGrotezk",
+    fontSize: 15,
+    // textAlign: "center",
   },
   vwActionsSuper: {
     top: -10,
+    width: Dimensions.get("window").width * 0.6,
   },
   vwActions: {
     flexDirection: "row",
     gap: 5,
     paddingTop: 35,
     // backgroundColor: "green",
+    width: Dimensions.get("window").width * 0.6,
   },
   txtAction: {
     color: "white",

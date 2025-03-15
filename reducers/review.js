@@ -127,8 +127,6 @@ export const reviewSlice = createSlice({
     filterReviewReducerActionsArrayOnIsFavorite: (state) => {
       // 🔹 If payload === true → Show only favorite actions, but apply the player filtering
       // 🔹 If payload === false → Show all actions, but still respect player filtering.
-      // const shouldShowOnlyFavorites = action.payload; // Boolean payload
-      console.log("in filterReviewReducerActionsArrayOnIsFavorite");
       state.isFavoriteToggle = !state.isFavoriteToggle;
 
       state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
@@ -161,6 +159,21 @@ export const reviewSlice = createSlice({
         }
       );
     },
+    filterReviewReducerActionsArrayShowAll: (state) => {
+      // 🔹  Used by ReviewVideoLandscape > show all actions
+      state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+        (action) => ({
+          ...action,
+          isDisplayed: true,
+        })
+      );
+      state.isFavoriteToggle = false;
+      state.reviewReducerListOfPlayerDbObjects =
+        state.reviewReducerListOfPlayerDbObjects.map((player) => ({
+          ...player,
+          isDisplayed: true,
+        }));
+    },
   },
 });
 
@@ -171,6 +184,7 @@ export const {
   updateReviewReducerIsPlayingforActionsArray,
   toggleReviewReducerActionIsFavorite,
   filterReviewReducerActionsArrayOnIsFavorite,
+  filterReviewReducerActionsArrayShowAll,
 } = reviewSlice.actions;
 
 export default reviewSlice.reducer;
