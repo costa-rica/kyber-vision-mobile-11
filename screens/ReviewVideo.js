@@ -38,68 +38,68 @@ export default function ReviewVideo({ navigation, route }) {
   // orientation
   const [orientation, setOrientation] = useState("portrait");
 
-  // for TESTing -> allows to change orientation
-  useEffect(() => {
-    ScreenOrientation.unlockAsync();
-    checkOrientation();
-    const subscriptionScreenOrientation =
-      ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
-
-    return () => {
-      subscriptionScreenOrientation.remove();
-      ScreenOrientation.lockAsync();
-    };
-  });
-  const checkOrientation = async () => {
-    // console.log("in checkOrientation");
-    const orientation = await ScreenOrientation.getOrientationAsync();
-    // console.log(`orientation is ${orientation}`);
-    if (
-      o.orientationInfo.orientation == 4 ||
-      o.orientationInfo.orientation == 3
-    ) {
-      setOrientation("landscape");
-    } else {
-      setOrientation("portrait");
-    }
-  };
-  const handleOrientationChange = async (o) => {
-    // console.log(
-    //   `o.orientationInfo.orientation: ${o.orientationInfo.orientation}`
-    // );
-    setOrientation(o.orientationInfo.orientation);
-    if (
-      o.orientationInfo.orientation == 4 ||
-      o.orientationInfo.orientation == 3
-    ) {
-      setOrientation("landscape");
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
-      );
-    } else {
-      setOrientation("portrait");
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP
-      );
-    }
-  };
-  // // for PRODUCTION -> forces to landscape
+  // // for TESTing -> allows to change orientation
   // useEffect(() => {
-  //   const lockToLandscape = async () => {
-  //     await ScreenOrientation.lockAsync(
-  //       ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
-  //     );
-  //     setOrientation("landscape");
-  //   };
-
-  //   lockToLandscape(); // Force landscape mode when component mounts
+  //   ScreenOrientation.unlockAsync();
+  //   checkOrientation();
+  //   const subscriptionScreenOrientation =
+  //     ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
 
   //   return () => {
-  //     ScreenOrientation.lockAsync(
-  //       ScreenOrientation.OrientationLock.PORTRAIT_UP
-  //     ); // Reset to portrait when leaving
+  //     subscriptionScreenOrientation.remove();
+  //     ScreenOrientation.lockAsync();
   //   };
-  // }, []);
+  // });
+  // const checkOrientation = async () => {
+  //   // console.log("in checkOrientation");
+  //   const orientation = await ScreenOrientation.getOrientationAsync();
+  //   // console.log(`orientation is ${orientation}`);
+  //   if (
+  //     o.orientationInfo.orientation == 4 ||
+  //     o.orientationInfo.orientation == 3
+  //   ) {
+  //     setOrientation("landscape");
+  //   } else {
+  //     setOrientation("portrait");
+  //   }
+  // };
+  // const handleOrientationChange = async (o) => {
+  //   // console.log(
+  //   //   `o.orientationInfo.orientation: ${o.orientationInfo.orientation}`
+  //   // );
+  //   setOrientation(o.orientationInfo.orientation);
+  //   if (
+  //     o.orientationInfo.orientation == 4 ||
+  //     o.orientationInfo.orientation == 3
+  //   ) {
+  //     setOrientation("landscape");
+  //     await ScreenOrientation.lockAsync(
+  //       ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+  //     );
+  //   } else {
+  //     setOrientation("portrait");
+  //     await ScreenOrientation.lockAsync(
+  //       ScreenOrientation.OrientationLock.PORTRAIT_UP
+  //     );
+  //   }
+  // };
+  // for PRODUCTION -> forces to landscape
+  useEffect(() => {
+    const lockToLandscape = async () => {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
+      );
+      setOrientation("landscape");
+    };
+
+    lockToLandscape(); // Force landscape mode when component mounts
+
+    return () => {
+      ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP
+      ); // Reset to portrait when leaving
+    };
+  }, []);
 
   const handleBackPress = async () => {
     await ScreenOrientation.lockAsync(

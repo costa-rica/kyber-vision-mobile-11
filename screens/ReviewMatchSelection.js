@@ -440,7 +440,7 @@ export default function ReviewMatchSelection({ navigation }) {
           />
           <View>
             {/* <Text>{JSON.stringify(videosList)}</Text> */}
-            <Text>{JSON.stringify(downloadStatuses)}</Text>
+            {/* <Text>{JSON.stringify(downloadStatuses)}</Text> */}
           </View>
         </View>
       </View>

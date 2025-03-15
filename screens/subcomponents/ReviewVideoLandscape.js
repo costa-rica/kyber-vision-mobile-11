@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
+  Platform,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -26,7 +27,7 @@ export default function ReviewVideoLandscape(props) {
   const reviewReducer = useSelector((state) => state.review);
   const dispatch = useDispatch();
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [topRightIsVisible, setTopRightIsVisible] = useState(false);
+  const [topAndRightIsVisible, setTopAndRightIsVisible] = useState(false);
   const vwVideo = {
     flex: 1,
     backgroundColor: "white",
@@ -58,7 +59,7 @@ export default function ReviewVideoLandscape(props) {
             />
           )}
           <Text style={styles.txtAction}>{item.actionsArrayId} </Text>
-          <Text style={{ fontSize: 10, color: "white" }}>{item.playerId}</Text>
+          {/* <Text style={{ fontSize: 10, color: "white" }}>{item.playerId}</Text> */}
         </TouchableOpacity>
       );
     }
@@ -67,7 +68,6 @@ export default function ReviewVideoLandscape(props) {
         <TouchableOpacity
           style={styles.touchOpBtnFavorite}
           onPress={() =>
-            // dispatch(toggleReviewReducerActionIsFavorite(item.actionTableId))
             dispatch(toggleReviewReducerActionIsFavorite(item.actionsTableId))
           }
         >
@@ -78,10 +78,8 @@ export default function ReviewVideoLandscape(props) {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[
-            styles.touchOpAction,
-            { borderWidth: 3, borderColor: "white", borderRadius: 12 },
-          ]}
+          // style={styles.touchOpActionPlaying}
+          style={[styles.touchOpAction, styles.touchOpActionPlaying]}
           onPress={() => props.setCurrentTimeManager(item.timestamp - 0.75)}
         >
           {item.isFavorite && (
@@ -92,98 +90,187 @@ export default function ReviewVideoLandscape(props) {
             />
           )}
           <Text style={[styles.txtAction]}>{item.actionsArrayId} </Text>
-          <Text style={{ fontSize: 10, color: "white" }}>{item.playerId}</Text>
+          {/* <Text style={{ fontSize: 10, color: "white" }}>{item.playerId}</Text> */}
         </TouchableOpacity>
       </View>
     );
   };
 
+  // ---- Dynamic Styles ---
+  const stylesContainerBottom = {
+    position: "absolute",
+    bottom: 15,
+    width: Dimensions.get("window").width,
+    zIndex: 1,
+    flexDirection: "row",
+    gap: 5,
+    height: 90,
+  };
+  const stylesVwContainerBottomLeft = {
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "flex-end",
+    width: Dimensions.get("window").width * 0.12,
+    // backgroundColor: "green",
+  };
+  const stylesVwActionsFlatListSuper = {
+    width: Dimensions.get("window").width * 0.7,
+  };
+  const stylesVwActionsFlatList = {
+    flexDirection: "row",
+    gap: 5,
+    paddingTop: 35,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    flexGrow: 1,
+  };
+  const stylesTouchOpSetTopAndRightIsVisible = {
+    position: "absolute",
+    top: 15,
+    right: 15,
+    zIndex: 1,
+    // width: 30,
+    // height: 30,
+    // backgroundColor: "white",
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.containerTopRight}>
-        <View style={styles.vwPlayersSelectedAndDropDownSuper}>
-          <Text style={styles.txtPlayersTitle}>Players</Text>
-          <View style={styles.vwPlayersSelectedAndDropDown}>
-            <View style={styles.vwPlayersSelected}>
-              {reviewReducer.reviewReducerListOfPlayerDbObjects.map(
-                (playerDbObject) => {
-                  if (playerDbObject.isDisplayed) {
-                    return (
-                      <TouchableOpacity
-                        key={playerDbObject.id}
-                        onPress={() =>
-                          props.filterActions("player", playerDbObject)
-                        }
-                        style={styles.touchOpSelectPlayer}
-                      >
-                        <Text style={styles.txtPlayer}>
-                          {playerDbObject.firstName.substring(0, 3)}
-                        </Text>
-                        <Image
-                          source={require("../../assets/images/whiteX.png")}
-                          resizeMode="contain"
-                          style={{
-                            width: 15,
-                            height: 15,
-                            paddingLeft: 5,
-                          }}
-                        />
-                        {/* <Text style={styles.txtPlayerX}> x</Text> */}
-                      </TouchableOpacity>
-                    );
-                  }
-                }
-              )}
-            </View>
-            <View style={styles.vwPlayersDropDownArrow}>
-              <TouchableOpacity
-                onPress={() => setDropdownVisible(!isDropdownVisible)}
-              >
-                <Image
-                  source={require("../../assets/images/btnReviewVideoPlayersDownArrow.png")}
-                  resizeMode="contain"
-                  style={{
-                    transform: [
-                      { rotate: isDropdownVisible ? "90deg" : "0deg" },
-                    ],
-                    width: 20,
-                    height: 20,
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        <View style={styles.vwFavoritesSwitchAndTitle}>
-          <Text style={styles.txtFavoritesTitle}>Favorites Only</Text>
-          <View style={styles.vwFavoritesSwitch}>
-            <SwitchKvWhite
-              state={isFavoritesOnly}
-              onPressCustom={() => {
-                dispatch(filterReviewReducerActionsArrayOnIsFavorite());
-                // setIsFavoritesOnly(reviewReducer.isFavoriteToggle);
-              }}
-              // setState={setIsFavoritesOnly}
-              // setState={()=>}
-            />
-          </View>
-        </View>
-      </View>
-      <View style={styles.containerMiddleRight}>
+      <View style={{ position: "absolute", top: 15, left: 15, zIndex: 1 }}>
         <TouchableOpacity
+          // style={styles.touchOpCircle}
           onPress={() => {
-            console.log("pressed middle right");
+            props.handleBackPress();
           }}
-          style={styles.touchOpMiddleRight}
         >
           <Image
-            source={require("../../assets/images/btnShareDiagram.png")}
+            //style={{ width: 24, height: 24 }} // Adjust based on expected size
+            source={require("../../assets/images/btnBackArrowWhite.png")}
             resizeMode="contain"
-            style={{ width: 30, height: 30 }}
           />
-          <Text style={styles.txtMiddleRight}>Share or export 12 actions</Text>
         </TouchableOpacity>
       </View>
+      {!topAndRightIsVisible && (
+        <TouchableOpacity
+          onPress={() => setTopAndRightIsVisible(true)}
+          style={stylesTouchOpSetTopAndRightIsVisible}
+        >
+          <Image
+            source={require("../../assets/images/btnReviewVideoSideTab.png")}
+            resizeMode="contain"
+            style={{}}
+          />
+        </TouchableOpacity>
+      )}
+      {topAndRightIsVisible && (
+        <View style={styles.containerTopRight}>
+          <View style={styles.vwPlayersSelectedGroupAndFavoritesSuper}>
+            <TouchableOpacity
+              onPress={() => setTopAndRightIsVisible(false)}
+              style={styles.containerTopRightSideTabClose}
+            >
+              <Image
+                source={require("../../assets/images/btnReviewVideoSideTabClose.png")}
+                resizeMode="contain"
+                style={{}}
+              />
+            </TouchableOpacity>
+            {/* <View style={styles.vwPlayersSelectedGroupSuper}> */}
+            <View style={styles.vwPlayersSelectedGroupAndFavorites}>
+              <View style={styles.vwPlayersSelectedGroup}>
+                <Text style={styles.txtPlayersTitle}>Players</Text>
+                <View style={styles.vwPlayersSelectedAndDropDown}>
+                  <View style={styles.vwPlayersSelected}>
+                    {reviewReducer.reviewReducerListOfPlayerDbObjects.map(
+                      (playerDbObject) => {
+                        if (playerDbObject.isDisplayed) {
+                          return (
+                            <TouchableOpacity
+                              key={playerDbObject.id}
+                              onPress={() =>
+                                props.filterActions("player", playerDbObject)
+                              }
+                              style={styles.touchOpSelectPlayer}
+                            >
+                              <Text style={styles.txtPlayer}>
+                                {playerDbObject.firstName.substring(0, 3)}
+                              </Text>
+                              <Image
+                                source={require("../../assets/images/whiteX.png")}
+                                resizeMode="contain"
+                                style={{
+                                  width: 15,
+                                  height: 15,
+                                  paddingLeft: 5,
+                                }}
+                              />
+                              {/* <Text style={styles.txtPlayerX}> x</Text> */}
+                            </TouchableOpacity>
+                          );
+                        }
+                      }
+                    )}
+                  </View>
+                  <View style={styles.vwPlayersDropDownArrow}>
+                    <TouchableOpacity
+                      onPress={() => setDropdownVisible(!isDropdownVisible)}
+                    >
+                      <Image
+                        source={require("../../assets/images/btnReviewVideoPlayersDownArrow.png")}
+                        resizeMode="contain"
+                        style={{
+                          transform: [
+                            { rotate: isDropdownVisible ? "90deg" : "0deg" },
+                          ],
+                          width: 20,
+                          height: 20,
+                        }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.vwFavoritesSwitchAndTitle}>
+                <Text style={styles.txtFavoritesTitle}>Favorites Only</Text>
+                <View style={styles.vwFavoritesSwitch}>
+                  <SwitchKvWhite
+                    state={isFavoritesOnly}
+                    onPressCustom={() => {
+                      dispatch(filterReviewReducerActionsArrayOnIsFavorite());
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+
+          {/* <View style={styles.containerMiddleRight}> */}
+          <View style={styles.vwShare}>
+            <TouchableOpacity
+              onPress={() => {
+                console.log("pressed middle right");
+              }}
+              style={styles.touchOpMiddleRight}
+            >
+              <Image
+                source={require("../../assets/images/btnShareDiagram.png")}
+                resizeMode="contain"
+                style={{ width: 30, height: 30 }}
+              />
+              <Text style={styles.txtMiddleRight}>
+                Share or export{" "}
+                {
+                  reviewReducer.reviewReducerActionsArray.filter(
+                    (action) => action.isDisplayed
+                  ).length
+                }{" "}
+                actions
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       <View style={vwVideo}>
         <VideoView
@@ -192,8 +279,8 @@ export default function ReviewVideoLandscape(props) {
           nativeControls={false}
         />
       </View>
-      <View style={styles.containerBottom}>
-        <View style={styles.vwContainerBottomLeft}>
+      <View style={stylesContainerBottom}>
+        <View style={stylesVwContainerBottomLeft}>
           <ButtonKvImage
             onPress={() => {
               console.log("rotate screen to landscape");
@@ -227,14 +314,21 @@ export default function ReviewVideoLandscape(props) {
             {/* </View> */}
           </ButtonKvImage>
         </View>
-        <View style={styles.vwActionsSuper}>
+        <View style={stylesVwActionsFlatListSuper}>
           {/* 🔹 FlatList for Actions */}
           <FlatList
             data={reviewReducer.reviewReducerActionsArray}
             renderItem={renderActionItem}
             keyExtractor={(item, index) => index.toString()}
             horizontal={true}
-            contentContainerStyle={styles.vwActions}
+            contentContainerStyle={stylesVwActionsFlatList}
+            // contentContainerStyle={[
+            //   styles.vwActions,
+            //   { flexGrow: 1, backgroundColor: "green" },
+            // ]} // Ensure scrollable content
+            // showsHorizontalScrollIndicator={true} // Optional: show scrollbar
+            bounces={false} // Prevent elastic bounce effect on iOS
+            scrollEnabled={true} // Ensure scrolling is enabled
           />
         </View>
       </View>
@@ -298,10 +392,34 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     borderBottomLeftRadius: 12, // Round bottom-left corner
-    backgroundColor: "rgba(74,74,74,.74)",
+    // backgroundColor: "rgba(74,74,74,.74)",
     flexDirection: "row",
-    gap: 10,
+    // gap: 10,
     padding: 3,
+  },
+  containerTopRight: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    // width: 400,
+    // height: 50,
+    zIndex: 1,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  vwPlayersSelectedGroupAndFavoritesSuper: {
+    justifyContent: "flex-end",
+    alignItems: "center",
+    borderBottomLeftRadius: 12, // Round bottom-left corner
+    // backgroundColor: "rgba(74,74,74,.74)",
+    flexDirection: "row",
+    // gap: 10,
+    // padding: 3,
+  },
+  containerTopRightSideTabClose: {
+    // position: "absolute",
+    // top: 0,
+    // left: -,
   },
   vwFavoritesSwitch: {
     height: 50,
@@ -313,8 +431,17 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-  vwPlayersSelectedAndDropDownSuper: {
+  vwPlayersSelectedGroupAndFavorites: {
     // justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    // padding: 3,
+    backgroundColor: "rgba(74,74,74,.74)",
+    borderBottomLeftRadius: 10,
+  },
+  vwPlayersSelectedGroup: {
+    // justifyContent: "center",
+    // flexDirection: "row",
     alignItems: "center",
     padding: 3,
   },
@@ -379,14 +506,16 @@ const styles = StyleSheet.create({
   // },
 
   // --- middle right: share ---
-  containerMiddleRight: {
-    position: "absolute",
-    top: 80,
-    right: 0,
+  // containerMiddleRight: {
+  vwShare: {
+    // position: "absolute",
+    // top: 80,
+    // right: 0,
     width: 70,
     backgroundColor: "rgba(74,74,74,.74)",
     zIndex: 1,
-    borderRadius: 12,
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
     flexDirection: "row",
     gap: 5,
     padding: 5,
@@ -415,27 +544,6 @@ const styles = StyleSheet.create({
   },
 
   // -- BOTTOM ---
-  containerBottom: {
-    position: "absolute",
-    bottom: 15,
-    width: "100%",
-    // backgroundColor: "rgba(74,74,74,.74)",
-    zIndex: 1,
-    // borderRadius: 12,
-    flexDirection: "row",
-    gap: 5,
-    // padding: 5,
-    justifyContent: "space-between",
-    // alignItems: "flex-end",
-    height: 80,
-  },
-  vwContainerBottomLeft: {
-    flexDirection: "row",
-    gap: 10,
-    alignItems: "flex-end",
-    width: Dimensions.get("window").width * 0.15,
-    backgroundColor: "green",
-  },
   vwBtnPausePlay: {
     justifyContent: "center",
     alignItems: "center",
@@ -456,31 +564,25 @@ const styles = StyleSheet.create({
     fontSize: 15,
     // textAlign: "center",
   },
-  vwActionsSuper: {
-    top: -10,
-    width: Dimensions.get("window").width * 0.6,
-  },
-  vwActions: {
-    flexDirection: "row",
-    gap: 5,
-    paddingTop: 35,
-    // backgroundColor: "green",
-    width: Dimensions.get("window").width * 0.6,
-  },
   txtAction: {
     color: "white",
     fontWeight: "bold",
     fontFamily: "ApfelGrotezkBold",
     fontSize: 20,
+    // textAlign: "center",
   },
   touchOpAction: {
-    padding: 5,
     borderRadius: 5,
-    backgroundColor: "rgba(110,110,110,1)",
+    backgroundColor: "rgba(110,110,110,.7)",
     justifyContent: "center",
     alignItems: "center",
-    padding: 2,
     width: 45,
+    height: 45,
+  },
+  touchOpActionPlaying: {
+    borderWidth: 3,
+    borderColor: "white",
+    borderRadius: 12,
   },
   imgIsFavorite: {
     position: "absolute",
