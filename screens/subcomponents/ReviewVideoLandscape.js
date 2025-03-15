@@ -250,6 +250,7 @@ export default function ReviewVideoLandscape(props) {
             <TouchableOpacity
               onPress={() => {
                 console.log("pressed middle right");
+                props.requestMontageVideo();
               }}
               style={styles.touchOpMiddleRight}
             >

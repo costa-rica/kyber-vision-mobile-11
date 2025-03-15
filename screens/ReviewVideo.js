@@ -25,7 +25,7 @@ import {
 import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
 import ReviewVideoPortrait from "./subcomponents/ReviewVideoPortrait";
 // import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   filterReviewReducerActionsArrayOnPlayer,
   updateReviewReducerIsPlayingforActionsArray,
@@ -33,6 +33,8 @@ import {
 
 export default function ReviewVideo({ navigation, route }) {
   const dispatch = useDispatch();
+  const reviewReducer = useSelector((state) => state.review);
+  const userReducer = useSelector((state) => state.user);
   // Video progress state
   const [progress, setProgress] = useState(0);
   // orientation
@@ -142,6 +144,40 @@ export default function ReviewVideo({ navigation, route }) {
     }
   };
 
+  const requestMontageVideo = async () => {
+    console.log(`in requestMontage video`);
+    console.log(reviewReducer.reviewReducerVideoObject.id);
+
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/videos/montage/${reviewReducer.reviewReducerVideoObject.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify({
+          matchId: 1,
+          actionsArray: reviewReducer.reviewReducerActionsArray.filter(
+            (action) => action.isDisplayed
+          ),
+        }),
+      }
+    );
+
+    if (response.status !== 200) {
+      // console.log(`There was a server error: ${response.status}`);
+      alert(`There was a server error: ${response.status}`);
+      return;
+    } else {
+      const contentType = response.headers.get("Content-Type");
+      if (contentType?.includes("application/json")) {
+        const resJson = await response.json();
+        alert(resJson.message);
+      }
+    }
+  };
+
   return orientation == "portrait" ? (
     <ReviewVideoPortrait
       navigation={navigation}
@@ -151,6 +187,7 @@ export default function ReviewVideo({ navigation, route }) {
       setCurrentTimeManager={setCurrentTimeManager}
       handleBackPress={handleBackPress}
       filterActions={filterActions}
+      requestMontageVideo={requestMontageVideo}
     />
   ) : (
     <ReviewVideoLandscape
@@ -161,6 +198,7 @@ export default function ReviewVideo({ navigation, route }) {
       setCurrentTimeManager={setCurrentTimeManager}
       handleBackPress={handleBackPress}
       filterActions={filterActions}
+      requestMontageVideo={requestMontageVideo}
     />
   );
   // return (

@@ -4,6 +4,7 @@ const initialState = {
   reviewReducerActionsArray: [],
   reviewReducerListOfPlayerDbObjects: [],
   isFavoriteToggle: false,
+  reviewReducerVideoObject: null,
 };
 
 // --- Elements of reviewActionsArray:
@@ -29,6 +30,9 @@ export const reviewSlice = createSlice({
   name: "review",
   initialState,
   reducers: {
+    updateReviewReducerVideoObject: (state, action) => {
+      state.reviewReducerVideoObject = action.payload;
+    },
     createReviewActionsArray: (state, action) => {
       state.reviewReducerActionsArray = action.payload;
     },
@@ -178,6 +182,7 @@ export const reviewSlice = createSlice({
 });
 
 export const {
+  updateReviewReducerVideoObject,
   createReviewActionsArray,
   createReviewActionsArrayUniquePlayersNamesAndObjects,
   filterReviewReducerActionsArrayOnPlayer,

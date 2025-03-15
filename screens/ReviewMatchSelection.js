@@ -28,6 +28,7 @@ import {
   initializePlayerNamesArrayRotated,
 } from "../reducers/script";
 import {
+  updateReviewReducerVideoObject,
   createReviewActionsArray,
   createReviewActionsArrayUniquePlayersNamesAndObjects,
 } from "../reducers/review";
@@ -137,13 +138,15 @@ export default function ReviewMatchSelection({ navigation }) {
     }
   };
   const pressBtnVideo = async (elem) => {
-    // 1. get video details in the userReducer
+    // 1.1 get video details in the userReducer <-- might be unnecessary consider deleting.
     dispatch(
       storeVideoDetailsInRedux({
         video: elem,
         // videoSetTimesArray: elem.setTimeStamps,
       })
     );
+    // 1.2 get video details in the reviewReducer
+    dispatch(updateReviewReducerVideoObject(elem));
 
     // 2. check if the video is already downloaded
     if (!downloadStatuses[elem.filename]) {
