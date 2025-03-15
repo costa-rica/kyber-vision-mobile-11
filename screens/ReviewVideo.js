@@ -27,7 +27,7 @@ import ReviewVideoPortrait from "./subcomponents/ReviewVideoPortrait";
 // import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
-  updateReviewReducerIsDisplayedForPlayerObject,
+  filterReviewReducerActionsArrayOnPlayer,
   updateReviewReducerIsPlayingforActionsArray,
 } from "../reducers/review";
 
@@ -138,7 +138,7 @@ export default function ReviewVideo({ navigation, route }) {
   // Filtering actions
   const filterActions = (parameterName, object) => {
     if (parameterName === "player") {
-      dispatch(updateReviewReducerIsDisplayedForPlayerObject(object));
+      dispatch(filterReviewReducerActionsArrayOnPlayer(object));
     }
   };
 

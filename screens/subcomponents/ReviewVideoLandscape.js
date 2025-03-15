@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  updateReviewReducerIsDisplayedForPlayerObject,
+  filterReviewReducerActionsArrayOnPlayer,
   toggleReviewReducerActionIsFavorite,
   filterReviewReducerActionsArrayOnIsFavorite,
 } from "../../reducers/review";
@@ -34,9 +34,9 @@ export default function ReviewVideoLandscape(props) {
   };
   const [isFavoritesOnly, setIsFavoritesOnly] = useState(false);
 
-  useEffect(() => {
-    dispatch(filterReviewReducerActionsArrayOnIsFavorite(isFavoritesOnly));
-  }, [isFavoritesOnly]);
+  // useEffect(() => {
+  //   dispatch(filterReviewReducerActionsArrayOnIsFavorite());
+  // }, [isFavoritesOnly]);
 
   // 🔹 Function to render each action in the FlatList
   const renderActionItem = ({ item }) => {
@@ -55,6 +55,7 @@ export default function ReviewVideoLandscape(props) {
             />
           )}
           <Text style={styles.txtAction}>{item.actionsArrayId} </Text>
+          <Text style={{ fontSize: 10, color: "white" }}>{item.playerId}</Text>
         </TouchableOpacity>
       );
     }
@@ -88,6 +89,7 @@ export default function ReviewVideoLandscape(props) {
             />
           )}
           <Text style={[styles.txtAction]}>{item.actionsArrayId} </Text>
+          <Text style={{ fontSize: 10, color: "white" }}>{item.playerId}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -154,7 +156,11 @@ export default function ReviewVideoLandscape(props) {
           <View style={styles.vwFavoritesSwitch}>
             <SwitchKvWhite
               state={isFavoritesOnly}
-              setState={setIsFavoritesOnly}
+              onPressCustom={() => {
+                setIsFavoritesOnly((previousState) => !previousState);
+                dispatch(filterReviewReducerActionsArrayOnIsFavorite());
+              }}
+              // setState={setIsFavoritesOnly}
               // setState={()=>}
             />
           </View>
@@ -244,9 +250,7 @@ export default function ReviewVideoLandscape(props) {
                     key={playerDbObject.id}
                     onPress={() =>
                       dispatch(
-                        updateReviewReducerIsDisplayedForPlayerObject(
-                          playerDbObject
-                        )
+                        filterReviewReducerActionsArrayOnPlayer(playerDbObject)
                       )
                     }
                     style={styles.touchOpSelectPlayer}

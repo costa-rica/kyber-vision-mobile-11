@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   reviewReducerActionsArray: [],
   reviewReducerListOfPlayerDbObjects: [],
+  isFavoriteToggle: false,
 };
 
 // --- Elements of reviewActionsArray:
@@ -35,99 +36,9 @@ export const reviewSlice = createSlice({
       state.reviewReducerListOfPlayerDbObjects =
         action.payload.playerDbObjectsArray;
     },
-    updateReviewReducerIsDisplayedForPlayerObject: (state, action) => {
-      const playerId = action.payload.id;
-
-      // Toggle isDisplayed in reviewReducerListOfPlayerDbObjects
-      const player = state.reviewReducerListOfPlayerDbObjects.find(
-        (p) => p.id === playerId
-      );
-      if (player) {
-        player.isDisplayed = !player.isDisplayed;
-      }
-
-      // Toggle isDisplayed for corresponding actions in reviewReducerActionsArray
-      state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
-        (action) =>
-          action.playerId === playerId
-            ? { ...action, isDisplayed: !action.isDisplayed }
-            : action
-      );
-    },
-    // 🔹 New function: updateReviewReducerIsPlayingforActionsArray
-    // updateReviewReducerIsPlayingforActionsArray: (state, action) => {
-    //   const currentTime = action.payload;
-
-    //   // Find the last action whose timestamp is greater than currentTime
-    //   let updatedActions = state.reviewReducerActionsArray.map((action) => ({
-    //     ...action,
-    //     isPlaying: false, // Reset all to false
-    //   }));
-
-    //   for (let i = 0; i < updatedActions.length; i++) {
-    //     if (currentTime < updatedActions[i].timestamp) {
-    //       if (i > 0) {
-    //         updatedActions[i - 1].isPlaying = true; // Set the previous action as playing
-    //       }
-    //       break; // Stop at the first match
-    //     }
-    //   }
-
-    //   state.reviewReducerActionsArray = updatedActions;
-    // },
-    // updateReviewReducerIsPlayingforActionsArray: (state, action) => {
-    //   const currentTime = action.payload;
-    //   const threshold = 0.5; // Define a small range for tolerance
-
-    //   let closestAction = state.reviewReducerActionsArray.reduce(
-    //     (prev, curr) => {
-    //       return Math.abs(curr.timestamp - currentTime) <
-    //         Math.abs(prev.timestamp - currentTime)
-    //         ? curr
-    //         : prev;
-    //     }
-    //   );
-
-    //   // Update the array with only the closest action as `isPlaying: true`
-    //   state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
-    //     (action) => ({
-    //       ...action,
-    //       isPlaying: Math.abs(action.timestamp - currentTime) <= threshold,
-    //     })
-    //   );
-    // },
-    // 🔹 New function: updateReviewReducerIsPlayingforActionsArray V3 -- keeps the last selected
-    // updateReviewReducerIsPlayingforActionsArray: (state, action) => {
-    //   const currentTime = action.payload;
-    //   const threshold = 0.5; // Define a tolerance range in seconds
-
-    //   let closestAction = state.reviewReducerActionsArray.reduce(
-    //     (prev, curr) => {
-    //       return Math.abs(curr.timestamp - currentTime) <
-    //         Math.abs(prev.timestamp - currentTime)
-    //         ? curr
-    //         : prev;
-    //     }
-    //   );
-
-    //   // If no action is within the threshold, keep the last known playing action
-    //   const newPlayingAction =
-    //     Math.abs(closestAction.timestamp - currentTime) <= threshold
-    //       ? closestAction
-    //       : state.reviewReducerActionsArray.find(
-    //           (action) => action.isPlaying
-    //         ) || closestAction;
-
-    //   // Update the array
-    //   state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
-    //     (action) => ({
-    //       ...action,
-    //       isPlaying: action === newPlayingAction,
-    //     })
-    //   );
-    // },
-    // 🔹 New function: updateReviewReducerIsPlayingforActionsArray V4 -- keeps the last selected and does not include isDisplayed=false
     updateReviewReducerIsPlayingforActionsArray: (state, action) => {
+      // 🔹 used by ReviewVideo useEventListener to update the currently played action
+      // 🔹 > keeps the last selected and does not include isDisplayed=false
       const currentTime = action.payload;
       const threshold = 0.5; // Define a tolerance range in seconds
 
@@ -170,7 +81,39 @@ export const reviewSlice = createSlice({
         })
       );
     },
+
+    filterReviewReducerActionsArrayOnPlayer: (state, action) => {
+      // 🔹  filter on player by toggline on isDisplayed
+      // 🔹  takes into account the isFavoriteToggle
+      const playerId = action.payload.id;
+
+      // Toggle isDisplayed in reviewReducerListOfPlayerDbObjects
+      const player = state.reviewReducerListOfPlayerDbObjects.find(
+        (p) => p.id === playerId
+      );
+      if (player) {
+        player.isDisplayed = !player.isDisplayed;
+      }
+
+      // Toggle isDisplayed for corresponding actions in reviewReducerActionsArray
+      state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+        (action) => {
+          if (state.isFavoriteToggle) {
+            return action.playerId === playerId && action.isFavorite
+              ? { ...action, isDisplayed: !action.isDisplayed }
+              : action;
+          } else {
+            return action.playerId === playerId
+              ? { ...action, isDisplayed: !action.isDisplayed }
+              : action;
+          }
+        }
+      );
+    },
+
     toggleReviewReducerActionIsFavorite: (state, action) => {
+      // 🔹  Used by ReviewVideoLandscape > star button
+      // 🔹  > toggle isFavorite for corresponding action
       const actionsTableId = action.payload;
 
       state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
@@ -180,14 +123,42 @@ export const reviewSlice = createSlice({
             : item
       );
     },
-    filterReviewReducerActionsArrayOnIsFavorite: (state, action) => {
-      const shouldDisplayFavorites = action.payload; // Boolean payload
+
+    filterReviewReducerActionsArrayOnIsFavorite: (state) => {
+      // 🔹 If payload === true → Show only favorite actions, but apply the player filtering
+      // 🔹 If payload === false → Show all actions, but still respect player filtering.
+      // const shouldShowOnlyFavorites = action.payload; // Boolean payload
+      console.log("in filterReviewReducerActionsArrayOnIsFavorite");
+      state.isFavoriteToggle = !state.isFavoriteToggle;
 
       state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
-        (item) => ({
-          ...item,
-          isDisplayed: item.isFavorite === shouldDisplayFavorites, // Match payload for favorites, inverse for non-favorites
-        })
+        (actionItem) => {
+          // Find the corresponding player object based on playerId
+          const matchingPlayer = state.reviewReducerListOfPlayerDbObjects.find(
+            (player) => player.id === actionItem.playerId
+          );
+
+          // Ensure we have a matching player
+          if (!matchingPlayer) {
+            return actionItem; // Skip if no matching player is found
+          }
+
+          // If state.isFavoriteToggle is true, show only favorites & apply player filtering
+          if (state.isFavoriteToggle) {
+            return {
+              ...actionItem,
+              isDisplayed: actionItem.isFavorite
+                ? matchingPlayer.isDisplayed
+                : false,
+            };
+          }
+
+          // If shouldShowOnlyFavorites is false, show all actions & apply player filtering
+          return {
+            ...actionItem,
+            isDisplayed: matchingPlayer.isDisplayed,
+          };
+        }
       );
     },
   },
@@ -196,7 +167,7 @@ export const reviewSlice = createSlice({
 export const {
   createReviewActionsArray,
   createReviewActionsArrayUniquePlayersNamesAndObjects,
-  updateReviewReducerIsDisplayedForPlayerObject,
+  filterReviewReducerActionsArrayOnPlayer,
   updateReviewReducerIsPlayingforActionsArray,
   toggleReviewReducerActionIsFavorite,
   filterReviewReducerActionsArrayOnIsFavorite,

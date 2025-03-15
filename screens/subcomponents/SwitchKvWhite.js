@@ -12,7 +12,7 @@ import {
 
 export default function SwitchKvWhite({
   state,
-  setState,
+  onPressCustom,
 
   // onPress,
   // colorBackground = "#A3A3A3",
@@ -23,7 +23,8 @@ export default function SwitchKvWhite({
   return (
     <TouchableOpacity
       style={[styles.switch]}
-      onPress={() => setState((previousState) => !previousState)}
+      // onPress={() => setState((previousState) => !previousState)}
+      onPress={onPressCustom}
     >
       {/* "Y" on the left */}
       <Text style={[styles.trackText, { right: 10 }]}>Y</Text>
