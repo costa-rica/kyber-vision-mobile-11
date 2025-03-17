@@ -16,6 +16,7 @@ import PlayerSelection from "./screens/PlayerSelection";
 import ReviewMatchSelection from "./screens/ReviewMatchSelection";
 import ReviewVideo from "./screens/ReviewVideo";
 import ReviewVideoLandscape from "./screens/subcomponents/ReviewVideoLandscape";
+import ResetPasswordRequest from "./screens/ResetPasswordRequest";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -86,6 +87,10 @@ export default function App() {
             <Stack.Screen
               name="ReviewVideoLandscape"
               component={ReviewVideoLandscape}
+            />
+            <Stack.Screen
+              name="ResetPasswordRequest"
+              component={ResetPasswordRequest}
             />
           </Stack.Navigator>
         </NavigationContainer>

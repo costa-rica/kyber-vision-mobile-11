@@ -132,7 +132,7 @@ export default function Login({ navigation }) {
           <View style={styles.vwButtons}>
             <TouchableOpacity
               style={[styles.touchOpButton, { backgroundColor: "#970F9A" }]}
-              onPress={() => console.log("pressed Forgot Password")}
+              onPress={() => navigation.navigate("ResetPasswordRequest")}
             >
               <Text style={styles.txtButton}>Forgot Password</Text>
             </TouchableOpacity>
