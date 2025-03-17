@@ -28,7 +28,12 @@ import ReviewVideoPortrait from "./subcomponents/ReviewVideoPortrait";
 import { useDispatch, useSelector } from "react-redux";
 import {
   filterReviewReducerActionsArrayOnPlayer,
-  updateReviewReducerIsPlayingforActionsArray,
+  // updateReviewReducerIsPlayingforActionsArray,
+  // setManuallySelectedAction,
+  // updateReviewReducerIsPlayingforActionsArrayV4,
+  pressedActionInReviewReducerActionArray,
+  updateReviewReducerIsPlayingforActionsArrayV5,
+  // setSelectedActionObject,
 } from "../reducers/review";
 
 export default function ReviewVideo({ navigation, route }) {
@@ -128,13 +133,21 @@ export default function ReviewVideo({ navigation, route }) {
   });
 
   // Seek video
-  const setCurrentTimeManager = (timeToSet) => {
+  const setCurrentTimeManager = (
+    timeToSet,
+    // manuallySelectedActionId = null
+    actionObject = null
+  ) => {
+    // dispatch(setManuallySelectedAction(manuallySelectedActionId));
+    // dispatch(setSelectedActionObject(actionObject));
+    dispatch(pressedActionInReviewReducerActionArray(actionObject));
     player.currentTime = timeToSet;
   };
 
   useEventListener(player, "timeUpdate", () => {
     setProgress(player.currentTime / player.duration);
-    dispatch(updateReviewReducerIsPlayingforActionsArray(player.currentTime));
+    // dispatch(updateReviewReducerIsPlayingforActionsArray(player.currentTime));
+    dispatch(updateReviewReducerIsPlayingforActionsArrayV5(player.currentTime));
   });
 
   // Filtering actions

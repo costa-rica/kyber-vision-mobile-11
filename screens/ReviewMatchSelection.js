@@ -283,8 +283,8 @@ export default function ReviewMatchSelection({ navigation }) {
       for (const elem of resJson.actionsArray) {
         // console.log(elem.id);
         tempCleanActionsArray.push({
-          actionsTableId: elem.id,
-          actionsArrayId: elem.actionsArrayId,
+          actionsDbTableId: elem.id,
+          reviewVideoActionsArrayIndex: elem.reviewVideoActionsArrayIndex,
           playerId: elem.playerId,
           timestamp: elem.timestampFromStartOfVideo,
           type: elem.type,

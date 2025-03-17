@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   View,
   TouchableOpacity,
@@ -15,6 +15,7 @@ import {
   toggleReviewReducerActionIsFavorite,
   filterReviewReducerActionsArrayOnIsFavorite,
   filterReviewReducerActionsArrayShowAll,
+  // pressedActionInReviewReducerActionArray,
 } from "../../reducers/review";
 import { useVideoPlayer, VideoView } from "expo-video";
 // import SwitchKv from "./SwitchKv";
@@ -38,6 +39,22 @@ export default function ReviewVideoLandscape(props) {
     reviewReducer.isFavoriteToggle
   );
 
+  const flatListRef = useRef(null); // 🔹 Store FlatList ref
+  // 🔹 Function to manually scroll to the currently playing action
+  const forceScrollFlatlistToAction = () => {
+    const currentPlayingIndex =
+      reviewReducer.reviewReducerActionsArray.findIndex(
+        (action) => action.isPlaying
+      );
+
+    if (flatListRef.current && currentPlayingIndex !== -1) {
+      flatListRef.current.scrollToIndex({
+        index: currentPlayingIndex,
+        animated: true,
+        viewPosition: 0.5, // Center the action in view
+      });
+    }
+  };
   useEffect(() => {
     setIsFavoritesOnly(reviewReducer.isFavoriteToggle);
   }, [reviewReducer.isFavoriteToggle]);
@@ -49,7 +66,9 @@ export default function ReviewVideoLandscape(props) {
       return (
         <TouchableOpacity
           style={styles.touchOpAction}
-          onPress={() => props.setCurrentTimeManager(item.timestamp - 0.75)}
+          onPress={() =>
+            props.setCurrentTimeManager(item.timestamp - 0.75, item)
+          }
         >
           {item.isFavorite && (
             <Image
@@ -58,7 +77,9 @@ export default function ReviewVideoLandscape(props) {
               style={styles.imgIsFavorite}
             />
           )}
-          <Text style={styles.txtAction}>{item.actionsArrayId} </Text>
+          <Text style={styles.txtAction}>
+            {item.reviewVideoActionsArrayIndex}{" "}
+          </Text>
           {/* <Text style={{ fontSize: 10, color: "white" }}>{item.playerId}</Text> */}
         </TouchableOpacity>
       );
@@ -68,7 +89,7 @@ export default function ReviewVideoLandscape(props) {
         <TouchableOpacity
           style={styles.touchOpBtnFavorite}
           onPress={() =>
-            dispatch(toggleReviewReducerActionIsFavorite(item.actionsTableId))
+            dispatch(toggleReviewReducerActionIsFavorite(item.actionsDbTableId))
           }
         >
           <Image
@@ -80,7 +101,9 @@ export default function ReviewVideoLandscape(props) {
         <TouchableOpacity
           // style={styles.touchOpActionPlaying}
           style={[styles.touchOpAction, styles.touchOpActionPlaying]}
-          onPress={() => props.setCurrentTimeManager(item.timestamp - 0.75)}
+          onPress={() =>
+            props.setCurrentTimeManager(item.timestamp - 0.75, item)
+          }
         >
           {item.isFavorite && (
             <Image
@@ -89,7 +112,9 @@ export default function ReviewVideoLandscape(props) {
               style={styles.imgIsFavorite}
             />
           )}
-          <Text style={[styles.txtAction]}>{item.actionsArrayId} </Text>
+          <Text style={[styles.txtAction]}>
+            {item.reviewVideoActionsArrayIndex}{" "}
+          </Text>
           {/* <Text style={{ fontSize: 10, color: "white" }}>{item.playerId}</Text> */}
         </TouchableOpacity>
       </View>
@@ -118,7 +143,7 @@ export default function ReviewVideoLandscape(props) {
   };
   const stylesVwActionsFlatList = {
     flexDirection: "row",
-    gap: 5,
+    // gap: 5,
     paddingTop: 35,
     paddingBottom: 10,
     paddingLeft: 10,
@@ -238,6 +263,7 @@ export default function ReviewVideoLandscape(props) {
                     state={isFavoritesOnly}
                     onPressCustom={() => {
                       dispatch(filterReviewReducerActionsArrayOnIsFavorite());
+                      forceScrollFlatlistToAction(); // 👈 Only triggers when the button is pressed
                     }}
                   />
                 </View>
@@ -315,21 +341,24 @@ export default function ReviewVideoLandscape(props) {
             {/* </View> */}
           </ButtonKvImage>
         </View>
+        {/* 🔹 FlatList for Actions */}
         <View style={stylesVwActionsFlatListSuper}>
-          {/* 🔹 FlatList for Actions */}
           <FlatList
+            ref={flatListRef} // Attach ref
             data={reviewReducer.reviewReducerActionsArray}
             renderItem={renderActionItem}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item) =>
+              item.reviewVideoActionsArrayIndex.toString()
+            }
             horizontal={true}
             contentContainerStyle={stylesVwActionsFlatList}
-            // contentContainerStyle={[
-            //   styles.vwActions,
-            //   { flexGrow: 1, backgroundColor: "green" },
-            // ]} // Ensure scrollable content
-            // showsHorizontalScrollIndicator={true} // Optional: show scrollbar
-            bounces={false} // Prevent elastic bounce effect on iOS
-            scrollEnabled={true} // Ensure scrolling is enabled
+            extraData={reviewReducer.reviewReducerActionsArray} // Ensures re-render
+            getItemLayout={(data, index) => ({
+              length: 50, // Approximate item width
+              offset: 50 * index, // Offset for accurate scrolling
+              index,
+            })}
+            showsHorizontalScrollIndicator={false} // Optional: hide scrollbar
           />
         </View>
       </View>
@@ -358,11 +387,12 @@ export default function ReviewVideoLandscape(props) {
                 return (
                   <TouchableOpacity
                     key={playerDbObject.id}
-                    onPress={() =>
+                    onPress={() => {
                       dispatch(
                         filterReviewReducerActionsArrayOnPlayer(playerDbObject)
-                      )
-                    }
+                      );
+                      forceScrollFlatlistToAction(); // 👈 Only triggers when the button is pressed
+                    }}
                     style={styles.touchOpSelectPlayer}
                   >
                     <Text>{playerDbObject.firstName.substring(0, 3)}</Text>
@@ -579,6 +609,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 45,
     height: 45,
+    marginLeft: 5,
   },
   touchOpActionPlaying: {
     borderWidth: 3,
@@ -588,6 +619,7 @@ const styles = StyleSheet.create({
   imgIsFavorite: {
     position: "absolute",
     top: -15,
+    // left: 15,
     width: 20,
     height: 20,
     zIndex: 20,
@@ -595,15 +627,15 @@ const styles = StyleSheet.create({
   touchOpBtnFavorite: {
     position: "absolute",
     top: -35,
-    left: 5,
+    left: 10,
     // width: 20,
     // height: 20,
     // justifyContent: "center",
     // alignItems: "center",
   },
   // imgBtnFavorite: {
-  //   width: 20,
-  //   height: 20,
+  //   paddingLeft: 15,
+  //   backgroundColor: "green",
   // },
   // --- Timeline ---
   gestureViewTimeline: {

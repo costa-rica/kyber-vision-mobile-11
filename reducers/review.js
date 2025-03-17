@@ -5,11 +5,14 @@ const initialState = {
   reviewReducerListOfPlayerDbObjects: [],
   isFavoriteToggle: false,
   reviewReducerVideoObject: null,
+  // manuallySelectedActionId: null, // New property to track user-selected action
+  selectedActionObject: null, // New property to track user-selected action
+  // selectedActionTimestamp: null, // New property to track user-selected action
 };
 
 // --- Elements of reviewActionsArray:
-// actionsTableId: elem.id,
-// actionsArrayId: elem.actionsArrayId,
+// actionsDbTableId: elem.id,
+// reviewVideoActionsArrayIndex: elem.reviewVideoActionsArrayIndex,
 // playerId: elem.playerId,
 // timestamp: elem.timestampFromStartOfVideo,
 // type: elem.type,
@@ -32,6 +35,7 @@ export const reviewSlice = createSlice({
   reducers: {
     updateReviewReducerVideoObject: (state, action) => {
       state.reviewReducerVideoObject = action.payload;
+      console.log(`- dans Redux: updateReviewReducerVideoObject 🔔`);
     },
     createReviewActionsArray: (state, action) => {
       state.reviewReducerActionsArray = action.payload;
@@ -40,48 +44,75 @@ export const reviewSlice = createSlice({
       state.reviewReducerListOfPlayerDbObjects =
         action.payload.playerDbObjectsArray;
     },
-    updateReviewReducerIsPlayingforActionsArray: (state, action) => {
-      // 🔹 used by ReviewVideo useEventListener to update the currently played action
-      // 🔹 > keeps the last selected and does not include isDisplayed=false
+
+    updateReviewReducerIsPlayingforActionsArrayV5: (state, action) => {
       const currentTime = action.payload;
-      const threshold = 0.5; // Define a tolerance range in seconds
+      const threshold = 0.25; // Define a tolerance range in seconds
 
       // Filter only actions where isDisplayed is true
       const displayedActions = state.reviewReducerActionsArray.filter(
         (action) => action.isDisplayed
       );
 
-      if (displayedActions.length === 0) {
-        // No displayed actions available, reset all to false
-        state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
-          (action) => ({
-            ...action,
-            isPlaying: false,
-          })
+      // Removed a check here for displayedActions.length === 0; I don't think its needed
+      let newPlayingAction = null;
+
+      // 🔹 Step 1: If a manual action is selected, keep it active until its timestamp is passed
+      if (
+        state.selectedActionObject &&
+        currentTime < state.selectedActionObject.timestamp
+      ) {
+        newPlayingAction = state.selectedActionObject;
+      } else {
+        state.selectedActionObject = null;
+
+        // 🔹 Step 2: Find the closest action, but ensure it's after the current time
+        let futureActions = displayedActions.filter(
+          (action) => action.timestamp >= currentTime
         );
-        return;
+
+        // 🔹 Step 2.1: Find the closest action, but ensure it's after the current time
+        if (futureActions.length > 0) {
+          newPlayingAction = futureActions.reduce((prev, curr) => {
+            return Math.abs(curr.timestamp - currentTime) <
+              Math.abs(prev.timestamp - currentTime)
+              ? curr
+              : prev;
+          });
+        } else {
+          // If no future actions exist, just keep the last available action
+          newPlayingAction = displayedActions[displayedActions.length - 1];
+        }
       }
 
-      // Find the closest displayed action
-      let closestAction = displayedActions.reduce((prev, curr) => {
-        return Math.abs(curr.timestamp - currentTime) <
-          Math.abs(prev.timestamp - currentTime)
-          ? curr
-          : prev;
-      });
-
-      // Determine which action should be playing
-      const newPlayingAction =
-        Math.abs(closestAction.timestamp - currentTime) <= threshold
-          ? closestAction
-          : displayedActions.find((action) => action.isPlaying) ||
-            closestAction;
-
-      // Update the array, ensuring only displayed actions can be set to true
+      // 🔹 Step 3: Update the state
       state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
         (action) => ({
           ...action,
-          isPlaying: action.isDisplayed && action === newPlayingAction,
+          isPlaying:
+            action.isDisplayed &&
+            action.reviewVideoActionsArrayIndex ===
+              newPlayingAction.reviewVideoActionsArrayIndex,
+        })
+      );
+    },
+
+    pressedActionInReviewReducerActionArray: (state, action) => {
+      state.selectedActionObject = action.payload;
+      // state.selectedActionTimestamp = action.payload.timestamp;
+      const updateActionIsPlaying = {
+        ...action.payload,
+        isPlaying: true,
+      };
+
+      // 🔹 UPDATE THE STATE
+      state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+        (action) => ({
+          ...action,
+          isPlaying:
+            action.isDisplayed &&
+            action.reviewVideoActionsArrayIndex ===
+              updateActionIsPlaying.reviewVideoActionsArrayIndex,
         })
       );
     },
@@ -118,11 +149,11 @@ export const reviewSlice = createSlice({
     toggleReviewReducerActionIsFavorite: (state, action) => {
       // 🔹  Used by ReviewVideoLandscape > star button
       // 🔹  > toggle isFavorite for corresponding action
-      const actionsTableId = action.payload;
+      const actionsDbTableId = action.payload;
 
       state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
         (item) =>
-          item.actionsTableId === actionsTableId
+          item.actionsDbTableId === actionsDbTableId
             ? { ...item, isFavorite: !item.isFavorite } // Toggle isFavorite
             : item
       );
@@ -190,6 +221,9 @@ export const {
   toggleReviewReducerActionIsFavorite,
   filterReviewReducerActionsArrayOnIsFavorite,
   filterReviewReducerActionsArrayShowAll,
+
+  updateReviewReducerIsPlayingforActionsArrayV5,
+  pressedActionInReviewReducerActionArray,
 } = reviewSlice.actions;
 
 export default reviewSlice.reducer;
