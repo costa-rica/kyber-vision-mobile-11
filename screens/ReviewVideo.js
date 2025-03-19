@@ -157,12 +157,46 @@ export default function ReviewVideo({ navigation, route }) {
     }
   };
 
+  const handlePressRequestMontageVideo = async () => {
+    const seledtionsCount = reviewReducer.reviewReducerActionsArray.filter(
+      (action) => action.isDisplayed
+    ).length;
+    if (seledtionsCount > 5) {
+      Alert.alert(
+        `You are about to request a montage of ${seledtionsCount} actions`, // Title
+        "Are you sure you want to proceed?", // Description
+        [
+          {
+            text: "No",
+            onPress: () => console.log("❌ No Pressed"),
+            style: "cancel", // iOS cancel style
+          },
+          {
+            text: "Yes",
+            onPress: () => requestMontageVideo(),
+          },
+        ],
+        { cancelable: false } // Prevents dismissing by tapping outside on Android
+      );
+      // Alert.alert(
+      //   "Video request sent", // Title
+      //   "Check your email for the video.", // Description
+      //   [
+      //     { text: "OK", onPress: () => console.log("OK Pressed") }, // Button
+      //   ]
+      // );
+    } else {
+      requestMontageVideo();
+    }
+  };
+
   const requestMontageVideo = async () => {
     console.log(`in requestMontage video`);
     console.log(reviewReducer.reviewReducerVideoObject.id);
 
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/videos/montage/${reviewReducer.reviewReducerVideoObject.id}`,
+      // `${process.env.EXPO_PUBLIC_API_URL}/videos//montage-service/queue-a-job/${reviewReducer.reviewReducerVideoObject.id}`,
+      `${process.env.EXPO_PUBLIC_API_URL}/videos//montage-service/queue-a-job`,
       {
         method: "POST",
         headers: {
@@ -171,9 +205,11 @@ export default function ReviewVideo({ navigation, route }) {
         },
         body: JSON.stringify({
           matchId: 1,
+          videoId: reviewReducer.reviewReducerVideoObject.id,
           actionsArray: reviewReducer.reviewReducerActionsArray.filter(
             (action) => action.isDisplayed
           ),
+          token: userReducer.token,
         }),
       }
     );
@@ -186,7 +222,15 @@ export default function ReviewVideo({ navigation, route }) {
       const contentType = response.headers.get("Content-Type");
       if (contentType?.includes("application/json")) {
         const resJson = await response.json();
-        alert(resJson.message);
+        // alert("Video request sent:check your email for video download");
+        // alert(resJson.message);
+        Alert.alert(
+          "Video request sent", // Title
+          "Check your email for the video.", // Description
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }, // Button
+          ]
+        );
       }
     }
   };
@@ -200,7 +244,7 @@ export default function ReviewVideo({ navigation, route }) {
       setCurrentTimeManager={setCurrentTimeManager}
       handleBackPress={handleBackPress}
       filterActions={filterActions}
-      requestMontageVideo={requestMontageVideo}
+      handlePressRequestMontageVideo={handlePressRequestMontageVideo}
     />
   ) : (
     <ReviewVideoLandscape
@@ -211,7 +255,7 @@ export default function ReviewVideo({ navigation, route }) {
       setCurrentTimeManager={setCurrentTimeManager}
       handleBackPress={handleBackPress}
       filterActions={filterActions}
-      requestMontageVideo={requestMontageVideo}
+      handlePressRequestMontageVideo={handlePressRequestMontageVideo}
     />
   );
   // return (
