@@ -14,6 +14,7 @@ import {
   SafeAreaView,
   Platform,
   FlatList,
+  Alert,
 } from "react-native";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -111,6 +112,7 @@ export default function ReviewMatchSelection({ navigation }) {
           durationOfMatch: elem.durationString,
           filename: elem.filename,
           setTimeStampsArray: elem.setTimeStampsArray,
+          videoFileSizeInMb: elem.videoFileSizeInMb,
         };
       });
       console.log(videosObjArray);
@@ -137,7 +139,20 @@ export default function ReviewMatchSelection({ navigation }) {
       console.error("Error checking existing videos:", error);
     }
   };
+
+  // const pressBtnVideo = async (elem) => {
   const pressBtnVideo = async (elem) => {
+    console.log("in pressBtnVideo");
+    console.log(JSON.stringify(elem));
+    if (!downloadStatuses[elem.filename]) {
+      console.log("1 -> triggering download video");
+      await promptDownloadVideo(elem);
+    } else {
+      await videoIsDownloadedGoToReviewVideo(elem);
+    }
+  };
+
+  const videoIsDownloadedGoToReviewVideo = async (elem) => {
     // 1.1 get video details in the userReducer <-- might be unnecessary consider deleting.
     dispatch(
       storeVideoDetailsInRedux({
@@ -148,23 +163,6 @@ export default function ReviewMatchSelection({ navigation }) {
     // 1.2 get video details in the reviewReducer
     dispatch(updateReviewReducerVideoObject(elem));
 
-    // 2. check if the video is already downloaded
-    if (!downloadStatuses[elem.filename]) {
-      console.log("1 -> triggering download video");
-      setIsDownloadModalVisible(true); // Show modal
-      try {
-        // await downloadVideo(elem.filename);
-        console.log(`----> tryign to download for videoId: ${elem.id}`);
-        // await downloadVideo(elem.id);
-        await downloadVideo(elem);
-      } catch (error) {
-        setDownloadProgress(0);
-        console.error("Download failed:", error);
-        Alert.alert("Error", "Failed to download the video. Please try again.");
-      } finally {
-        setIsDownloadModalVisible(false);
-      }
-    }
     // 3. Get the actions for the match
     await fetchActionsForMatch(elem.match.id);
 
@@ -174,6 +172,51 @@ export default function ReviewMatchSelection({ navigation }) {
       matchName: elem.matchName,
       videoUri: `${FileSystem.documentDirectory}${elem.filename}`,
     });
+  };
+
+  const promptDownloadVideo = async (elem) => {
+    let downloadSizeMessage;
+    if (elem.videoFileSizeInMb < 100) {
+      downloadSizeMessage = `You are about to download a small (<100 Mb) file`;
+    } else {
+      downloadSizeMessage = `You are about to download a ${(
+        elem.videoFileSizeInMb / 1000
+      ).toFixed(1)} GB`;
+    }
+
+    Alert.alert(
+      downloadSizeMessage, // Title
+      "Are you sure you want to proceed?", // Description
+      [
+        {
+          text: "No",
+          onPress: () => console.log("❌ No Pressed"),
+          style: "cancel", // iOS cancel style
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            try {
+              // await downloadVideo(elem.filename);
+              console.log(`----> tryign to download for videoId: ${elem.id}`);
+              // await downloadVideo(elem.id);
+              await downloadVideo(elem);
+              await videoIsDownloadedGoToReviewVideo(elem);
+            } catch (error) {
+              setDownloadProgress(0);
+              console.error("Download failed:", error);
+              Alert.alert(
+                "Error",
+                "Failed to download the video. Please try again."
+              );
+            } finally {
+              setIsDownloadModalVisible(false);
+            }
+          },
+        },
+      ],
+      { cancelable: false } // Prevents dismissing by tapping outside on Android
+    );
   };
 
   const downloadVideo = async (elemVideo) => {
