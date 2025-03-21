@@ -157,12 +157,12 @@ export default function Register({ navigation }) {
                   />
                 </View>
                 {/* <View style={styles.vwSwitchHidePassword}>
-                        <Text>Show Password</Text>
-                        <Switch
-                          value={showPassword}
-                          onValueChange={(value) => setShowPassword(value)}
-                        />
-                      </View> */}
+                  <Text>Show Password</Text>
+                  <Switch
+                    value={showPassword}
+                    onValueChange={(value) => setShowPassword(value)}
+                  />
+                </View> */}
               </View>
               <View style={styles.vwInputWhiteLabel}>
                 <TextInput
@@ -226,11 +226,11 @@ const styles = StyleSheet.create({
   },
   // ---- MIDDLE  ------
   containerMiddle: {
-    flex: 1,
+    // flex: 1,
     // height: 500,
     // minHeight: 500,
-    paddingTop: 75,
-    paddingBottom: 75,
+    paddingTop: 50,
+    paddingBottom: 50,
     justifyContent: "space-around",
     gap: 20,
     // justifyContent: "space-around",
@@ -277,9 +277,9 @@ const styles = StyleSheet.create({
     // width: "100%",
     // flexDirection: "column",
     // flexDirection:"column"
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
-    gap: 50,
+    gap: 20,
     // padding: 50,
     paddingBottom: 10,
   },
